@@ -1,2 +1,2 @@
-| Date | Lance | Kevin | Yipeng | Xinhao | NAME | NAME | Task
+| Date | Lance | Kevin | Yipeng | Xinhao | Bach | NAME | Task
 |------------|------|---------|-------|------|-|-|-|
