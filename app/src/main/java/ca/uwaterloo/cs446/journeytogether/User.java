@@ -1,4 +1,4 @@
-package ca.uwaterloo.ece452.journeytogether;
+package ca.uwaterloo.cs446.journeytogether;
 
 public class User {
 
