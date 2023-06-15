@@ -1,0 +1,34 @@
+CREATE DATABASE JT;
+
+USE JT;
+
+CREATE TABLE Rider
+(
+  username VARCHAR(30) NOT NULL PRIMARY KEY,
+  legal_name VARCHAR(30) NOT NULL,
+  password VARCHAR(30) NOT NULL,
+  phone_num VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Driver
+(
+  username VARCHAR(30) NOT NULL PRIMARY KEY,
+  legal_name VARCHAR(30) NOT NULL,
+  password VARCHAR(30) NOT NULL,
+  phone_num VARCHAR(30) NOT NULL,
+  license_num VARCHAR(30) NOT NULL,
+  plate_num VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Carpool
+(
+  carpool_id INT PRIMARY KEY,
+  driver_username VARCHAR(30) NOT NULL REFERENCES User(username),
+  time DATETIME NOT NULL,
+  departure_city VARCHAR(30) NOT NULL,
+  destination_city VARCHAR(30) NOT NULL,
+  car_plate VARCHAR(30) NOT NULL,
+  availability CHAR(10) NOT NULL,
+  price DECIMAL
+);
+
