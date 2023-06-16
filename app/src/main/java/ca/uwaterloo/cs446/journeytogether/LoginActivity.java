@@ -14,6 +14,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameEditText, passwordEditText;
     private Button loginButton;
 
+    private Button registerButton;
+
     UserSession userSession = UserSession.getInstance();
 
     @Override
@@ -25,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
+        registerButton = findViewById(R.id.registerButton);
 
         // Set click listener for the login button
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +52,16 @@ public class LoginActivity extends AppCompatActivity {
                     userSession.setLoggedIn(false);
                     Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        // Set click listener for the registerButton
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the RegisterActivity
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }
