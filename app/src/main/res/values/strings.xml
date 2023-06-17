@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Journey Together</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="already_registered">Already registered</string>
+    <string name="register_here">Register here</string>
+    <string name="login_here">Login here</string>
+    <string name="not_reg_yet">Not registered yet</string>
+    <string name="signout">Signout</string>
 </resources>

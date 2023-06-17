@@ -9,25 +9,34 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.content.Intent;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-    private Button loginButton;
-    UserSession userSession = UserSession.getInstance();
+public class MainActivity extends AppCompatActivity {
+    Button btnSignout;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Check if user is already logged in
-        boolean isLoggedIn = userSession.isLoggedIn();
+        btnSignout = findViewById(R.id.btnSignout);
+        mAuth = FirebaseAuth.getInstance();
 
-        if (isLoggedIn) {
-            // User is already logged in, show main content
-            showMainContent();
-        } else {
-            // User is not logged in, redirect to login page
+        btnSignout.setOnClickListener(v -> {
+            mAuth.signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
             redirectToLoginPage();
         }
     }
@@ -35,16 +44,11 @@ public class MainActivity extends AppCompatActivity {
     private void showMainContent() {
         // Add your code to display the main content of the page
         // For this example, we will display a toast message
-
         Toast.makeText(MainActivity.this, "Welcome to the main page!", Toast.LENGTH_SHORT).show();
     }
 
     private void redirectToLoginPage() {
-        // Add your code to redirect the user to the login page
-        // For this example, we will start a new LoginActivity
-
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
     }
 }
