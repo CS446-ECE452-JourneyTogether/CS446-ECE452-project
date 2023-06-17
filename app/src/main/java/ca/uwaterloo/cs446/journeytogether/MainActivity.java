@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import java.sql.Connection;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
