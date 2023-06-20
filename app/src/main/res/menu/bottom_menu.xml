@@ -9,6 +9,10 @@
         android:icon="@drawable/app_logo"
         android:title="Dashboard" />
     <item
+        android:id="@+id/navigation_carpool"
+        android:icon="@drawable/app_logo"
+        android:title="Carpool" />
+    <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/app_logo"
         android:title="Notifications" />
