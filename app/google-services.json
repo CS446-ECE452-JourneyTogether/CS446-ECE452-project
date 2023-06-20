@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "918228799777",
+    "project_id": "journey-together-823b8",
+    "storage_bucket": "journey-together-823b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918228799777:android:a846de1ed67e06679c2e60",
+        "android_client_info": {
+          "package_name": "ca.uwaterloo.cs446.journeytogether"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "918228799777-dss0v3jenvmv3l57qp3jq4mrmjg49cru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBz_UBH5wZt310MlWjGKGcB-LTRT7mJwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "918228799777-dss0v3jenvmv3l57qp3jq4mrmjg49cru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
