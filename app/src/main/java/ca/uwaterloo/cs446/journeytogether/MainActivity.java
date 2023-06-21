@@ -34,15 +34,11 @@ public class MainActivity extends AppCompatActivity {
                             // Handle home item selection
                             return true;
                         }
-                        if (item.getItemId() == R.id.navigation_dashboard) {
-                            // Handle dashboard item selection
-                            return true;
-                        }
                         if (item.getItemId() == R.id.navigation_carpool) {
                             // Handle carpool item selection
                             return true;
                         }
-                        if (item.getItemId() == R.id.navigation_notifications) {
+                        if (item.getItemId() == R.id.navigation_profile) {
                             // Handle notifications item selection
                             return true;
                         }
