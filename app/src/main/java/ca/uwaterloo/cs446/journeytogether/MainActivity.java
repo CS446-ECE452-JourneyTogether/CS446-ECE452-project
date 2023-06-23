@@ -15,7 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-// test commit
+
 public class MainActivity extends AppCompatActivity {
     Button btnSignout;
     private FirebaseAuth mAuth;
@@ -60,7 +60,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        final boolean DEBUGGING = true;
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (DEBUGGING) {
+            redirectToDebuggingPage();
+        }
+
         if(currentUser == null){
             redirectToLoginPage();
         }
@@ -74,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void redirectToLoginPage() {
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
+    }
+
+    private void redirectToDebuggingPage() {
+        startActivity(new Intent(MainActivity.this, TripRequestActivity.class));
         finish();
     }
 }

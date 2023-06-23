@@ -6,11 +6,17 @@ public class User {
     private String lastName;
     private String id; // this should be used as the primary key
 
-    public User(String id) {
+    public User(String id, String firstName, String lastName) {
         this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public boolean equals(User other) {
         return this.id.equals(other.id);
+    }
+
+    public String getDisplayName() {
+        return String.format("%s %s", firstName, lastName);
     }
 }
