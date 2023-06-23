@@ -15,7 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+// test commit
 public class MainActivity extends AppCompatActivity {
     Button btnSignout;
     private FirebaseAuth mAuth;
