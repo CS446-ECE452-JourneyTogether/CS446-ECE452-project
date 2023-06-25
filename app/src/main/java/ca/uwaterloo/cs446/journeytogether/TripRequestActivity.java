@@ -33,12 +33,8 @@ public class TripRequestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        selectedTrip = new Trip("rgt", new User("k323lee", "Kevim", "Lee"), 5);
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            Trip trip = (Trip) intent.getSerializableExtra("trip");
-//            // Use the retrieved data as needed
-//        }
+        Intent intent = getIntent();
+        selectedTrip = (Trip) intent.getSerializableExtra("trip");
 
         setContentView(R.layout.activity_trip_request);
 
@@ -46,7 +42,8 @@ public class TripRequestActivity extends AppCompatActivity {
         selectedTripDisplay = findViewById(R.id.selectedTripDisplay);
         View selectedTripView = LayoutInflater.from(this).inflate(R.layout.trip_item_layout, selectedTripDisplay, false);
         selectedTripDisplay.addView(selectedTripView);
-        selectedTripViewHolder = new TripAdapter.TripViewHolder(selectedTripView);
+        selectedTripViewHolder = new TripAdapter.TripViewHolder(selectedTripView, this);
+        selectedTripViewHolder.setAllowSendRequest(false); // don't display a button that let's user send request. This is just for display
         selectedTripViewHolder.bind(selectedTrip);
 
         // components

@@ -2,7 +2,9 @@ package ca.uwaterloo.cs446.journeytogether;
 
 import android.location.Location;
 
-public class LatLng {
+import java.io.Serializable;
+
+public class LatLng implements Serializable {
     // This class encodes information about a location on Earth
     // It is an immutable type to avoid accidental mutation
 

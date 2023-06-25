@@ -27,7 +27,7 @@ public class Trip implements Serializable {
         this.id = id;
         this.driver = driver;
         this.totalSeats = totalSeats;
-        this.riders = new HashSet<>(); // placeholder
+        this.riders = new HashSet<>(); // TODO: placeholder
     }
 
     public boolean equals(Trip other) {

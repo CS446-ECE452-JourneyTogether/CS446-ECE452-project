@@ -2,11 +2,15 @@ package ca.uwaterloo.cs446.journeytogether;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import android.content.Intent;
@@ -16,51 +20,66 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
-    Button btnSignout;
+
     private FirebaseAuth mAuth;
+
+    // fragments used for navigation
+    TripListFragment tripListFragment;
+    ProfileFragment profileFragment;
+    HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
+
+        homeFragment = new HomeFragment();
+        tripListFragment = new TripListFragment();
+        profileFragment = new ProfileFragment(mAuth);
+
+        // ..............................
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(
                 new NavigationBarView.OnItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                        Fragment fragment;
+
                         if (item.getItemId() == R.id.navigation_home) {
-                            // Handle home item selection
-                            return true;
+                            fragment = homeFragment;
                         }
-                        if (item.getItemId() == R.id.navigation_carpool) {
-                            // Handle carpool item selection
-                            return true;
+                        else if (item.getItemId() == R.id.navigation_carpool) {
+                            fragment = tripListFragment;
                         }
-                        if (item.getItemId() == R.id.navigation_profile) {
-                            // Handle notifications item selection
-                            return true;
+                        else if (item.getItemId() == R.id.navigation_profile) {
+                            fragment = profileFragment;
+                        } else {
+                            return false;
                         }
-                        return false;
+
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.mainFragmentContainerView, fragment)
+                                .commit();
+
+                        return true;
                     }
                 });
 
-        btnSignout = findViewById(R.id.btnSignout);
-        mAuth = FirebaseAuth.getInstance();
 
-        btnSignout.setOnClickListener(v -> {
-            mAuth.signOut();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        final boolean DEBUGGING = true;
+        final boolean DEBUGGING = false;
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -85,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void redirectToDebuggingPage() {
-        startActivity(new Intent(MainActivity.this, TripRequestActivity.class));
+//        startActivity(new Intent(MainActivity.this, TripListActivity.class));
         finish();
     }
 }
