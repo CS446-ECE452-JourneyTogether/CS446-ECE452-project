@@ -44,11 +44,24 @@ public class TripListFragment extends Fragment {
                         String destLoc = documentSnapshot.getString("destloc");
                         int availSeat = documentSnapshot.getLong("availseat").intValue();
                         if (!addedUsernames.contains(username)) {
-                            trips.add(new Trip(username, new User(username, username, username), availSeat));
-                            addedUsernames.add(username);
+                            db.collection("jt_driver")
+                                    .whereEqualTo("username", username)
+                                    .get()
+                                    .addOnSuccessListener(driverQuerySnapshot -> {
+                                        // Retrieve the matching document from jt_driver collection
+                                        for (QueryDocumentSnapshot driverDocument : driverQuerySnapshot) {
+                                            String firstName = driverDocument.getString("firstname");
+                                            String lastName = driverDocument.getString("lastname");
+
+                                            trips.add(new Trip(username, new User(username, firstName, lastName), availSeat));
+                                            addedUsernames.add(username);
+                                        }
+
+                                        // Refresh the adapter to update the UI
+                                        tripAdapter.notifyDataSetChanged();
+                                    });
                         }
                     }
-                    tripAdapter.notifyDataSetChanged();
                 });
         recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
         tripAdapter = new TripAdapter(trips, getContext());
