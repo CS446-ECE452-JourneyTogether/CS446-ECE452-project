@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -37,31 +38,28 @@ public class TripListFragment extends Fragment {
         db.collection("jt_carpool")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    ArrayList<String> addedUsernames = new ArrayList<>();
+                    trips.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         String username = documentSnapshot.getString("username");
                         String startLoc = documentSnapshot.getString("startloc");
                         String destLoc = documentSnapshot.getString("destloc");
                         int availSeat = documentSnapshot.getLong("availseat").intValue();
-                        if (!addedUsernames.contains(username)) {
                             db.collection("jt_driver")
                                     .whereEqualTo("username", username)
                                     .get()
                                     .addOnSuccessListener(driverQuerySnapshot -> {
-                                        // Retrieve the matching document from jt_driver collection
-                                        for (QueryDocumentSnapshot driverDocument : driverQuerySnapshot) {
+                                        if (!driverQuerySnapshot.isEmpty()) {
+                                            DocumentSnapshot driverDocument = driverQuerySnapshot.getDocuments().get(0);
                                             String firstName = driverDocument.getString("firstname");
                                             String lastName = driverDocument.getString("lastname");
 
                                             trips.add(new Trip(username, new User(username, firstName, lastName), availSeat));
-                                            addedUsernames.add(username);
-                                        }
 
-                                        // Refresh the adapter to update the UI
-                                        tripAdapter.notifyDataSetChanged();
+                                            // Refresh the adapter to update the UI
+                                            tripAdapter.notifyDataSetChanged();
+                                        }
                                     });
                         }
-                    }
                 });
         recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
         tripAdapter = new TripAdapter(trips, getContext());
