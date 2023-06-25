@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         tripListFragment = new TripListFragment();
         profileFragment = new ProfileFragment(mAuth);
+        setFragment(homeFragment);
 
         // ..............................
 
@@ -64,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
                             return false;
                         }
 
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.mainFragmentContainerView, fragment)
-                                .commit();
+                        setFragment(fragment);
 
                         return true;
                     }
@@ -90,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null){
             redirectToLoginPage();
         }
+    }
+
+    private void setFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFragmentContainerView, fragment)
+                .commit();
     }
 
     private void showMainContent() {
