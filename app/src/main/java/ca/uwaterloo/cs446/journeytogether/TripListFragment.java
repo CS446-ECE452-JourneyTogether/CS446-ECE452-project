@@ -2,6 +2,7 @@ package ca.uwaterloo.cs446.journeytogether;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,9 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -19,6 +23,8 @@ public class TripListFragment extends Fragment {
     private RecyclerView recyclerView;
     private TripAdapter tripAdapter;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public TripListFragment() {
         // necessarily empty
     }
@@ -28,19 +34,22 @@ public class TripListFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
 
-        trips.add(new Trip("rgt", new User("lala135", "Kevim", "Lee"), 5));
-        trips.add(new Trip("bah", new User("lala123", "Kevin", "Lhhhhh"), 4));
-        trips.add(new Trip("rgeth", new User("45hebsdf", "Kevid", "Lsssss"), 3));
-        trips.add(new Trip("4y4y4", new User("fghretyt", "Kevid", "Lsssss"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-        trips.add(new Trip("etett", new User("bingchilling", "John", "Cena"), 4));
-
+        db.collection("jt_carpool")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<String> addedUsernames = new ArrayList<>();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        String username = documentSnapshot.getString("username");
+                        String startLoc = documentSnapshot.getString("startloc");
+                        String destLoc = documentSnapshot.getString("destloc");
+                        int availSeat = documentSnapshot.getLong("availseat").intValue();
+                        if (!addedUsernames.contains(username)) {
+                            trips.add(new Trip(username, new User(username, username, username), availSeat));
+                            addedUsernames.add(username);
+                        }
+                    }
+                    tripAdapter.notifyDataSetChanged();
+                });
         recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
         tripAdapter = new TripAdapter(trips, getContext());
         recyclerView.setAdapter(tripAdapter);
