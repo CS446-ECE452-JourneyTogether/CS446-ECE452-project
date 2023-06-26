@@ -71,7 +71,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             this.trip = trip;
             tripDriverTextView.setText(trip.getDriver().getDisplayName());
             tripDestinationTextView.setText("Placeholder location name");
-            tripCostTextView.setText(String.valueOf(trip.getCost()));
+            tripCostTextView.setText(String.format("$%d", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.availableSeats(), trip.totalSeats()));
 //            iconImageView.setImageResource(trip.getIconResId());
 
