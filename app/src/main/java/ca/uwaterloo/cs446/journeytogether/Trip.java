@@ -17,14 +17,15 @@ public class Trip implements Serializable {
     private int cost;
     private int totalSeats;
 
-    private LatLng startLocation;
+    private LatLng startLoc;
     private LocalDateTime startTime;
 
-    private LatLng end;
-    private LocalDateTime expectedEndTime;
+    private LatLng destLoc;
+    private LocalDateTime expectedDestTime;
 
-    public Trip(String id, User driver, int totalSeats) {
+    public Trip(String id, User driver, int totalSeats, int cost) {
         this.id = id;
+        this.cost = cost;
         this.driver = driver;
         this.totalSeats = totalSeats;
         this.riders = new HashSet<>(); // TODO: placeholder
@@ -35,7 +36,7 @@ public class Trip implements Serializable {
     }
 
     public Duration expectedDuration() {
-        return Duration.between(startTime, expectedEndTime);
+        return Duration.between(startTime, expectedDestTime);
     }
 
     public User getDriver() {
@@ -44,5 +45,6 @@ public class Trip implements Serializable {
 
     public int totalSeats() { return totalSeats; }
     public int takenSeats() { return riders.size(); }
+    public int getCost() { return cost; }
     public int availableSeats() { return totalSeats - riders.size(); }
 }

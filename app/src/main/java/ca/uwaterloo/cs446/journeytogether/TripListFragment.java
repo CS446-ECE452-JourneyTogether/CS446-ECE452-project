@@ -43,6 +43,7 @@ public class TripListFragment extends Fragment {
                         String username = documentSnapshot.getString("username");
                         String startLoc = documentSnapshot.getString("startloc");
                         String destLoc = documentSnapshot.getString("destloc");
+                        int cost = documentSnapshot.getLong("cost").intValue();
                         int availSeat = documentSnapshot.getLong("availseat").intValue();
                             db.collection("jt_driver")
                                     .whereEqualTo("username", username)
@@ -53,7 +54,7 @@ public class TripListFragment extends Fragment {
                                             String firstName = driverDocument.getString("firstname");
                                             String lastName = driverDocument.getString("lastname");
 
-                                            trips.add(new Trip(username, new User(username, firstName, lastName), availSeat));
+                                            trips.add(new Trip(username, new User(username, firstName, lastName), availSeat, cost));
 
                                             // Refresh the adapter to update the UI
                                             tripAdapter.notifyDataSetChanged();
