@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -41,6 +42,10 @@ public class TripListFragment extends Fragment {
                     trips.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         String username = documentSnapshot.getString("username");
+                        GeoPoint startGeo = documentSnapshot.getGeoPoint("startloc");
+                        GeoPoint destGeo = documentSnapshot.getGeoPoint("destloc");
+                        LatLng startLoc = new LatLng(startGeo.getLatitude(), startGeo.getLongitude());
+                        LatLng destLoc = new LatLng(destGeo.getLatitude(), destGeo.getLongitude());
                         int cost = documentSnapshot.getLong("cost").intValue();
                         int availSeat = documentSnapshot.getLong("availseat").intValue();
                             db.collection("jt_driver")
