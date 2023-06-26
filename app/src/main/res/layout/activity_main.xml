@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnSignout_old"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_above="@+id/bottom_navigation">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/mainFragmentContainerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Welcome to JourneyTogether"
-            android:textSize="28sp" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSignout"
-            android:text="@string/signout"
-            android:textSize="18sp"
-            android:layout_marginTop="30dp" />
-
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,6 +26,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_menu" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_menu">
 
-</RelativeLayout>
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,6 +27,9 @@
         <activity
             android:name=".RegisterActivity">
         </activity>
+        <activity
+            android:name=".TripRequestActivity">
+        </activity>
     </application>
 
 </manifest>
