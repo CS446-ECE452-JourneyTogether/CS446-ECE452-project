@@ -22,8 +22,7 @@ import java.util.Locale;
 
 public class PostTripActivity extends AppCompatActivity {
 
-    private TextInputEditText driverNameEditText, etOrigin,
-            etDestination, etAvailableSeats, etDate, etTime;
+    private TextInputEditText etOrigin, etDestination, etAvailableSeats, etDate, etTime;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -80,7 +79,6 @@ public class PostTripActivity extends AppCompatActivity {
             if (dateStr != null && timeStr != null) {
                 // Create a Trip object with the retrieved details
                 Trip trip = new Trip(user, origin, destination, availableSeats, dateStr, timeStr);
-
 
 //              Add the trip to Firestore collection
                 CollectionReference tripsCollection = db.collection("jt_trips");
