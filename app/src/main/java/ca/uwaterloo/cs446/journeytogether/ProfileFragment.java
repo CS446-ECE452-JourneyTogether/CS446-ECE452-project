@@ -6,16 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class ProfileFragment extends Fragment {
 
-    Button btnSignout;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private View rootView;
+    private EditText etLastName, etFirstName;
+    private Button btnUpdate, btnSignout;
 
     public ProfileFragment(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
@@ -26,13 +31,53 @@ public class ProfileFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        btnSignout = rootView.findViewById(R.id.btnSignout);
-        btnSignout.setOnClickListener(v -> {
-            mAuth.signOut();
-            startActivity(new Intent(getContext(), LoginActivity.class));
-            getActivity().finish();
+        etLastName = rootView.findViewById(R.id.profileEtLastName);
+        etFirstName = rootView.findViewById(R.id.profileEtFirstName);
+        btnUpdate = rootView.findViewById(R.id.profileBtnUpdate);
+        btnSignout = rootView.findViewById(R.id.profileBtnSignout);
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserProfile();
+            }
+        });
+
+        btnSignout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                startActivity(new Intent(getContext(), LoginActivity.class));
+                getActivity().finish();
+            }
         });
 
         return rootView;
     }
+
+    private void updateUserProfile() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String firstName = etFirstName.getText().toString().trim();
+            String lastName = etLastName.getText().toString().trim();
+
+            String displayName = firstName + " " + lastName;
+
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(displayName)
+                    .build();
+
+            user.updateProfile(profileUpdates)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+                            etFirstName.setText("");
+                            etLastName.setText("");
+                        } else {
+                            Toast.makeText(getContext(), "Failed to update profile. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
 }
+

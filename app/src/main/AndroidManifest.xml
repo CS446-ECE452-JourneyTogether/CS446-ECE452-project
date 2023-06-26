@@ -30,6 +30,9 @@
         <activity
             android:name=".TripRequestActivity">
         </activity>
+        <activity
+            android:name=".PostTripActivity">
+        </activity>
     </application>
 
 </manifest>

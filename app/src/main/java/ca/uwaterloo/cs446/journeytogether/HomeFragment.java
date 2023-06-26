@@ -1,19 +1,18 @@
 package ca.uwaterloo.cs446.journeytogether;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
-
     private View rootView;
+    private Button btnPost;
+
 
     public HomeFragment() {
         // necessarily empty
@@ -21,10 +20,12 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        btnPost = rootView.findViewById(R.id.btnPost);
 
-        // view stuff
+        btnPost.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), PostTripActivity.class));
+        });
 
         return rootView;
     }
