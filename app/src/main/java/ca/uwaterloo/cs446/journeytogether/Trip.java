@@ -1,48 +1,113 @@
 package ca.uwaterloo.cs446.journeytogether;
 
-import static java.time.temporal.ChronoUnit.SECONDS;
-
-import android.os.Parcelable;
-
 import java.io.Serializable;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class Trip implements Serializable {
-    private String id;
     private User driver;
-    private Set<User> riders;
-    private int cost;
+    private String origin;
+    private String destination;
+    private String date;
+    private String time;
+    private float duration; // Duration in hours
+    private int availableSeats;
     private int totalSeats;
+    private int cost;
+    private List<User> passengers;
 
-    private LatLng startLocation;
-    private LocalDateTime startTime;
+    public Trip() {}
 
-    private LatLng end;
-    private LocalDateTime expectedEndTime;
-
-    public Trip(String id, User driver, int totalSeats) {
-        this.id = id;
+    public Trip(User driver, String origin, String destination, int availableSeats, String date, String time) {
         this.driver = driver;
-        this.totalSeats = totalSeats;
-        this.riders = new HashSet<>(); // TODO: placeholder
-    }
-
-    public boolean equals(Trip other) {
-        return this.id.equals(other.id);
-    }
-
-    public Duration expectedDuration() {
-        return Duration.between(startTime, expectedEndTime);
+        this.origin = origin;
+        this.destination = destination;
+        this.availableSeats = availableSeats;
+        this.totalSeats = availableSeats;
+        this.date = date;
+        this.time = time;
+        this.duration = 2.0f;
+        this.cost = 100;
+        this.passengers = null;
     }
 
     public User getDriver() {
-        return this.driver;
+        return driver;
     }
 
-    public int totalSeats() { return totalSeats; }
-    public int takenSeats() { return riders.size(); }
-    public int availableSeats() { return totalSeats - riders.size(); }
+    public void setDriver(User driver) {
+        this.driver = driver;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public float getDuration() {
+        return duration;
+    }
+
+    public void setDuration(float duration) {
+        this.duration = duration;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(int availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
+    public int getTotalSeats() {
+        return totalSeats;
+    }
+
+    public void setTotalSeats(int totalSeats) {
+        this.totalSeats = totalSeats;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public List<User> getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(List<User> passengers) {
+        this.passengers = passengers;
+    }
 }
+

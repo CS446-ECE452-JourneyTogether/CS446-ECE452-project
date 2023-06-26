@@ -56,7 +56,7 @@ public class TripRequestActivity extends AppCompatActivity {
 
         // configuring components
         seekBarInfoTextView.setText(String.format("%d", seatsSeekBar.getProgress()));
-        seatsSeekBar.setMax(selectedTrip.availableSeats());
+        seatsSeekBar.setMax(selectedTrip.getAvailableSeats());
         seatsSeekBar.setMin(1);
         seatsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

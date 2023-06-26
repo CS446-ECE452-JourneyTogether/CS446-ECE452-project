@@ -3,22 +3,36 @@ package ca.uwaterloo.cs446.journeytogether;
 import java.io.Serializable;
 
 public class User implements Serializable {
-
-    private String firstName;
-    private String lastName;
     private String id; // this should be used as the primary key
+    private String name;
 
-    public User(String id, String firstName, String lastName) {
+    public User() {}
+    public User(String id, String name) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
     }
 
-    public boolean equals(User other) {
-        return this.id.equals(other.id);
+    public String getId() {
+        return id;
     }
 
-    public String getDisplayName() {
-        return String.format("%s %s", firstName, lastName);
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
