@@ -41,8 +41,6 @@ public class TripListFragment extends Fragment {
                     trips.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         String username = documentSnapshot.getString("username");
-                        String startLoc = documentSnapshot.getString("startloc");
-                        String destLoc = documentSnapshot.getString("destloc");
                         int cost = documentSnapshot.getLong("cost").intValue();
                         int availSeat = documentSnapshot.getLong("availseat").intValue();
                             db.collection("jt_driver")
