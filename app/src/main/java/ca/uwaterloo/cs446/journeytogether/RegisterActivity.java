@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etRegEmail;
@@ -24,6 +26,8 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView tvLoginHere;
 
     private FirebaseAuth mAuth;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +64,8 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
+                        CollectionReference usersCollection = db.collection("jt_driver");
+                        usersCollection.add(new User(email, ""));
                         Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         finish();
