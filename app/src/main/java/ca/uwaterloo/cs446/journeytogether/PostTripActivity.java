@@ -74,11 +74,11 @@ public class PostTripActivity extends AppCompatActivity {
             int availableSeats = Integer.parseInt(availableSeatsStr);
 
             FirebaseUser currentUser = mAuth.getCurrentUser();
-            User user = new User(currentUser.getEmail(), currentUser.getDisplayName());
+            String driverId = currentUser.getEmail();
 
             if (dateStr != null && timeStr != null) {
                 // Create a Trip object with the retrieved details
-                Trip trip = new Trip(user, origin, destination, availableSeats, dateStr, timeStr);
+                Trip trip = new Trip(driverId, origin, destination, availableSeats, dateStr, timeStr);
 
 //              Add the trip to Firestore collection
                 CollectionReference tripsCollection = db.collection("jt_trips");

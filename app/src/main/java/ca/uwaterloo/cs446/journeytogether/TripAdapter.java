@@ -69,7 +69,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
         public void bind(Trip trip) {
             this.trip = trip;
-            tripDriverTextView.setText(trip.getDriver().getName());
+            tripDriverTextView.setText(trip.getDriverId());
             tripDestinationTextView.setText(trip.getDestination());
             tripCostTextView.setText(String.format("$%d", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));

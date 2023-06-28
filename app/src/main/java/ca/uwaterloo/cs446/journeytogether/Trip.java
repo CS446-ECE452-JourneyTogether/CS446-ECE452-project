@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Trip implements Serializable {
-    private User driver;
+    private String driverId;
     private String origin;
     private String destination;
     private String date;
@@ -17,8 +17,8 @@ public class Trip implements Serializable {
 
     public Trip() {}
 
-    public Trip(User driver, String origin, String destination, int availableSeats, String date, String time) {
-        this.driver = driver;
+    public Trip(String driverId, String origin, String destination, int availableSeats, String date, String time) {
+        this.driverId = driverId;
         this.origin = origin;
         this.destination = destination;
         this.availableSeats = availableSeats;
@@ -30,12 +30,12 @@ public class Trip implements Serializable {
         this.passengers = null;
     }
 
-    public User getDriver() {
-        return driver;
+    public String getDriverId() {
+        return driverId;
     }
 
-    public void setDriver(User driver) {
-        this.driver = driver;
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
     }
 
     public String getOrigin() {
