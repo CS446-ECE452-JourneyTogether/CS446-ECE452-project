@@ -76,7 +76,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             this.trip = trip;
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference driverCollection = db.collection("jt_driver");
-            driverCollection.whereEqualTo("id", trip.getDriverId())
+            driverCollection.whereEqualTo("id", trip.getDriver().getId())
                     .limit(1)
                     .get()
                     .addOnCompleteListener(task -> {
@@ -84,12 +84,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                 DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                String drivername = documentSnapshot.getString("name");
+                                String drivername = documentSnapshot.getString("FirstName") + " " + documentSnapshot.getString("LastName");
                                 tripDriverTextView.setText(drivername);
                             }
                         }
                     });
-            tripDriverTextView.setText(trip.getDriverId());
+
             tripDestinationTextView.setText(trip.getDestination());
             tripCostTextView.setText(String.format("$%d", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
