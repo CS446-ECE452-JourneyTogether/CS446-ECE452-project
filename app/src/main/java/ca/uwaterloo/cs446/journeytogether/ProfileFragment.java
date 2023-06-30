@@ -2,7 +2,6 @@ package ca.uwaterloo.cs446.journeytogether;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,9 +108,6 @@ public class ProfileFragment extends Fragment {
                             updates.put("LastName", lastName);
 
                             documentRef.update(updates);
-                        } else {
-                            // Document not found
-                            Log.d("Fetching profile", "Document not found");
                         }
                     });
 
