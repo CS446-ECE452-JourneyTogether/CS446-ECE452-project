@@ -74,7 +74,7 @@ public class PostTripActivity extends AppCompatActivity {
             int availableSeats = Integer.parseInt(availableSeatsStr);
 
             FirebaseUser currentUser = mAuth.getCurrentUser();
-            User user = new User(currentUser.getEmail(), currentUser.getDisplayName());
+            User user = new User(currentUser.getEmail());
 
             if (dateStr != null && timeStr != null) {
                 // Create a Trip object with the retrieved details
