@@ -105,7 +105,8 @@ public class ProfileFragment extends Fragment {
                             DocumentReference documentRef = db.collection("jt_driver").document(documentId);
 
                             Map<String, Object> updates = new HashMap<>();
-                            updates.put("name", displayName);
+                            updates.put("FirstName", firstName);
+                            updates.put("LastName", lastName);
 
                             documentRef.update(updates);
                         } else {
