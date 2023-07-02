@@ -10,6 +10,11 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +34,9 @@ public class TripRequestActivity extends AppCompatActivity {
     private EditText additionalInfoEditText;
     private Button sendRequestButton;
 
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +45,9 @@ public class TripRequestActivity extends AppCompatActivity {
         selectedTrip = (Trip) intent.getSerializableExtra("trip");
 
         setContentView(R.layout.activity_trip_request);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // display the selected trip at the top
         selectedTripDisplay = findViewById(R.id.selectedTripDisplay);
@@ -68,6 +79,30 @@ public class TripRequestActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        sendRequestButton.setOnClickListener(view -> {
+            boolean sharePhone = sharePhoneNumberCheckbox.isChecked();
+            int seatRequest = seatsSeekBar.getProgress();
+            String pickupAddr = pickupAddressEditText.getText().toString().trim();
+            String comment = additionalInfoEditText.getText().toString().trim();
+
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            User passenger = new User(currentUser.getEmail());
+
+            // Create a Trip object with the retrieved details
+            TripRequest tripRequest = new TripRequest(this.selectedTrip.getDriver(), passenger, seatRequest, sharePhone, pickupAddr, comment);
+
+            CollectionReference tripRequestCollection = db.collection("jt_carpoolrequest");
+            tripRequestCollection.add(tripRequest)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(TripRequestActivity.this, "Trip requested successfully", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(TripRequestActivity.this, MainActivity.class));
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(TripRequestActivity.this, "Failed to request trip: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         });
     }
 

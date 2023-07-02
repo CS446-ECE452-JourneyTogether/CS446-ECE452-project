@@ -47,22 +47,25 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String displayName = firebaseUser.getDisplayName(); // Retrieve the display name
+        if(displayName != null && !displayName.isEmpty()) {
+            String[] nameParts = displayName.split(" ");
 
-        String[] nameParts = displayName.split(" ");
+            String firstName = "";
+            String lastName = "";
 
-        String firstName = "";
-        String lastName = "";
+            if (nameParts.length > 0) {
+                firstName = nameParts[0]; // Retrieve the first name
 
-        if (nameParts.length > 0) {
-            firstName = nameParts[0]; // Retrieve the first name
-
-            if (nameParts.length > 1) {
-                lastName = nameParts[nameParts.length - 1]; // Retrieve the last name
+                if (nameParts.length > 1) {
+                    lastName = nameParts[nameParts.length - 1]; // Retrieve the last name
+                }
             }
+            etFirstName.setText(firstName);
+            etLastName.setText(lastName);
+        } else {
+            etFirstName.setText("");
+            etLastName.setText("");
         }
-
-        etFirstName.setText(firstName);
-        etLastName.setText(lastName);
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override

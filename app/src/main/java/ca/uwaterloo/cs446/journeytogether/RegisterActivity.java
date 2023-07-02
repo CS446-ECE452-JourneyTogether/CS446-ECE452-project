@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         CollectionReference usersCollection = db.collection("jt_driver");
-                        usersCollection.add(new User(email, ""));
+                        usersCollection.add(new User(email));
                         Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         finish();

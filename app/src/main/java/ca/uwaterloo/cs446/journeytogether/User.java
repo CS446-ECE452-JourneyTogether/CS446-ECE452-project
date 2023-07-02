@@ -4,18 +4,27 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private String id; // this should be used as the primary key
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String phoneNum;
+    private String driverLicense;
 
     public User() {}
 
     public User(String id){
         this.id = id;
-        this.name = null;
+        this.firstName = null;
+        this.lastName = null;
+        this.phoneNum = null;
+        this.driverLicense = null;
     }
 
-    public User(String id, String name) {
+    public User(String id, String firstName, String lastName, String phoneNum, String driverLicense) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNum = phoneNum;
+        this.driverLicense = driverLicense;
     }
 
     public String getId() {
@@ -26,19 +35,11 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", name='" + firstName + ' ' + lastName + '\'' +
                 '}';
     }
 }
