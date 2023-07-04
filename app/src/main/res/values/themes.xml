@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.JourneyTogether" parent="Base.Theme.JourneyTogether" />
+
+    <style name="SeekBarWithoutSteps" parent="Base.Widget.AppCompat.SeekBar.Discrete">
+        <item name="tickMark">@null</item>
+    </style>
 </resources>

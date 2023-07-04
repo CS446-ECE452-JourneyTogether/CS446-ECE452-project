@@ -44,11 +44,12 @@
 
             <SeekBar
                 android:id="@+id/seatsSeekBar"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                style="@style/SeekBarWithoutSteps"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:max="10"
-                android:progress="1" />
+                android:progress="1"
+                app:tickVisible="false" />
         </LinearLayout>
 
         <Space
