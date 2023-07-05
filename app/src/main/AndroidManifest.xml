@@ -33,6 +33,7 @@
         <activity
             android:name=".PostTripActivity">
         </activity>
+        <activity android:name=".DriverMainActivity" />
     </application>
 
 </manifest>

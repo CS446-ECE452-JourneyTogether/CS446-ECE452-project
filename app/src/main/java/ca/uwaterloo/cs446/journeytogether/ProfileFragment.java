@@ -20,7 +20,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private View rootView;
     private EditText etLastName, etFirstName;
-    private Button btnUpdate, btnSignout;
+    private Button btnUpdate, btnSignout, btnLoginToDriver;
 
     public ProfileFragment(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
@@ -35,6 +35,7 @@ public class ProfileFragment extends Fragment {
         etFirstName = rootView.findViewById(R.id.profileEtFirstName);
         btnUpdate = rootView.findViewById(R.id.profileBtnUpdate);
         btnSignout = rootView.findViewById(R.id.profileBtnSignout);
+        btnLoginToDriver = rootView.findViewById(R.id.btnToDriverLogin);
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +51,11 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 getActivity().finish();
             }
+        });
+
+        btnLoginToDriver.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), DriverMainActivity.class));
+            getActivity().finish();
         });
 
         return rootView;

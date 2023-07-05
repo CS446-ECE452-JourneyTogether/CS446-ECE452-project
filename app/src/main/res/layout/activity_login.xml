@@ -86,8 +86,7 @@
                 android:layout_marginLeft="8dp"
                 android:text="@string/register_here"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
-
+                android:textSize="20sp" />
         </LinearLayout>
 
     </LinearLayout>

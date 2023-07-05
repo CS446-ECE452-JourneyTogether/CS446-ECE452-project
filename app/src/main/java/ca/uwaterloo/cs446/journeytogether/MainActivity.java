@@ -47,28 +47,21 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(
-                new NavigationBarView.OnItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                        Fragment fragment;
-
-                        if (item.getItemId() == R.id.navigation_home) {
-                            fragment = homeFragment;
-                        }
-                        else if (item.getItemId() == R.id.navigation_carpool) {
-                            fragment = tripListFragment;
-                        }
-                        else if (item.getItemId() == R.id.navigation_profile) {
-                            fragment = profileFragment;
-                        } else {
-                            return false;
-                        }
-
-                        setFragment(fragment);
-
-                        return true;
+                item -> {
+                    Fragment fragment;
+                    if (item.getItemId() == R.id.navigation_home) {
+                        fragment = homeFragment;
                     }
+                    else if (item.getItemId() == R.id.navigation_carpool) {
+                        fragment = tripListFragment;
+                    }
+                    else if (item.getItemId() == R.id.navigation_profile) {
+                        fragment = profileFragment;
+                    } else {
+                        return false;
+                    }
+                    setFragment(fragment);
+                    return true;
                 });
 
 

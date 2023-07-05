@@ -42,6 +42,7 @@ public class PostTripActivity extends AppCompatActivity {
         etTime = findViewById(R.id.ptEtTime);
 
         Button postButton = findViewById(R.id.ptBtnPost);
+
         postButton.setOnClickListener(view -> {
             String origin = etOrigin.getText().toString().trim();
             String destination = etDestination.getText().toString().trim();
