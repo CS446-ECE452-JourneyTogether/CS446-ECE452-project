@@ -7,6 +7,12 @@ public class User implements Serializable {
     private String name;
 
     public User() {}
+
+    public User(String id){
+        this.id = id;
+        this.name = null;
+    }
+
     public User(String id, String name) {
         this.id = id;
         this.name = name;
