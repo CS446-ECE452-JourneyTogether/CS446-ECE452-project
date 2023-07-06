@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private void showMainContent() {
         // Add your code to display the main content of the page
         // For this example, we will display a toast message
-        Toast.makeText(MainActivity.this, "Welcome to the main page!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Welcome to the main page!", Toast.LENGTH_LONG).show();
     }
 
     private void redirectToLoginPage() {

@@ -96,12 +96,12 @@ public class TripRequestActivity extends AppCompatActivity {
             CollectionReference tripRequestCollection = db.collection("jt_carpoolrequest");
             tripRequestCollection.add(tripRequest)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(TripRequestActivity.this, "Trip requested successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TripRequestActivity.this, "Trip requested successfully", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(TripRequestActivity.this, MainActivity.class));
                         finish();
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(TripRequestActivity.this, "Failed to request trip: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TripRequestActivity.this, "Failed to request trip: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
         });
     }

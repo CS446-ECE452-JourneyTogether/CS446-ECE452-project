@@ -57,7 +57,7 @@ public class PostTripActivity extends AppCompatActivity {
             if (origin.isEmpty() || destination.isEmpty() ||
                     availableSeatsStr.isEmpty() || dateText.isEmpty() || timeText.isEmpty() ||
                     dateText.isEmpty() || timeText.isEmpty()) {
-                Toast.makeText(PostTripActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostTripActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -67,7 +67,7 @@ public class PostTripActivity extends AppCompatActivity {
                 dateStr = date.format(dateFormatter);
                 timeStr = time.format(timeFormatter);
             } catch (DateTimeParseException e) {
-                Toast.makeText(PostTripActivity.this, "Error parsing date or time", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostTripActivity.this, "Error parsing date or time", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
 
@@ -84,12 +84,12 @@ public class PostTripActivity extends AppCompatActivity {
                 CollectionReference tripsCollection = db.collection("jt_trips");
                 tripsCollection.add(trip)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(PostTripActivity.this, MainActivity.class));
                         finish();
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(PostTripActivity.this, "Failed to post trip: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostTripActivity.this, "Failed to post trip: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
             }
         });

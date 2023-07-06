@@ -121,11 +121,11 @@ public class ProfileFragment extends Fragment {
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Profile updated successfully.", Toast.LENGTH_LONG).show();
                             etFirstName.setText(firstName);
                             etLastName.setText(lastName);
                         } else {
-                            Toast.makeText(getContext(), "Failed to update profile. Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Failed to update profile. Please try again.", Toast.LENGTH_LONG).show();
                         }
                     });
         }

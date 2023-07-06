@@ -66,11 +66,11 @@ public class RegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         CollectionReference usersCollection = db.collection("jt_driver");
                         usersCollection.add(new User(email));
-                        Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         finish();
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
