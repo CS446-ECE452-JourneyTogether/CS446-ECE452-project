@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText etLogPassword;
     private Button btnLogin;
     private TextView tvRegisterHere;
-
     private FirebaseAuth mAuth;
 
     @Override
@@ -33,20 +33,31 @@ public class LoginActivity extends AppCompatActivity {
         etLogPassword = findViewById(R.id.etLogPassword);
         btnLogin = findViewById(R.id.btnLogin);
         tvRegisterHere = findViewById(R.id.tvRegisterHere);
+        Switch UserType_Switch = findViewById(R.id.UserType_Switch);
 
         mAuth = FirebaseAuth.getInstance();
 
         btnLogin.setOnClickListener(v -> {
-            loginUser();
+            if (UserType_Switch.isChecked()){
+                loginDr();
+            } else {
+                loginP();
+            }
         });
 
         tvRegisterHere.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            finish();
+            if (UserType_Switch.isChecked()) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                finish();
+            } else {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                finish();
+            }
         });
     }
 
-    private void loginUser() {
+
+    private void loginP() {
         String email = etLogEmail.getText().toString().trim();
         String password = etLogPassword.getText().toString().trim();
 
@@ -72,5 +83,30 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
     }
+    private void loginDr() {
+        String email = etLogEmail.getText().toString().trim();
+        String password = etLogPassword.getText().toString().trim();
 
+        if (TextUtils.isEmpty(email)) {
+            etLogEmail.setError("Email is empty");
+            etLogEmail.requestFocus();
+        } else if (TextUtils.isEmpty(password)) {
+            etLogPassword.setError("Password is empty");
+            etLogPassword.requestFocus();
+        } else {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Login failed!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
 }
