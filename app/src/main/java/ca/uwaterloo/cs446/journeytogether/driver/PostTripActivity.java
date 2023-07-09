@@ -1,8 +1,7 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.driver;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -19,6 +18,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
+
+import ca.uwaterloo.cs446.journeytogether.MainActivity;
+import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.user.Trip;
+import ca.uwaterloo.cs446.journeytogether.user.User;
 
 public class PostTripActivity extends AppCompatActivity {
 

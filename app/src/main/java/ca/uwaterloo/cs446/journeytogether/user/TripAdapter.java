@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.user;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import ca.uwaterloo.cs446.journeytogether.R;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 

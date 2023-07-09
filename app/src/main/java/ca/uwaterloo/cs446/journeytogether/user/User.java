@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.user;
 
 import java.io.Serializable;
 

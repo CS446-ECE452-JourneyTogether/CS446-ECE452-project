@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import ca.uwaterloo.cs446.journeytogether.R;
 
 public class TripRequestActivity extends AppCompatActivity {
 

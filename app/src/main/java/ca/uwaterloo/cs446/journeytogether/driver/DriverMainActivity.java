@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.driver;
 
 import android.os.Bundle;
 
@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import ca.uwaterloo.cs446.journeytogether.R;
 
 public class DriverMainActivity extends AppCompatActivity {
 

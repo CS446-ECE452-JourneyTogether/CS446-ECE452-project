@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.driver.DriverMainActivity;
+import ca.uwaterloo.cs446.journeytogether.user.LoginActivity;
 
 public class ProfileFragment extends Fragment {
 
