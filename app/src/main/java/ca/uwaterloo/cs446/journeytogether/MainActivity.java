@@ -1,26 +1,21 @@
 package ca.uwaterloo.cs446.journeytogether;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
-import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.Toast;
 import android.content.Intent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
+import ca.uwaterloo.cs446.journeytogether.user.HomeFragment;
+import ca.uwaterloo.cs446.journeytogether.user.LoginActivity;
+import ca.uwaterloo.cs446.journeytogether.user.ProfileFragment;
+import ca.uwaterloo.cs446.journeytogether.user.TripListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,28 +42,21 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(
-                new NavigationBarView.OnItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                        Fragment fragment;
-
-                        if (item.getItemId() == R.id.navigation_home) {
-                            fragment = homeFragment;
-                        }
-                        else if (item.getItemId() == R.id.navigation_carpool) {
-                            fragment = tripListFragment;
-                        }
-                        else if (item.getItemId() == R.id.navigation_profile) {
-                            fragment = profileFragment;
-                        } else {
-                            return false;
-                        }
-
-                        setFragment(fragment);
-
-                        return true;
+                item -> {
+                    Fragment fragment;
+                    if (item.getItemId() == R.id.navigation_home) {
+                        fragment = homeFragment;
                     }
+                    else if (item.getItemId() == R.id.navigation_carpool) {
+                        fragment = tripListFragment;
+                    }
+                    else if (item.getItemId() == R.id.navigation_profile) {
+                        fragment = profileFragment;
+                    } else {
+                        return false;
+                    }
+                    setFragment(fragment);
+                    return true;
                 });
 
 

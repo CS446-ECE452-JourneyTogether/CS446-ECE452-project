@@ -22,17 +22,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity">
+            android:name=".user.LoginActivity">
         </activity>
         <activity
-            android:name=".RegisterActivity">
+            android:name=".user.RegisterActivity">
         </activity>
         <activity
-            android:name=".TripRequestActivity">
+            android:name=".user.TripRequestActivity">
         </activity>
         <activity
-            android:name=".PostTripActivity">
+            android:name=".driver.DriverProfileFragment$PostTripActivity">
         </activity>
+        <activity android:name=".driver.DriverMainActivity" />
     </application>
 
 </manifest>

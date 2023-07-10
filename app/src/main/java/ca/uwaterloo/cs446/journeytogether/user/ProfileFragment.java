@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,12 +22,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.driver.DriverMainActivity;
+import ca.uwaterloo.cs446.journeytogether.user.LoginActivity;
+
 public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private View rootView;
     private EditText etLastName, etFirstName;
-    private Button btnUpdate, btnSignout;
+    private Button btnUpdate, btnSignout, btnLoginToDriver;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -44,6 +48,7 @@ public class ProfileFragment extends Fragment {
         etFirstName = rootView.findViewById(R.id.profileEtFirstName);
         btnUpdate = rootView.findViewById(R.id.profileBtnUpdate);
         btnSignout = rootView.findViewById(R.id.profileBtnSignout);
+        btnLoginToDriver = rootView.findViewById(R.id.btnToDriverLogin);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String displayName = firebaseUser.getDisplayName(); // Retrieve the display name
@@ -78,6 +83,11 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 getActivity().finish();
             }
+        });
+
+        btnLoginToDriver.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), DriverMainActivity.class));
+            getActivity().finish();
         });
 
         return rootView;
