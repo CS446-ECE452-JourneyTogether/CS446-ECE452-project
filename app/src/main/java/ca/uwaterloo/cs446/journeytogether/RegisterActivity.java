@@ -66,16 +66,23 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        CollectionReference usersCollection = db.collection("jt_driver");
-                        usersCollection.add(new User(email));
-                        Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        finish();
+                        User.firestore.create(
+                            new User(email),
+                            () -> {
+                                Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                            },
+                            () -> { onError("An error occurred. Please try again later."); }
+                        );
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        onError(task.getException().getMessage());
                     }
                 }
             });
         }
+    }
+
+    private void onError(String message) {
+        Toast.makeText(RegisterActivity.this, String.format("Error: %s", message), Toast.LENGTH_LONG).show();
     }
 }

@@ -22,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import ca.uwaterloo.cs446.journeytogether.schema.User;
+
 public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -95,6 +97,18 @@ public class ProfileFragment extends Fragment {
             String displayName = firstName + " " + lastName;
 
             CollectionReference usersCollection = db.collection("jt_driver");
+
+            User.firestore.makeQuery(
+                    c -> c.whereEqualTo("email", user.getEmail()).limit(1),
+                    arr -> {
+                        if (!arr.isEmpty()) {
+                            User u = arr.get(0);
+                            u.setName(firstName, lastName);
+                            User.firestore.syncById(u.getId(), () -> {}, () -> {});
+                        }
+                    },
+                    () -> {}
+            );
 
             usersCollection.whereEqualTo("id", user.getEmail())
                     .limit(1)

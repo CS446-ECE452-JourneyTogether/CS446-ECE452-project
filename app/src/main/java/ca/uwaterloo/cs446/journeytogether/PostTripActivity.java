@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 import ca.uwaterloo.cs446.journeytogether.schema.User;
@@ -65,35 +66,66 @@ public class PostTripActivity extends AppCompatActivity {
 
             try {
                 LocalDate date = LocalDate.parse(dateText, dateFormatter);
-                LocalTime time = LocalTime.parse(timeText, timeFormatter);
                 dateStr = date.format(dateFormatter);
-                timeStr = time.format(timeFormatter);
             } catch (DateTimeParseException e) {
                 Toast.makeText(PostTripActivity.this, "Error parsing date or time", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+
+            try {
+                LocalTime time = LocalTime.parse(timeText, timeFormatter);
+                timeStr = time.format(timeFormatter);
+            } catch (DateTimeParseException e) {
+                Toast.makeText(PostTripActivity.this, "Time is formatted incorrectly", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
 
             int availableSeats = Integer.parseInt(availableSeatsStr);
 
             FirebaseUser currentUser = mAuth.getCurrentUser();
-            User user = new User(currentUser.getEmail());
 
-            if (dateStr != null && timeStr != null) {
-                // Create a Trip object with the retrieved details
-                Trip trip = new Trip(user, origin, destination, availableSeats, dateStr, timeStr);
+            if (dateStr == null || timeStr == null) {
+                return;
+            }
+
+            CompletableFuture<User> futureUser = new CompletableFuture<>();
+            User.firestore.makeQuery(
+                    v -> v.whereEqualTo("email", currentUser.getEmail()),
+                    arr -> {
+                        if (arr.isEmpty()) {
+                            futureUser.completeExceptionally(new Exception("Query failed"));
+                            return;
+                        }
+                        futureUser.complete(arr.get(0));
+                    },
+                    () -> {
+                        futureUser.completeExceptionally(new Exception("Query failed"));
+                    }
+            );
+
+            futureUser.thenApply((user) -> {
+                Trip trip = new Trip(user, origin, destination, availableSeats, "test", "test");
 
 //              Add the trip to Firestore collection
-                CollectionReference tripsCollection = db.collection("jt_trips");
-                tripsCollection.add(trip)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(PostTripActivity.this, MainActivity.class));
-                        finish();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(PostTripActivity.this, "Failed to post trip: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
-            }
+                Trip.firestore.create(
+                        trip,
+                        () -> {
+                            Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PostTripActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        },
+                        () -> {
+                            Toast.makeText(PostTripActivity.this, "Failed to post trip. Please try again later.", Toast.LENGTH_LONG).show();
+                        }
+                );
+
+                return user;
+            }).exceptionally(exception -> {
+                Toast.makeText(PostTripActivity.this, "Failed to post trip. Please try again later.", Toast.LENGTH_LONG).show();
+                return null;
+            });
         });
     }
 }

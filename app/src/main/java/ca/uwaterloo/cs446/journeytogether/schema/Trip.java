@@ -39,9 +39,15 @@ public class Trip implements Serializable {
     public void update(DocumentSnapshot document) {
         try {
             String driverId = (String) document.get("driver");
-            User.firestore.getValuesById(driverId, (arr) -> {
-                if (!arr.isEmpty()) { this.driver = arr.get(0); }
-            } );
+
+            if (driverId != null) {
+                User.firestore.getValuesById(driverId,
+                    (arr) -> {
+                        if (!arr.isEmpty()) { this.driver = arr.get(0); }
+                    },
+                    () -> {}
+                );
+            }
 
             this.origin = (String) document.get("origin");
             this.destination = (String) document.get("destination");
@@ -52,16 +58,20 @@ public class Trip implements Serializable {
             this.totalSeats = Math.toIntExact((long) document.get("totalSeats"));
             this.cost = Math.toIntExact((long) document.get("cost"));
 
-            Log.d("D", String.format("%s", this.cost));
-
             List<String> passengerId = (List<String>) document.get("passengers");
             this.passengers = new ArrayList<User>();
 
-            for (String id : passengerId) {
-                User.firestore.getValuesById(id, (arr) -> {
-                    if (!arr.isEmpty()) { this.passengers.add(arr.get(0)); }
-                });
+            if (passengerId != null) {
+                for (String id : passengerId) {
+                    User.firestore.getValuesById(id,
+                            (arr) -> {
+                                if (!arr.isEmpty()) { this.passengers.add(arr.get(0)); }
+                            },
+                            () -> {}
+                    );
+                }
             }
+
         } catch (ClassCastException e) {
             Log.e("E", String.format("Casting error occurred with Trip %s: %s", this.id, e.getMessage()));
         }
@@ -70,7 +80,10 @@ public class Trip implements Serializable {
 
     public Map<String, Object> asMap() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("driver", this.driver.getId());
+
+        if (this.driver != null) {
+            map.put("driver", this.driver.getId());
+        }
         map.put("origin", this.origin);
         map.put("destination", this.destination);
         map.put("date", this.date);
@@ -108,7 +121,7 @@ public class Trip implements Serializable {
         this.time = time;
         this.duration = 2.0f;
         this.cost = 100;
-        this.passengers = null;
+        this.passengers = new ArrayList<>();
     }
 
     public User getDriver() {

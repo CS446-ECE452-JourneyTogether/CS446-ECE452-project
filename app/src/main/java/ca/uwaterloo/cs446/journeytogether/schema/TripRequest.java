@@ -33,14 +33,20 @@ public class TripRequest {
     public void update(DocumentSnapshot document) {
         try {
             String tripId = (String) document.get("trip");
-            Trip.firestore.getValuesById(tripId, (arr) -> {
-                if (!arr.isEmpty()) { this.trip = arr.get(0); }
-            } );
+            Trip.firestore.getValuesById(tripId,
+                    (arr) -> {
+                        if (!arr.isEmpty()) { this.trip = arr.get(0); }
+                    },
+                    () -> {}
+            );
 
             String passengerId = (String) document.get("passenger");
-            User.firestore.getValuesById(passengerId, (arr) -> {
-                if (!arr.isEmpty()) { this.passenger = arr.get(0); }
-            } );
+            User.firestore.getValuesById(passengerId,
+                    (arr) -> {
+                        if (!arr.isEmpty()) { this.passenger = arr.get(0); }
+                    },
+                    () -> {}
+            );
 
             this.seatRequest = Math.toIntExact((long) document.get("seatRequest"));
             this.sharePhone = (boolean) document.get("sharePhone");

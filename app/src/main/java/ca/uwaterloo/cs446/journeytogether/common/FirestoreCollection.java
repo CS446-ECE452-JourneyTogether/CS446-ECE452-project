@@ -78,7 +78,7 @@ public class FirestoreCollection<T> {
         this.localSnapshots = new HashMap<>();
     }
 
-    public void getValuesById(String id, ValuesCallback<T> callback) {
+    public void getValuesById(String id, ValuesCallback<T> onSuccess, VoidCallback<T> onFailure) {
 
         ArrayList<T> retval = new ArrayList<>();
 
@@ -89,21 +89,21 @@ public class FirestoreCollection<T> {
                     if (documentSnapshot.exists()) {
                         updateSnapshot(id, documentSnapshot);
                         retval.add(localSnapshots.get(id));
-                        callback.callback(retval);
+                        onSuccess.callback(retval);
                     } else {
-                        callback.callback(new ArrayList<>());
+                        onSuccess.callback(new ArrayList<>());
                     }
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    callback.callback(new ArrayList<>());
+                    onFailure.callback();
                 }
             });
     }
 
-    public void syncById(String id, VoidCallback<T> voidCallback) {
+    public void syncById(String id, VoidCallback<T> onSuccess, VoidCallback<T> onFailure) {
 
         T value = localSnapshots.get(id);
 
@@ -112,39 +112,38 @@ public class FirestoreCollection<T> {
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    voidCallback.callback();
+                    onSuccess.callback();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    voidCallback.callback();
+                    onFailure.callback();
                 }
             });
     }
 
-    public void create(T value, VoidCallback<T> voidCallback) {
+    public void create(T value, VoidCallback<T> onSuccess, VoidCallback<T> onFailure) {
         db.collection(collectionPath)
             .add(documentWriter.write(value))
             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     String id = documentReference.getId();
-                    idSetter.setId(value, id);
                     updateSnapshot(id, value);
 
-                    voidCallback.callback();
+                    onSuccess.callback();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    voidCallback.callback();
+                    onFailure.callback();
                 }
             });
     }
 
-    public void makeQuery(QueryCallback<T> qc, ValuesCallback<T> valuesCallback) {
+    public void makeQuery(QueryCallback<T> qc, ValuesCallback<T> onSuccess, VoidCallback<T> onFailure) {
         Query query = qc.build(db.collection(collectionPath));
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -159,12 +158,12 @@ public class FirestoreCollection<T> {
                     retval.add(localSnapshots.get(id));
                 }
 
-                valuesCallback.callback(retval);
+                onSuccess.callback(retval);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                valuesCallback.callback(new ArrayList<>());
+                onFailure.callback();
             }
         });
     }
@@ -176,6 +175,7 @@ public class FirestoreCollection<T> {
 
         // Document now exists no matter what, retrieve the data and do in-place write
         T val = localSnapshots.get(id);
+        idSetter.setId(val, id);
         documentUpdater.update(val, document);
     }
 

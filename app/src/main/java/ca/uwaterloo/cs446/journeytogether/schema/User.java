@@ -16,10 +16,12 @@ public class User implements Serializable {
     private String lastName;
 
     // this field will remain null for basically every user except for the user themselves
+    private String email;
     private String phoneNum;
 
     // this field will remain null for basically every user except for the user themselves
     private String driverLicense;
+    private boolean isDriver;
 
     private static final String COLLECTION_PATH = "jt_user";
     public static final FirestoreCollection<User> firestore =
@@ -35,8 +37,14 @@ public class User implements Serializable {
         try {
             this.firstName = (String) document.get("firstName");
             this.lastName = (String) document.get("lastName");
+            this.email = (String) document.get("email");
             this.phoneNum = (String) document.get("phoneNum");
-            this.driverLicense = (String) document.get("driverLicense");
+            this.isDriver = (boolean) document.get("isDriver");
+
+            if (this.isDriver) {
+                this.driverLicense = (String) document.get("driverLicense");
+            }
+
         } catch (ClassCastException e) {
             Log.e("E", String.format("Casting error occurred with User %s: %s", this.id, e.getMessage()));
         }
@@ -46,8 +54,13 @@ public class User implements Serializable {
         HashMap<String, Object> map = new HashMap<>();
         map.put("firstName", this.firstName);
         map.put("lastName", this.lastName);
+        map.put("email", this.email);
         map.put("phoneNum", this.phoneNum);
-        map.put("driverLicense", this.driverLicense);
+        map.put("isDriver", this.isDriver);
+
+        if (this.isDriver) {
+            map.put("driverLicense", this.driverLicense);
+        }
 
         return map;
     }
@@ -58,20 +71,27 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(String id){
-        this.id = id;
+    public User(String email){
+        this.email = email;
         this.firstName = null;
         this.lastName = null;
         this.phoneNum = null;
         this.driverLicense = null;
+        this.isDriver = false;
     }
 
-    public User(String id, String firstName, String lastName, String phoneNum, String driverLicense) {
-        this.id = id;
+    public User(String email, String firstName, String lastName, String phoneNum, String driverLicense, boolean isDriver) {
+        this.id = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNum = phoneNum;
         this.driverLicense = driverLicense;
+        this.isDriver = isDriver;
+    }
+
+    public void setName(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getDocumentId() {
