@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import ca.uwaterloo.cs446.journeytogether.schema.User;
+
 public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etRegEmail;
     private TextInputEditText etRegPassword;

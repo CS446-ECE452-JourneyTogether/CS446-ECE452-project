@@ -1,6 +1,5 @@
 package ca.uwaterloo.cs446.journeytogether;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +15,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
+import ca.uwaterloo.cs446.journeytogether.schema.Trip;
+
 public class TripListFragment extends Fragment {
 
     private ArrayList<Trip> trips = new ArrayList<>();
@@ -26,29 +27,14 @@ public class TripListFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public TripListFragment() {
-        // necessarily empty
+        // placeholder: currently it make query about everything
+        Trip.firestore.makeQuery(c -> c, (arr) -> { this.trips = arr; });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
-
-        db.collection("jt_trips")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        trips.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            // Convert Firestore document to Trip object
-                            Trip trip = document.toObject(Trip.class);
-                            trips.add(trip);
-                        }
-                        tripAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("Fetching trips", "Error getting trips: ", task.getException());
-                    }
-                });
         recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
         tripAdapter = new TripAdapter(trips, getContext());
         recyclerView.setAdapter(tripAdapter);
