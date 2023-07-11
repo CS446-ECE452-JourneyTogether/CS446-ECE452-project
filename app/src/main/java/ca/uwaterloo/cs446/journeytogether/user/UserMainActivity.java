@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,18 +12,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import ca.uwaterloo.cs446.journeytogether.user.HomeFragment;
-import ca.uwaterloo.cs446.journeytogether.user.LoginActivity;
-import ca.uwaterloo.cs446.journeytogether.user.ProfileFragment;
-import ca.uwaterloo.cs446.journeytogether.user.TripListFragment;
+import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class UserMainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
     // fragments used for navigation
     TripListFragment tripListFragment;
-    ProfileFragment profileFragment;
+    UserProfileFragment profileFragment;
     HomeFragment homeFragment;
 
     @Override
@@ -35,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         homeFragment = new HomeFragment();
         tripListFragment = new TripListFragment();
-        profileFragment = new ProfileFragment(mAuth);
+        profileFragment = new UserProfileFragment(mAuth);
         setFragment(homeFragment);
-
-        // ..............................
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(
@@ -58,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
                     setFragment(fragment);
                     return true;
                 });
-
-
     }
 
     @Override
@@ -75,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(currentUser == null){
-            redirectToLoginPage();
+            redirectToWelcomePage();
         }
     }
 
@@ -88,11 +82,11 @@ public class MainActivity extends AppCompatActivity {
     private void showMainContent() {
         // Add your code to display the main content of the page
         // For this example, we will display a toast message
-        Toast.makeText(MainActivity.this, "Welcome to the main page!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UserMainActivity.this, "Welcome to the main page!", Toast.LENGTH_SHORT).show();
     }
 
-    private void redirectToLoginPage() {
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+    private void redirectToWelcomePage() {
+        startActivity(new Intent(UserMainActivity.this, WelcomeActivity.class));
         finish();
     }
 

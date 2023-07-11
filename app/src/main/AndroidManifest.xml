@@ -13,7 +13,7 @@
         android:theme="@style/Theme.JourneyTogether"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,18 +22,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".user.LoginActivity">
-        </activity>
-        <activity
-            android:name=".user.RegisterActivity">
-        </activity>
-        <activity
             android:name=".user.TripRequestActivity">
         </activity>
-        <activity
-            android:name=".driver.DriverProfileFragment$PostTripActivity">
-        </activity>
+
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".user.UserLoginActivity" />
+        <activity android:name=".user.UserRegistrationActivity" />
+        <activity android:name=".user.UserMainActivity" />
         <activity android:name=".driver.DriverMainActivity" />
+        <activity android:name=".driver.DriverLoginActivity" />
+        <activity android:name=".driver.DriverRegistrationActivity" />
+
+        <activity android:name=".driver.PostTripActivity" />
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-import ca.uwaterloo.cs446.journeytogether.MainActivity;
+import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.user.Trip;
 import ca.uwaterloo.cs446.journeytogether.user.User;
@@ -90,7 +90,7 @@ public class PostTripActivity extends AppCompatActivity {
                 tripsCollection.add(trip)
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(PostTripActivity.this, MainActivity.class));
+                        startActivity(new Intent(PostTripActivity.this, UserMainActivity.class));
                         finish();
                     })
                     .addOnFailureListener(e -> {

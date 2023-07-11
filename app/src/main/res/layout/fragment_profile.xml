@@ -56,16 +56,7 @@
             android:layout_height="wrap_content"
             android:text="@string/signout"
             android:layout_centerHorizontal="true"
-            android:layout_above="@+id/btnToDriverLogin" />
-
-        <Button
-            android:id="@+id/btnToDriverLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Login as a driver?"
-            android:textSize="18sp"
-            android:layout_marginTop="20dp"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
 

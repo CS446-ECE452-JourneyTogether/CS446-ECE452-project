@@ -24,7 +24,7 @@ public class DriverTripsFragment extends Fragment {
         btnPost = rootView.findViewById(R.id.btnPost);
 
         btnPost.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), DriverProfileFragment.PostTripActivity.class));
+            startActivity(new Intent(getActivity(), PostTripActivity.class));
         });
 
         return rootView;

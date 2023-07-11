@@ -35,25 +35,25 @@ public class TripListFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
 
-        db.collection("jt_trips")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        trips.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            // Convert Firestore document to Trip object
-                            Trip trip = document.toObject(Trip.class);
-                            trips.add(trip);
-                        }
-                        tripAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("Fetching trips", "Error getting trips: ", task.getException());
-                    }
-                });
-        recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
-        tripAdapter = new TripAdapter(trips, getContext());
-        recyclerView.setAdapter(tripAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        db.collection("jt_trips")
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        trips.clear();
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            // Convert Firestore document to Trip object
+//                            Trip trip = document.toObject(Trip.class);
+//                            trips.add(trip);
+//                        }
+//                        tripAdapter.notifyDataSetChanged();
+//                    } else {
+//                        Log.d("Fetching trips", "Error getting trips: ", task.getException());
+//                    }
+//                });
+//        recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
+//        tripAdapter = new TripAdapter(trips, getContext());
+//        recyclerView.setAdapter(tripAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return rootView;
     }

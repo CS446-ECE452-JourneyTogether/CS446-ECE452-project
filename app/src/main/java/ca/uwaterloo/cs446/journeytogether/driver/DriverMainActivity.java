@@ -1,15 +1,21 @@
 package ca.uwaterloo.cs446.journeytogether.driver;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
+import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
 
 public class DriverMainActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
 
     private BottomNavigationView bnvDriver;
 
@@ -17,13 +23,24 @@ public class DriverMainActivity extends AppCompatActivity {
     private DriverProfileFragment profileDriverFragment;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            redirectToWelcomePage();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_main);
 
         // Create instances of the fragments
+        mAuth = FirebaseAuth.getInstance();
         tripsDriverFragment = new DriverTripsFragment();
-        profileDriverFragment = new DriverProfileFragment();
+        profileDriverFragment = new DriverProfileFragment(mAuth);
 
         // Set the initial fragment
         setFragment(tripsDriverFragment);
@@ -42,6 +59,11 @@ public class DriverMainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void redirectToWelcomePage() {
+        startActivity(new Intent(DriverMainActivity.this, WelcomeActivity.class));
+        finish();
     }
 
     private void setFragment(Fragment fragment) {

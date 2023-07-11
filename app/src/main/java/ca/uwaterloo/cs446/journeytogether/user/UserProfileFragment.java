@@ -23,10 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ca.uwaterloo.cs446.journeytogether.R;
-import ca.uwaterloo.cs446.journeytogether.driver.DriverMainActivity;
-import ca.uwaterloo.cs446.journeytogether.user.LoginActivity;
+import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
 
-public class ProfileFragment extends Fragment {
+public class UserProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private View rootView;
@@ -35,7 +34,7 @@ public class ProfileFragment extends Fragment {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public ProfileFragment(FirebaseAuth mAuth) {
+    public UserProfileFragment(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
     }
 
@@ -48,23 +47,26 @@ public class ProfileFragment extends Fragment {
         etFirstName = rootView.findViewById(R.id.profileEtFirstName);
         btnUpdate = rootView.findViewById(R.id.profileBtnUpdate);
         btnSignout = rootView.findViewById(R.id.profileBtnSignout);
-        btnLoginToDriver = rootView.findViewById(R.id.btnToDriverLogin);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String displayName = firebaseUser.getDisplayName(); // Retrieve the display name
 
-        String[] nameParts = displayName.split(" ");
-
+        String[] nameParts = new String[0];
         String firstName = "";
         String lastName = "";
 
-        if (nameParts.length > 0) {
-            firstName = nameParts[0]; // Retrieve the first name
+        if (displayName != null && !displayName.isEmpty()) {
+            nameParts = displayName.split(" ");
 
-            if (nameParts.length > 1) {
-                lastName = nameParts[nameParts.length - 1]; // Retrieve the last name
+            if (nameParts.length > 0) {
+                firstName = nameParts[0]; // Retrieve the first name
+
+                if (nameParts.length > 1) {
+                    lastName = nameParts[nameParts.length - 1]; // Retrieve the last name
+                }
             }
         }
+
 
         etFirstName.setText(firstName);
         etLastName.setText(lastName);
@@ -76,17 +78,9 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        btnSignout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                startActivity(new Intent(getContext(), LoginActivity.class));
-                getActivity().finish();
-            }
-        });
-
-        btnLoginToDriver.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), DriverMainActivity.class));
+        btnSignout.setOnClickListener(v -> {
+            mAuth.signOut();
+            startActivity(new Intent(getContext(), WelcomeActivity.class));
             getActivity().finish();
         });
 

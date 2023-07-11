@@ -78,7 +78,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             this.trip = trip;
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference driverCollection = db.collection("jt_driver");
-            driverCollection.whereEqualTo("id", trip.getDriver().getId())
+            driverCollection.whereEqualTo("id", trip.getDriver().getEmail())
                     .limit(1)
                     .get()
                     .addOnCompleteListener(task -> {
