@@ -36,6 +36,9 @@
         <activity
             android:name=".PostTripActivity">
         </activity>
+        <activity
+            android:name=".LocationPickerActivity">
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCsFS0c6k07jbJLYwNBXbSiCiwSPMMUjWU" />

@@ -2,6 +2,7 @@ package ca.uwaterloo.cs446.journeytogether.schema;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
@@ -11,13 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 import ca.uwaterloo.cs446.journeytogether.common.FirestoreCollection;
+import ca.uwaterloo.cs446.journeytogether.common.GeoHashing;
 
 public class Trip implements Serializable {
 
     private String id;
     private User driver;
-    private String origin;
-    private String destination;
+    private LatLng origin;
+    private LatLng destination;
     private String date;
     private String time;
     private double duration; // Duration in hours
@@ -49,10 +51,12 @@ public class Trip implements Serializable {
                 );
             }
 
-            this.origin = (String) document.get("origin");
-            this.destination = (String) document.get("destination");
+            this.origin = GeoHashing.unhash("origin", document);
+            this.destination = GeoHashing.unhash("destination", document);
+
             this.date = (String) document.get("date");
             this.time = (String) document.get("time");
+
             this.duration = (double) document.get("duration");
             this.availableSeats = Math.toIntExact((long) document.get("availableSeats"));
             this.totalSeats = Math.toIntExact((long) document.get("totalSeats"));
@@ -84,8 +88,10 @@ public class Trip implements Serializable {
         if (this.driver != null) {
             map.put("driver", this.driver.getId());
         }
-        map.put("origin", this.origin);
-        map.put("destination", this.destination);
+
+        GeoHashing.hash("origin", this.origin, map);
+        GeoHashing.hash("destination", this.destination, map);
+
         map.put("date", this.date);
         map.put("time", this.time);
         map.put("duration", this.duration);
@@ -111,7 +117,7 @@ public class Trip implements Serializable {
 
     public Trip() {}
 
-    public Trip(User driver, String origin, String destination, int availableSeats, String date, String time) {
+    public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, String date, String time) {
         this.driver = driver;
         this.origin = origin;
         this.destination = destination;
@@ -132,19 +138,19 @@ public class Trip implements Serializable {
         this.driver = driver;
     }
 
-    public String getOrigin() {
+    public LatLng getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(LatLng origin) {
         this.origin = origin;
     }
 
-    public String getDestination() {
+    public LatLng getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(LatLng destination) {
         this.destination = destination;
     }
 
