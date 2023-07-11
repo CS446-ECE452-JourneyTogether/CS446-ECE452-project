@@ -72,20 +72,19 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     protected void onStart() {
         super.onStart();
         mapView.onStart();
+        requestLocationUpdates();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        requestLocationUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        stopLocationUpdates();
     }
 
     @Override
@@ -137,6 +136,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                         // Update the map camera to the current location
                         LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
+                        stopLocationUpdates();
                     }
                 }
             };
