@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether.driver;
+package ca.uwaterloo.cs446.journeytogether;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,29 +7,28 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
-import ca.uwaterloo.cs446.journeytogether.R;
-import ca.uwaterloo.cs446.journeytogether.user.Trip;
-import ca.uwaterloo.cs446.journeytogether.user.User;
+import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
+import ca.uwaterloo.cs446.journeytogether.common.InAppNotice;
+import ca.uwaterloo.cs446.journeytogether.component.DateTimePickerButton;
+import ca.uwaterloo.cs446.journeytogether.component.LocationPickerButton;
+import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 
 public class PostTripActivity extends AppCompatActivity {
 
-    private TextInputEditText etOrigin, etDestination, etAvailableSeats, etDate, etTime;
-
+    private TextInputEditText etAvailableSeats;
+    private DateTimePickerButton departureDateTimePicker, arrivalDateTimePicker;
+    private LocationPickerButton originLocationSelector, destinationLocationSelector;
+    private InAppNotice inAppNotice;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,66 +36,74 @@ public class PostTripActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post_trip);
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
-        etOrigin = findViewById(R.id.ptEtOrigin);
-        etDestination = findViewById(R.id.ptEtDestination);
+        originLocationSelector = findViewById(R.id.originLocationSelector);
+        destinationLocationSelector = findViewById(R.id.pickupAddressLocationSelector);
+
+        departureDateTimePicker = findViewById(R.id.departureDateTimePicker);
+        arrivalDateTimePicker = findViewById(R.id.arrivalDateTimePicker);
+
+        originLocationSelector.setActivity(this, 1);
+        destinationLocationSelector.setActivity(this, 2);
+
         etAvailableSeats = findViewById(R.id.ptEtSeats);
-        etDate = findViewById(R.id.ptEtDate);
-        etTime = findViewById(R.id.ptEtTime);
 
         Button postButton = findViewById(R.id.ptBtnPost);
+        postButton.setOnClickListener(view -> handleFormInputs());
+    }
 
-        postButton.setOnClickListener(view -> {
-            String origin = etOrigin.getText().toString().trim();
-            String destination = etDestination.getText().toString().trim();
-            String availableSeatsStr = etAvailableSeats.getText().toString().trim();
-            String dateText = etDate.getText().toString().trim();
-            String timeText = etTime.getText().toString().trim();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        originLocationSelector.onActivityResult(requestCode, resultCode, data);
+        destinationLocationSelector.onActivityResult(requestCode, resultCode, data);
+    }
 
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.US);
-            String dateStr = null;
-            String timeStr = null;
+    private void handleFormInputs() {
 
-            if (origin.isEmpty() || destination.isEmpty() ||
-                    availableSeatsStr.isEmpty() || dateText.isEmpty() || timeText.isEmpty() ||
-                    dateText.isEmpty() || timeText.isEmpty()) {
-                Toast.makeText(PostTripActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        LatLng origin = originLocationSelector.getSelectedLocation();
+        LatLng destination = destinationLocationSelector.getSelectedLocation();
 
-            try {
-                LocalDate date = LocalDate.parse(dateText, dateFormatter);
-                LocalTime time = LocalTime.parse(timeText, timeFormatter);
-                dateStr = date.format(dateFormatter);
-                timeStr = time.format(timeFormatter);
-            } catch (DateTimeParseException e) {
-                Toast.makeText(PostTripActivity.this, "Error parsing date or time", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
+        String availableSeatsStr = etAvailableSeats.getText().toString().trim();
+        LocalDateTime departureTime = departureDateTimePicker.getDateTime();
+        LocalDateTime arrivalTime = arrivalDateTimePicker.getDateTime();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.US);
+        String dateStr = null;
+        String timeStr = null;
 
-            int availableSeats = Integer.parseInt(availableSeatsStr);
+        if (
+            origin == null || destination == null || availableSeatsStr.isEmpty() ||
+            departureTime == null || arrivalTime == null
+        ) {
+            Toast.makeText(PostTripActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
+            return;
+        }
 
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            User user = new User(currentUser.getEmail());
+        int availableSeats = Integer.parseInt(availableSeatsStr);
 
-            if (dateStr != null && timeStr != null) {
-                // Create a Trip object with the retrieved details
-                Trip trip = new Trip(user, origin, destination, availableSeats, dateStr, timeStr);
+        CurrentUser.getCurrentUser().thenApply((user) -> {
+            Trip trip = new Trip(user, origin, destination, availableSeats, departureTime, arrivalTime);
 
 //              Add the trip to Firestore collection
-                CollectionReference tripsCollection = db.collection("jt_trips");
-                tripsCollection.add(trip)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(PostTripActivity.this, UserMainActivity.class));
-                        finish();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(PostTripActivity.this, "Failed to post trip: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-            }
+            Trip.firestore.create(
+                    trip,
+                    () -> {
+                        Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(PostTripActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    },
+                    () -> {
+                        Toast.makeText(PostTripActivity.this, "Failed to post trip. Please try again later.", Toast.LENGTH_LONG).show();
+                    }
+            );
+
+            return user;
+        }).exceptionally(exception -> {
+            Toast.makeText(PostTripActivity.this, "Failed to post trip. Please try again later.", Toast.LENGTH_LONG).show();
+            return null;
         });
-    }
-}
+
+    }}

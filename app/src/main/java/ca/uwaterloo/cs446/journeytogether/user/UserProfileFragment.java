@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether.user;
+package ca.uwaterloo.cs446.journeytogether;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,19 +22,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-import ca.uwaterloo.cs446.journeytogether.R;
-import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
+import ca.uwaterloo.cs446.journeytogether.schema.User;
 
-public class UserProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private View rootView;
     private EditText etLastName, etFirstName;
-    private Button btnUpdate, btnSignout, btnLoginToDriver;
+    private Button btnUpdate, btnSignout;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public UserProfileFragment(FirebaseAuth mAuth) {
+    public ProfileFragment(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
     }
 
@@ -50,13 +49,11 @@ public class UserProfileFragment extends Fragment {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String displayName = firebaseUser.getDisplayName(); // Retrieve the display name
+        if(displayName != null && !displayName.isEmpty()) {
+            String[] nameParts = displayName.split(" ");
 
-        String[] nameParts = new String[0];
-        String firstName = "";
-        String lastName = "";
-
-        if (displayName != null && !displayName.isEmpty()) {
-            nameParts = displayName.split(" ");
+            String firstName = "";
+            String lastName = "";
 
             if (nameParts.length > 0) {
                 firstName = nameParts[0]; // Retrieve the first name
@@ -65,11 +62,12 @@ public class UserProfileFragment extends Fragment {
                     lastName = nameParts[nameParts.length - 1]; // Retrieve the last name
                 }
             }
+            etFirstName.setText(firstName);
+            etLastName.setText(lastName);
+        } else {
+            etFirstName.setText("");
+            etLastName.setText("");
         }
-
-
-        etFirstName.setText(firstName);
-        etLastName.setText(lastName);
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +76,13 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        btnSignout.setOnClickListener(v -> {
-            mAuth.signOut();
-            startActivity(new Intent(getContext(), WelcomeActivity.class));
-            getActivity().finish();
+        btnSignout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                startActivity(new Intent(getContext(), LoginActivity.class));
+                getActivity().finish();
+            }
         });
 
         return rootView;
@@ -96,6 +97,18 @@ public class UserProfileFragment extends Fragment {
             String displayName = firstName + " " + lastName;
 
             CollectionReference usersCollection = db.collection("jt_driver");
+
+            User.firestore.makeQuery(
+                    c -> c.whereEqualTo("email", user.getEmail()).limit(1),
+                    arr -> {
+                        if (!arr.isEmpty()) {
+                            User u = arr.get(0);
+                            u.setName(firstName, lastName);
+                            User.firestore.syncById(u.getId(), () -> {}, () -> {});
+                        }
+                    },
+                    () -> {}
+            );
 
             usersCollection.whereEqualTo("id", user.getEmail())
                     .limit(1)
@@ -122,11 +135,11 @@ public class UserProfileFragment extends Fragment {
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Profile updated successfully.", Toast.LENGTH_LONG).show();
                             etFirstName.setText(firstName);
                             etLastName.setText(lastName);
                         } else {
-                            Toast.makeText(getContext(), "Failed to update profile. Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Failed to update profile. Please try again.", Toast.LENGTH_LONG).show();
                         }
                     });
         }

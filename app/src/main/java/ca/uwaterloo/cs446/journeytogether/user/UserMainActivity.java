@@ -1,27 +1,34 @@
-package ca.uwaterloo.cs446.journeytogether.user;
+package ca.uwaterloo.cs446.journeytogether;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 import android.content.Intent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import ca.uwaterloo.cs446.journeytogether.R;
-import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
+import java.util.ArrayList;
 
-public class UserMainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
     // fragments used for navigation
     TripListFragment tripListFragment;
-    UserProfileFragment profileFragment;
+    ProfileFragment profileFragment;
     HomeFragment homeFragment;
 
     @Override
@@ -33,27 +40,38 @@ public class UserMainActivity extends AppCompatActivity {
 
         homeFragment = new HomeFragment();
         tripListFragment = new TripListFragment();
-        profileFragment = new UserProfileFragment(mAuth);
+        profileFragment = new ProfileFragment(mAuth);
         setFragment(homeFragment);
+
+        // ..............................
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(
-                item -> {
-                    Fragment fragment;
-                    if (item.getItemId() == R.id.navigation_home) {
-                        fragment = homeFragment;
+                new NavigationBarView.OnItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                        Fragment fragment;
+
+                        if (item.getItemId() == R.id.navigation_home) {
+                            fragment = homeFragment;
+                        }
+                        else if (item.getItemId() == R.id.navigation_carpool) {
+                            fragment = tripListFragment;
+                        }
+                        else if (item.getItemId() == R.id.navigation_profile) {
+                            fragment = profileFragment;
+                        } else {
+                            return false;
+                        }
+
+                        setFragment(fragment);
+
+                        return true;
                     }
-                    else if (item.getItemId() == R.id.navigation_carpool) {
-                        fragment = tripListFragment;
-                    }
-                    else if (item.getItemId() == R.id.navigation_profile) {
-                        fragment = profileFragment;
-                    } else {
-                        return false;
-                    }
-                    setFragment(fragment);
-                    return true;
                 });
+
+
     }
 
     @Override
@@ -69,7 +87,7 @@ public class UserMainActivity extends AppCompatActivity {
         }
 
         if(currentUser == null){
-            redirectToWelcomePage();
+            redirectToLoginPage();
         }
     }
 
@@ -82,11 +100,11 @@ public class UserMainActivity extends AppCompatActivity {
     private void showMainContent() {
         // Add your code to display the main content of the page
         // For this example, we will display a toast message
-        Toast.makeText(UserMainActivity.this, "Welcome to the main page!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Welcome to the main page!", Toast.LENGTH_LONG).show();
     }
 
-    private void redirectToWelcomePage() {
-        startActivity(new Intent(UserMainActivity.this, WelcomeActivity.class));
+    private void redirectToLoginPage() {
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
     }
 

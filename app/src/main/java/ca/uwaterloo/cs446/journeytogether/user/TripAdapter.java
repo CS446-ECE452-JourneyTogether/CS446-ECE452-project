@@ -1,7 +1,8 @@
-package ca.uwaterloo.cs446.journeytogether.user;
+package ca.uwaterloo.cs446.journeytogether;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
     private ArrayList<Trip> trips;
     private Context context;
+    private Geocoder geocoder;
 
     public TripAdapter(ArrayList<Trip> trips, Context context) {
         this.trips = trips;
@@ -78,22 +78,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             this.trip = trip;
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference driverCollection = db.collection("jt_driver");
-            driverCollection.whereEqualTo("id", trip.getDriver().getEmail())
-                    .limit(1)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                String drivername = documentSnapshot.getString("FirstName") + " " + documentSnapshot.getString("LastName");
-                                tripDriverTextView.setText(drivername);
-                            }
-                        }
-                    });
 
-            tripDestinationTextView.setText(trip.getDestination());
-            tripCostTextView.setText(String.format("$%d", trip.getCost()));
+            if (trip.getDriver() != null) {
+                tripDriverTextView.setText(trip.getDriver().getDisplayName());
+            }
+
+            tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
+            tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
 //            iconImageView.setImageResource(trip.getIconResId());
 
