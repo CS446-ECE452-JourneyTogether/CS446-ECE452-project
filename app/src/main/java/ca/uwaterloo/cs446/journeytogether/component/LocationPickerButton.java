@@ -18,10 +18,9 @@ import java.util.List;
 import java.util.Locale;
 
 import ca.uwaterloo.cs446.journeytogether.LocationPickerActivity;
+import ca.uwaterloo.cs446.journeytogether.common.AddressRep;
 
 public class LocationPickerButton extends AppCompatButton {
-
-    private static final int REQUEST_LOCATION_PICKER = 1;
 
     private LatLng selectedLocation;
     private Activity activity;
@@ -75,22 +74,7 @@ public class LocationPickerButton extends AppCompatButton {
         if (selectedLocation == null) {
             this.setText("Select location");
         } else {
-            this.setText(addressOf(selectedLocation));
+            this.setText(AddressRep.getLocationStringAddress(getContext(), selectedLocation));
         }
-    }
-
-    private String addressOf(LatLng latlng) {
-        List<Address> addresses;
-        geocoder = new Geocoder(this.getContext(), Locale.getDefault());
-
-        try {
-            addresses = geocoder.getFromLocation(latlng.latitude, latlng.longitude, 1);
-        } catch (IOException e) {
-            Log.w("W", "IO Exception in Geocoder. Resorting to latlng representation.");
-            return String.format("%s, %s", latlng.latitude, latlng.longitude);
-        }
-
-        String address = addresses.get(0).getAddressLine(0);
-        return address;
     }
 }

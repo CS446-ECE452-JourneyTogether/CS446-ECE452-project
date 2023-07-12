@@ -1,18 +1,24 @@
 package ca.uwaterloo.cs446.journeytogether.schema;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import ca.uwaterloo.cs446.journeytogether.common.AddressRep;
 import ca.uwaterloo.cs446.journeytogether.common.DateTimeConverter;
 import ca.uwaterloo.cs446.journeytogether.common.FirestoreCollection;
 import ca.uwaterloo.cs446.journeytogether.common.GeoHashing;
@@ -137,6 +143,21 @@ public class Trip implements Serializable {
         this.arrivalTime = arrivalTime;
         this.cost = 100;
         this.passengers = new ArrayList<>();
+    }
+
+    public Address getOriginAddress(Context context) {
+        return AddressRep.getLocationAddress(context, this.origin.toLatLng());
+    }
+
+    public Address getDestinationAddress(Context context) {
+        return AddressRep.getLocationAddress(context, this.destination.toLatLng());
+    }
+
+    public String getRouteStringRep(Context context) {
+        return String.format(
+                "%s → %s",
+                AddressRep.getLocationStringAddress(context, origin.toLatLng()),
+                AddressRep.getLocationStringAddress(context, destination.toLatLng()));
     }
 
     public User getDriver() {

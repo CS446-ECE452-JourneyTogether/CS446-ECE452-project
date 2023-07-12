@@ -2,6 +2,7 @@ package ca.uwaterloo.cs446.journeytogether;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     private ArrayList<Trip> trips;
     private Context context;
+    private Geocoder geocoder;
 
     public TripAdapter(ArrayList<Trip> trips, Context context) {
         this.trips = trips;
@@ -81,8 +83,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 tripDriverTextView.setText(trip.getDriver().getDisplayName());
             }
 
-            tripDestinationTextView.setText("TODO: location needs string rep!");
-            tripCostTextView.setText(String.format("$%d", trip.getCost()));
+            tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
+            tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
 //            iconImageView.setImageResource(trip.getIconResId());
 
