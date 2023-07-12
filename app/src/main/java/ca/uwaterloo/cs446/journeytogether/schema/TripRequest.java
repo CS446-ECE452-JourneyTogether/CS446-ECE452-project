@@ -52,7 +52,8 @@ public class TripRequest {
 
             this.seatRequest = Math.toIntExact((long) document.get("seatRequest"));
             this.sharePhone = (boolean) document.get("sharePhone");
-            this.pickupAddr = GeoHashing.unhash("pickupAddr", document);
+            // TODO: fix this
+            // this.pickupAddr = GeoHashing.unhash("pickupAddr", document);
             this.comment = (String) document.get("comment");
         } catch (ClassCastException e) {
             Log.e("E", String.format("Casting error occurred with TripRequest %s: %s", this.id, e.getMessage()));

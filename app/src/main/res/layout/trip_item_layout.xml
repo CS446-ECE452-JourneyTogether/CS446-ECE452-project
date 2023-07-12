@@ -119,6 +119,14 @@
                 android:text="@string/start_send_trip_request"
                 app:icon="@drawable/send" />
 
+            <Button
+                android:id="@+id/startViewRequestsButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_view_requests"
+                app:icon="@drawable/send" />
+
         </LinearLayout>
 
     </LinearLayout>

@@ -34,6 +34,9 @@
             android:name=".TripRequestActivity">
         </activity>
         <activity
+            android:name=".ViewRequestsActivity">
+        </activity>
+        <activity
             android:name=".PostTripActivity">
         </activity>
         <activity

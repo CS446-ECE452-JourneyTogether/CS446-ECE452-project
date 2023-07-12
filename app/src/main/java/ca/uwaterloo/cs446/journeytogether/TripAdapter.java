@@ -54,6 +54,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         private TextView tripCostTextView;
         private TextView tripSeatsLeftTextView;
         private Button startSendRequestButton;
+        private Button startViewRequestsButton;
 //        private ImageView iconImageView;
         private Context context;
         private Trip trip;
@@ -65,6 +66,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             tripCostTextView = itemView.findViewById(R.id.tripCostTextView);
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
             startSendRequestButton = itemView.findViewById(R.id.startSendRequestButton);
+            startViewRequestsButton = itemView.findViewById(R.id.startViewRequestsButton);
             this.context = context;
 //            iconImageView = itemView.findViewById(R.id.iconImageView);
         }
@@ -72,6 +74,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         // this function enables or disables the Send request button
         public void setAllowSendRequest(boolean allow) {
             startSendRequestButton.setVisibility(allow ? View.VISIBLE : View.GONE);
+        }
+
+        // this function enables or disables the View request button
+        public void setAllowViewRequests(boolean allow) {
+            startViewRequestsButton.setVisibility(allow ? View.VISIBLE : View.GONE);
         }
 
         public void bind(Trip trip) {
@@ -93,6 +100,16 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, TripRequestActivity.class);
+                    intent.putExtra("trip", trip);
+                    context.startActivity(intent);
+                }
+            });
+
+            // upon pressing the view button, it takes us to a trip request activity
+            startViewRequestsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ViewRequestsActivity.class);
                     intent.putExtra("trip", trip);
                     context.startActivity(intent);
                 }
