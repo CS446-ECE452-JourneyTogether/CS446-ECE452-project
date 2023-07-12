@@ -3,14 +3,17 @@ package ca.uwaterloo.cs446.journeytogether.schema;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.uwaterloo.cs446.journeytogether.common.DateTimeConverter;
 import ca.uwaterloo.cs446.journeytogether.common.FirestoreCollection;
 import ca.uwaterloo.cs446.journeytogether.common.GeoHashing;
 
@@ -18,11 +21,20 @@ public class Trip implements Serializable {
 
     private String id;
     private User driver;
-    private LatLng origin;
-    private LatLng destination;
-    private String date;
-    private String time;
-    private double duration; // Duration in hours
+    private SerializableLatLng origin;
+    private SerializableLatLng destination;
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    private LocalDateTime departureTime;
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    private LocalDateTime arrivalTime;
     private int availableSeats;
     private int totalSeats;
     private int cost;
@@ -54,10 +66,9 @@ public class Trip implements Serializable {
             this.origin = GeoHashing.unhash("origin", document);
             this.destination = GeoHashing.unhash("destination", document);
 
-            this.date = (String) document.get("date");
-            this.time = (String) document.get("time");
+            this.departureTime = DateTimeConverter.toLocalDateTime((Timestamp) document.get("departureTime"));
+            this.arrivalTime = DateTimeConverter.toLocalDateTime((Timestamp) document.get("arrivalTime"));
 
-            this.duration = (double) document.get("duration");
             this.availableSeats = Math.toIntExact((long) document.get("availableSeats"));
             this.totalSeats = Math.toIntExact((long) document.get("totalSeats"));
             this.cost = Math.toIntExact((long) document.get("cost"));
@@ -92,9 +103,8 @@ public class Trip implements Serializable {
         GeoHashing.hash("origin", this.origin, map);
         GeoHashing.hash("destination", this.destination, map);
 
-        map.put("date", this.date);
-        map.put("time", this.time);
-        map.put("duration", this.duration);
+        map.put("departureTime", DateTimeConverter.toTimestamp(departureTime));
+        map.put("arrivalTime", DateTimeConverter.toTimestamp(arrivalTime));
         map.put("availableSeats", this.availableSeats);
         map.put("totalSeats", this.totalSeats);
         map.put("cost", this.cost);
@@ -117,15 +127,14 @@ public class Trip implements Serializable {
 
     public Trip() {}
 
-    public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, String date, String time) {
+    public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.driver = driver;
-        this.origin = origin;
-        this.destination = destination;
+        this.origin = new SerializableLatLng(origin);
+        this.destination = new SerializableLatLng(destination);
         this.availableSeats = availableSeats;
         this.totalSeats = availableSeats;
-        this.date = date;
-        this.time = time;
-        this.duration = 2.0f;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
         this.cost = 100;
         this.passengers = new ArrayList<>();
     }
@@ -139,44 +148,21 @@ public class Trip implements Serializable {
     }
 
     public LatLng getOrigin() {
-        return origin;
+        return origin.toLatLng();
     }
 
     public void setOrigin(LatLng origin) {
-        this.origin = origin;
+        this.origin = new SerializableLatLng(origin);
     }
 
     public LatLng getDestination() {
-        return destination;
+        return destination.toLatLng();
     }
 
     public void setDestination(LatLng destination) {
-        this.destination = destination;
+        this.destination = new SerializableLatLng(destination);
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public double getDuration() {
-        return duration;
-    }
-
-    public void setDuration(double duration) {
-        this.duration = duration;
-    }
 
     public int getAvailableSeats() {
         return availableSeats;
