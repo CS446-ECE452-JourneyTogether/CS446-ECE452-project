@@ -31,6 +31,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
+import ca.uwaterloo.cs446.journeytogether.component.LocationPickerButton;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 import ca.uwaterloo.cs446.journeytogether.schema.User;
@@ -50,8 +52,7 @@ public class TripRequestActivity extends AppCompatActivity {
     private CheckBox sharePhoneNumberCheckbox;
 
 
-    private EditText pickupAddressEditText;
-    private MapView pickupAddressMapView;
+    private LocationPickerButton pickupAddressLocationSelector;
     private EditText additionalInfoEditText;
     private Button sendRequestButton;
 
@@ -83,21 +84,9 @@ public class TripRequestActivity extends AppCompatActivity {
         seekBarInfoTextView = findViewById(R.id.seekBarInfoTextView);
         seatsSeekBar = findViewById(R.id.seatsSeekBar);
         sharePhoneNumberCheckbox = findViewById(R.id.sharePhoneNumberCheckbox);
-        pickupAddressEditText = findViewById(R.id.pickupAddressEditText);
         additionalInfoEditText = findViewById(R.id.additionalInfoEditText);
         sendRequestButton = findViewById(R.id.sendRequestButton);
-        pickupAddressMapView = findViewById(R.id.pickupAddressMapView);
-        pickupAddressMapView.onCreate(savedInstanceState);
-        pickupAddressMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                if (ContextCompat.checkSelfPermission(TripRequestActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    googleMap.setMyLocationEnabled(true);
-                }
-
-                setCamera(googleMap);
-            }
-        });
+        pickupAddressLocationSelector = findViewById(R.id.pickupAddressLocationSelector);
 
         // configuring components
         seekBarInfoTextView.setText(String.format("%d", seatsSeekBar.getProgress()));
@@ -115,77 +104,45 @@ public class TripRequestActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
+        pickupAddressLocationSelector.setActivity(this, 1);
+
         sendRequestButton.setOnClickListener(view -> {
             // TODO: put this in a separate function
             boolean sharePhone = sharePhoneNumberCheckbox.isChecked();
             int seatRequest = seatsSeekBar.getProgress();
-            String pickupAddr = pickupAddressEditText.getText().toString().trim();
+            LatLng pickupAddress = pickupAddressLocationSelector.getSelectedLocation();
             String comment = additionalInfoEditText.getText().toString().trim();
 
             FirebaseUser currentUser = mAuth.getCurrentUser();
-            User passenger = new User(currentUser.getEmail());
+            CurrentUser.getCurrentUser().thenApply((user) -> {
+                // Create a Trip object with the retrieved details
+                TripRequest tripRequest = new TripRequest(this.selectedTrip, user, seatRequest, sharePhone, pickupAddress, comment);
 
-            // Create a Trip object with the retrieved details
-            TripRequest tripRequest = new TripRequest(this.selectedTrip, passenger, seatRequest, sharePhone, pickupAddr, comment);
+                TripRequest.firestore.create(
+                    tripRequest,
+                    () -> {
+                        Toast.makeText(TripRequestActivity.this, "Trip request posted successfully", Toast.LENGTH_LONG).show();
 
-            CollectionReference tripRequestCollection = db.collection("jt_carpoolrequest");
-            tripRequestCollection.add(tripRequest)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(TripRequestActivity.this, "Trip requested successfully", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(TripRequestActivity.this, MainActivity.class));
-                        finish();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(TripRequestActivity.this, "Failed to request trip: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent returnIntent = new Intent(TripRequestActivity.this, MainActivity.class);
+                        returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(returnIntent);
+                    },
+                    () -> {
+                        Toast.makeText(TripRequestActivity.this, "Failed to post trip request. Please try again later.", Toast.LENGTH_LONG).show();
                     });
+
+                return user;
+            });
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        pickupAddressLocationSelector.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateSeekBarProgress(int progress) {
         seekBarInfoTextView.setText(String.format("%d", progress));
-    }
-
-    // the default location shown on map selection
-    private void setCamera(GoogleMap googleMap) {
-
-        // this is the location of Waterloo... It is the default if we can't get the user's location
-//        LatLng latlng = new LatLng(43.4305658, -80.6407781);
-
-        // Inside onMapReady()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        // Move the camera to the user's location
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM));
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        pickupAddressMapView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        pickupAddressMapView.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        pickupAddressMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        pickupAddressMapView.onLowMemory();
     }
 }

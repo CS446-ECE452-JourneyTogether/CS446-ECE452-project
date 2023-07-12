@@ -2,6 +2,7 @@ package ca.uwaterloo.cs446.journeytogether.schema;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ca.uwaterloo.cs446.journeytogether.common.FirestoreCollection;
+import ca.uwaterloo.cs446.journeytogether.common.GeoHashing;
 
 public class TripRequest {
 
@@ -17,7 +19,7 @@ public class TripRequest {
     private User passenger;
     private int seatRequest;
     private boolean sharePhone;
-    private String pickupAddr;
+    private LatLng pickupAddr;
     private String comment;
 
     private static final String COLLECTION_PATH = "jt_triprequests";
@@ -50,7 +52,7 @@ public class TripRequest {
 
             this.seatRequest = Math.toIntExact((long) document.get("seatRequest"));
             this.sharePhone = (boolean) document.get("sharePhone");
-            this.pickupAddr = (String) document.get("pickupAddr");
+            this.pickupAddr = GeoHashing.unhash("pickupAddr", document);
             this.comment = (String) document.get("comment");
         } catch (ClassCastException e) {
             Log.e("E", String.format("Casting error occurred with TripRequest %s: %s", this.id, e.getMessage()));
@@ -76,7 +78,7 @@ public class TripRequest {
 
     public TripRequest() {}
 
-    public TripRequest(Trip trip, User passenger, int seatRequest, boolean sharePhone, String pickupAddr, String comment) {
+    public TripRequest(Trip trip, User passenger, int seatRequest, boolean sharePhone, LatLng pickupAddr, String comment) {
         this.trip = trip;
         this.passenger = passenger;
         this.seatRequest = seatRequest;
@@ -119,11 +121,11 @@ public class TripRequest {
         this.sharePhone = sharePhone;
     }
 
-    public String getPickupAddr() {
+    public LatLng getPickupAddr() {
         return pickupAddr;
     }
 
-    public void setPickupAddr(String pickupAddr) {
+    public void setPickupAddr(LatLng pickupAddr) {
         this.pickupAddr = pickupAddr;
     }
 

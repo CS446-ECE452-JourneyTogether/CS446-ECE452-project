@@ -72,23 +72,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp" />
 
-                <TextView
-                    android:id="@+id/textView2"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/pickup_address" />
+                    android:orientation="horizontal">
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/pickupAddressMapView"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp" />
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="137dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pickup_address" />
 
-                <EditText
-                    android:id="@+id/pickupAddressEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPostalAddress" />
+                    <ca.uwaterloo.cs446.journeytogether.component.LocationPickerButton
+                        android:id="@+id/pickupAddressLocationSelector"
+                        android:layout_width="229dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Select location" />
+                </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"

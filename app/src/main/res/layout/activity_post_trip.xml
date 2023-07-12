@@ -39,7 +39,7 @@
             android:text="Destination" />
 
         <ca.uwaterloo.cs446.journeytogether.component.LocationPickerButton
-            android:id="@+id/destinationLocationSelector"
+            android:id="@+id/pickupAddressLocationSelector"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

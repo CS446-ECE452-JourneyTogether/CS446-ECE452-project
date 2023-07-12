@@ -63,8 +63,8 @@ public class Trip implements Serializable {
                 );
             }
 
-            this.origin = GeoHashing.unhash("origin", document);
-            this.destination = GeoHashing.unhash("destination", document);
+            this.origin = new SerializableLatLng(GeoHashing.unhash("origin", document));
+            this.destination = new SerializableLatLng(GeoHashing.unhash("destination", document));
 
             this.departureTime = DateTimeConverter.toLocalDateTime((Timestamp) document.get("departureTime"));
             this.arrivalTime = DateTimeConverter.toLocalDateTime((Timestamp) document.get("arrivalTime"));

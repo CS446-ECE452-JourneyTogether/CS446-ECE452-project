@@ -28,10 +28,10 @@ public class GeoHashing {
         return;
     }
 
-    public static SerializableLatLng unhash(String fieldName, DocumentSnapshot doc) {
+    public static LatLng unhash(String fieldName, DocumentSnapshot doc) {
         double lat = (double) doc.get(String.format(LAT_FORMAT, fieldName));
         double lng = (double) doc.get(String.format(LNG_FORMAT, fieldName));
 
-        return new SerializableLatLng(lat, lng);
+        return new LatLng(lat, lng);
     }
 }

@@ -1,7 +1,6 @@
 package ca.uwaterloo.cs446.journeytogether;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -10,26 +9,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
 
 import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
 import ca.uwaterloo.cs446.journeytogether.common.InAppNotice;
 import ca.uwaterloo.cs446.journeytogether.component.DateTimePickerButton;
-import ca.uwaterloo.cs446.journeytogether.component.DateTimePickerPopup;
 import ca.uwaterloo.cs446.journeytogether.component.LocationPickerButton;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
-import ca.uwaterloo.cs446.journeytogether.schema.User;
 
 public class PostTripActivity extends AppCompatActivity {
 
@@ -48,7 +38,7 @@ public class PostTripActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         originLocationSelector = findViewById(R.id.originLocationSelector);
-        destinationLocationSelector = findViewById(R.id.destinationLocationSelector);
+        destinationLocationSelector = findViewById(R.id.pickupAddressLocationSelector);
 
         departureDateTimePicker = findViewById(R.id.departureDateTimePicker);
         arrivalDateTimePicker = findViewById(R.id.arrivalDateTimePicker);
@@ -83,8 +73,8 @@ public class PostTripActivity extends AppCompatActivity {
         String timeStr = null;
 
         if (
-                origin == null || destination == null || availableSeatsStr.isEmpty() ||
-                departureTime == null || arrivalTime == null
+            origin == null || destination == null || availableSeatsStr.isEmpty() ||
+            departureTime == null || arrivalTime == null
         ) {
             Toast.makeText(PostTripActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
             return;
