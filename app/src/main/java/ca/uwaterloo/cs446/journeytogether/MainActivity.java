@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     // fragments used for navigation
     TripListFragment tripListFragment;
     ProfileFragment profileFragment;
+    PostedTripsFragment postedTripsFragment;
     HomeFragment homeFragment;
 
     @Override
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         homeFragment = new HomeFragment();
         tripListFragment = new TripListFragment();
+        postedTripsFragment = new PostedTripsFragment();
         profileFragment = new ProfileFragment(mAuth);
         setFragment(homeFragment);
 
@@ -58,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                         else if (item.getItemId() == R.id.navigation_carpool) {
                             fragment = tripListFragment;
+                        }
+                        else if (item.getItemId() == R.id.navigation_posted_trips) {
+                            fragment = postedTripsFragment;
                         }
                         else if (item.getItemId() == R.id.navigation_profile) {
                             fragment = profileFragment;

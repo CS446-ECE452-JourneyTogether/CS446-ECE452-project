@@ -9,6 +9,10 @@
         android:icon="@drawable/carpool"
         android:title="Carpool" />
     <item
+        android:id="@+id/navigation_posted_trips"
+        android:icon="@drawable/carpool"
+        android:title="Posted Trips" />
+    <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/profile"
         android:title="Profile" />
