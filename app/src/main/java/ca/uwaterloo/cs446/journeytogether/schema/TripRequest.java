@@ -21,6 +21,12 @@ public class TripRequest {
     private boolean sharePhone;
     private LatLng pickupAddr;
     private String comment;
+    public enum Status {
+        PENDING,
+        ACCEPTED,
+        REJECTED
+    }
+    private Status status;
 
     private static final String COLLECTION_PATH = "jt_triprequests";
     public static final FirestoreCollection<TripRequest> firestore =
@@ -55,6 +61,7 @@ public class TripRequest {
             // TODO: fix this
             // this.pickupAddr = GeoHashing.unhash("pickupAddr", document);
             this.comment = (String) document.get("comment");
+            this.status = Status.valueOf((String) document.get("status"));
         } catch (ClassCastException e) {
             Log.e("E", String.format("Casting error occurred with TripRequest %s: %s", this.id, e.getMessage()));
         }
@@ -69,8 +76,13 @@ public class TripRequest {
         map.put("sharePhone", this.sharePhone);
         map.put("pickupAddr", this.pickupAddr);
         map.put("comment", this.comment);
+        map.put("status", this.status.toString());
 
         return map;
+    }
+
+    public String getId() {
+        return id;
     }
 
     private void setId(String id) {
@@ -86,6 +98,7 @@ public class TripRequest {
         this.sharePhone = sharePhone;
         this.pickupAddr = pickupAddr;
         this.comment = comment;
+        this.status = Status.PENDING;
     }
 
     // Getters and Setters for each property
@@ -134,7 +147,11 @@ public class TripRequest {
         return comment;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
