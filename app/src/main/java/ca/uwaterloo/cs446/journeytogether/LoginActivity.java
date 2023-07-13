@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import ca.uwaterloo.cs446.journeytogether.driver.DriverMainActivity;
 import ca.uwaterloo.cs446.journeytogether.driver.DriverRegistrationActivity;
+import ca.uwaterloo.cs446.journeytogether.driver.PostTripActivity;
+import ca.uwaterloo.cs446.journeytogether.schema.Trip;
+import ca.uwaterloo.cs446.journeytogether.schema.User;
 import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
 import ca.uwaterloo.cs446.journeytogether.user.UserRegistrationActivity;
 
@@ -77,20 +80,39 @@ public class LoginActivity extends AppCompatActivity {
             etLogPassword.setError("Password is empty");
             etLogPassword.requestFocus();
         } else {
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                        if (isDriverLogin) {
-                            startActivity(new Intent(LoginActivity.this, DriverMainActivity.class));
-                        } else {
-                            startActivity(new Intent(LoginActivity.this, UserMainActivity.class));
-                        }
-                        finish();
+
+                        boolean isValidRiderType = true;
+
+                        // make sure driver is using driver login, rider is using rider login
+                        User.getUserByEmail(email).thenApply((user) -> {
+
+                            if (user.getIsDriver() != isDriverLogin) {
+                                Toast.makeText(LoginActivity.this,
+                                        String.format("You cannot login here. Please use the %s login screen instead.", isDriverLogin ? "passenger" : "driver"),
+                                        Toast.LENGTH_LONG).show();
+                                return user;
+                            }
+
+                            Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                            if (isDriverLogin) {
+                                startActivity(new Intent(LoginActivity.this, DriverMainActivity.class));
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, UserMainActivity.class));
+                            }
+                            finish();
+
+                            return user;
+                        }).exceptionally(exception -> {
+                            Toast.makeText(LoginActivity.this, "Failed to log in. Please try again later.", Toast.LENGTH_LONG).show();
+                            return null;
+                        });
                     } else {
-                        Toast.makeText(LoginActivity.this, "Login failed!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login failed! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
