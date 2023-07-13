@@ -19,7 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import ca.uwaterloo.cs446.journeytogether.driver.DriverLoginActivity;
 import ca.uwaterloo.cs446.journeytogether.schema.User;
+import ca.uwaterloo.cs446.journeytogether.user.UserLoginActivity;
+import ca.uwaterloo.cs446.journeytogether.user.UserLoginActivity;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etRegEmail;
@@ -31,10 +34,23 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private boolean isDriverRegistration; // Flag to determine if it's driver registration or user registration
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+
+        // Retrieve the intent extras to determine if it's driver registration or user registration
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isDriverRegistration = extras.getBoolean("isDriverRegistration", false);
+        }
+
+        if (isDriverRegistration) {
+            setContentView(R.layout.activity_driver_register);
+        } else {
+            setContentView(R.layout.activity_user_register);
+        }
 
         etRegEmail = findViewById(R.id.etRegEmail);
         etRegPassword = findViewById(R.id.etRegPassword);
@@ -46,7 +62,12 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(v -> createUser());
 
         tvLoginHere.setOnClickListener(v -> {
-            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            // Redirect to the appropriate login activity based on the registration type
+            if (isDriverRegistration) {
+                startActivity(new Intent(RegisterActivity.this, DriverLoginActivity.class));
+            } else {
+                startActivity(new Intent(RegisterActivity.this, UserLoginActivity.class));
+            }
             finish();
         });
     }
@@ -67,15 +88,20 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         User.firestore.create(
-                            new User(email),
-                            () -> {
-                                Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            },
-                            () -> { onError("An error occurred. Please try again later."); }
+                                new User(email, isDriverRegistration),
+                                () -> {
+                                    Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_LONG).show();
+                                     if (!isDriverRegistration) {
+                                         startActivity(new Intent(RegisterActivity.this, UserLoginActivity.class));
+                                     } else {
+                                         startActivity(new Intent(RegisterActivity.this, DriverLoginActivity.class));
+                                     }
+                                },
+                                () -> { onError("An error occurred. Please try again later."); }
                         );
                     } else {
                         onError(task.getException().getMessage());
+                        Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

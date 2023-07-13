@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.common.InAppNotice;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
+import ca.uwaterloo.cs446.journeytogether.user.TripAdapter;
 
 public class TripListFragment extends Fragment {
 

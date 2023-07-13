@@ -6,28 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Locale;
-
-import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
-import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
 import ca.uwaterloo.cs446.journeytogether.R;
-import ca.uwaterloo.cs446.journeytogether.user.Trip;
-import ca.uwaterloo.cs446.journeytogether.user.User;
+import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
 
 public class DriverProfileFragment extends Fragment {
     private FirebaseAuth mAuth;

@@ -16,6 +16,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import ca.uwaterloo.cs446.journeytogether.driver.DriverMainActivity;
+import ca.uwaterloo.cs446.journeytogether.driver.DriverRegistrationActivity;
+import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
+import ca.uwaterloo.cs446.journeytogether.user.UserRegistrationActivity;
+
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText etLogEmail;
     private TextInputEditText etLogPassword;
@@ -24,10 +29,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private boolean isDriverLogin; // Flag to determine if it's driver login or passenger login
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
+        // Retrieve the intent extras to determine if it's driver login or passenger login
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isDriverLogin = extras.getBoolean("isDriverLogin", false);
+        }
+        if (isDriverLogin) {
+            setContentView(R.layout.activity_driver_login);
+        } else {
+            setContentView(R.layout.activity_user_login);
+        }
 
         etLogEmail = findViewById(R.id.etLogEmail);
         etLogPassword = findViewById(R.id.etLogPassword);
@@ -41,8 +58,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         tvRegisterHere.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            finish();
+            if (isDriverLogin) {
+                startActivity(new Intent(LoginActivity.this, DriverRegistrationActivity.class));
+            } else {
+                startActivity(new Intent(LoginActivity.this, UserRegistrationActivity.class));
+            }
         });
     }
 
@@ -62,15 +82,18 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        if (isDriverLogin) {
+                            startActivity(new Intent(LoginActivity.this, DriverMainActivity.class));
+                        } else {
+                            startActivity(new Intent(LoginActivity.this, UserMainActivity.class));
+                        }
                         finish();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Login failed!" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Login failed!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
     }
-
 }

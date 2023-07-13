@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
+import ca.uwaterloo.cs446.journeytogether.driver.PostTripActivity;
 import ca.uwaterloo.cs446.journeytogether.R;
 
 public class DriverTripsFragment extends Fragment {

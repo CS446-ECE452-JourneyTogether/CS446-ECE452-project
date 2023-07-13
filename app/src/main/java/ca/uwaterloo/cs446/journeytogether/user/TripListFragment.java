@@ -1,7 +1,6 @@
 package ca.uwaterloo.cs446.journeytogether.user;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.common.InAppNotice;
+import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 
 public class TripListFragment extends Fragment {
 
@@ -23,6 +23,7 @@ public class TripListFragment extends Fragment {
     private View rootView;
     private RecyclerView recyclerView;
     private TripAdapter tripAdapter;
+    private InAppNotice inAppNotice;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -34,27 +35,20 @@ public class TripListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
+        inAppNotice = new InAppNotice(rootView);
 
-//        db.collection("jt_trips")
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        trips.clear();
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            // Convert Firestore document to Trip object
-//                            Trip trip = document.toObject(Trip.class);
-//                            trips.add(trip);
-//                        }
-//                        tripAdapter.notifyDataSetChanged();
-//                    } else {
-//                        Log.d("Fetching trips", "Error getting trips: ", task.getException());
-//                    }
-//                });
-//        recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
-//        tripAdapter = new TripAdapter(trips, getContext());
-//        recyclerView.setAdapter(tripAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        // placeholder: currently it make query about everything
+        Trip.firestore.makeQuery(
+                c -> c,
+                (arr) -> {
+                    this.trips = arr;
+                    recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
+                    tripAdapter = new TripAdapter(trips, getContext());
+                    recyclerView.setAdapter(tripAdapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                },
+                () -> { inAppNotice.onError("Cannot fetch the trips. Please try again later."); }
+        );
         return rootView;
     }
 }
