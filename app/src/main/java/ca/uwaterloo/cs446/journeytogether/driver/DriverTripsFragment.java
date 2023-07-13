@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.driver;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,18 +9,19 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
-public class HomeFragment extends Fragment {
+import ca.uwaterloo.cs446.journeytogether.driver.PostTripActivity;
+import ca.uwaterloo.cs446.journeytogether.R;
+
+public class DriverTripsFragment extends Fragment {
     private View rootView;
     private Button btnPost;
 
-
-    public HomeFragment() {
-        // necessarily empty
-    }
+    public DriverTripsFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_home, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_driver_trips, container, false);
         btnPost = rootView.findViewById(R.id.btnPost);
 
         btnPost.setOnClickListener(v -> {

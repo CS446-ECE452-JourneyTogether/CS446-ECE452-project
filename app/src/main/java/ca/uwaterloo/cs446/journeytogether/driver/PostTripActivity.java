@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.driver;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
 import ca.uwaterloo.cs446.journeytogether.common.InAppNotice;
 import ca.uwaterloo.cs446.journeytogether.component.DateTimePickerButton;
@@ -84,14 +85,12 @@ public class PostTripActivity extends AppCompatActivity {
 
         CurrentUser.getCurrentUser().thenApply((user) -> {
             Trip trip = new Trip(user, origin, destination, availableSeats, departureTime, arrivalTime);
-
-//              Add the trip to Firestore collection
             Trip.firestore.create(
                     trip,
                     () -> {
                         Toast.makeText(PostTripActivity.this, "Trip posted successfully", Toast.LENGTH_LONG).show();
 
-                        Intent intent = new Intent(PostTripActivity.this, MainActivity.class);
+                        Intent intent = new Intent(PostTripActivity.this, DriverMainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     },

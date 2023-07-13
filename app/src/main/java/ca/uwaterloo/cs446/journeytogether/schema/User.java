@@ -89,6 +89,11 @@ public class User implements Serializable {
         this.isDriver = isDriver;
     }
 
+    public User(String email, boolean isDriver) {
+        this.email = email;
+        this.isDriver = isDriver;
+    }
+
     public void setName(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
