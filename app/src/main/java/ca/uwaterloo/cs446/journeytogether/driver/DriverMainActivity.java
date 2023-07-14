@@ -22,6 +22,8 @@ public class DriverMainActivity extends AppCompatActivity {
     private DriverTripsFragment tripsDriverFragment;
     private DriverProfileFragment profileDriverFragment;
 
+    private DriverModeFragment modeDriverFragment;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -41,6 +43,7 @@ public class DriverMainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         tripsDriverFragment = new DriverTripsFragment();
         profileDriverFragment = new DriverProfileFragment(mAuth);
+        modeDriverFragment = new DriverModeFragment();
 
         // Set the initial fragment
         setFragment(tripsDriverFragment);
@@ -50,6 +53,9 @@ public class DriverMainActivity extends AppCompatActivity {
         bnvDriver.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.driver_menu_trips) {
                 setFragment(tripsDriverFragment);
+                return true;
+            } else if (item.getItemId() == R.id.driver_mode) {
+                setFragment(modeDriverFragment);
                 return true;
             } else if (item.getItemId() == R.id.driver_menu_profile) {
                 setFragment(profileDriverFragment);
