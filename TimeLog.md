@@ -5,7 +5,7 @@
 |2023-06-10|0|2.12|0|0|0|0|App repository setup|
 |2023-06-10|0|0.78|0|0|0|0|Create basic classes: Trip, User, etc.|
 |2023-06-13|0|0.19|0|0|0|0|Additional set up classes|
-|2023-06-13|0|0|2|1|0|3|D2 document|
+|2023-06-13|0|2|2|0|0|0|D2 document|
 |2023-06-14|0|0.33|0|0|0|0|Set up database repo|
 |2023-06-22|0|3.08|0|0|0|0|Develop ride selection menu|
 |2023-06-23|0|3.26|0|0|0|0|Develop ride request menu|
