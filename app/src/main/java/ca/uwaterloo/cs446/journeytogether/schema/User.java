@@ -81,12 +81,13 @@ public class User implements Serializable {
         this.isDriver = false;
     }
 
-    public User(String email, String firstName, String lastName, String phoneNum, String driverLicense, boolean isDriver) {
+    public User(String email, String firstName, String lastName, String phoneNum, boolean isDriver) {
         this.id = email;
+        this.email =email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNum = phoneNum;
-        this.driverLicense = driverLicense;
+        this.driverLicense = null;
         this.isDriver = isDriver;
     }
 
@@ -139,5 +140,9 @@ public class User implements Serializable {
         );
 
         return futureUser;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 }
