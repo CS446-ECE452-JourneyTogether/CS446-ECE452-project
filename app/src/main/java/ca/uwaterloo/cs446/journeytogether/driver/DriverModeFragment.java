@@ -23,19 +23,23 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import android.speech.tts.TextToSpeech;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 
-public class DriverModeFragment extends Fragment {
+public class DriverModeFragment extends Fragment implements TextToSpeech.OnInitListener {
 
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final int LOCATION_UPDATE_INTERVAL = 5000; // Update interval in milliseconds
+    private static final int LOCATION_UPDATE_INTERVAL = 10000; // Update interval in milliseconds
 
     private Location currentLocation;
     private TextView textViewMessage;
+
+    private TextToSpeech textToSpeech;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -49,6 +53,8 @@ public class DriverModeFragment extends Fragment {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         requestLocationPermission();
+
+        textToSpeech = new TextToSpeech(requireContext(), this);
 
         return view;
     }
@@ -107,6 +113,9 @@ public class DriverModeFragment extends Fragment {
                     public void run() {
                         String message = roadNum + '\n' + roadName + '\n' + cityName;
                         textViewMessage.setText(message);
+
+                        // convert text to speech
+                        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                     }
                 });
             }
@@ -146,6 +155,21 @@ public class DriverModeFragment extends Fragment {
         super.onDestroyView();
         if (fusedLocationClient != null && locationCallback != null) {
             fusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            // TextToSpeech initialization successful
+        } else {
+            // TextToSpeech initialization failed
+            Toast.makeText(requireContext(), "TextToSpeech initialization failed", Toast.LENGTH_SHORT).show();
         }
     }
 }
