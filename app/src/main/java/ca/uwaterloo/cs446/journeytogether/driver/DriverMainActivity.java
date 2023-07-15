@@ -1,9 +1,12 @@
 package ca.uwaterloo.cs446.journeytogether.driver;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -24,6 +27,8 @@ public class DriverMainActivity extends AppCompatActivity {
 
     private DriverModeFragment modeDriverFragment;
 
+    private static final int PERMISSION_REQUEST_CODE = 100;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -31,6 +36,8 @@ public class DriverMainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             redirectToWelcomePage();
+        } else {
+            requestForegroundServicePermission();
         }
     }
 
@@ -64,7 +71,6 @@ public class DriverMainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
     private void redirectToWelcomePage() {
@@ -76,5 +82,21 @@ public class DriverMainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fcvDriver, fragment)
                 .commit();
+    }
+
+    private void requestForegroundServicePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE, Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+        } else {
+            startForegroundService();
+        }
+    }
+
+
+    private void startForegroundService() {
+        Intent serviceIntent = new Intent(this, DriverModeService.class);
+        startForegroundService(serviceIntent);
     }
 }
