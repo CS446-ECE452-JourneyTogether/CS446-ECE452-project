@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import ca.uwaterloo.cs446.journeytogether.driver.ViewRequestsActivity;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 import ca.uwaterloo.cs446.journeytogether.schema.User;

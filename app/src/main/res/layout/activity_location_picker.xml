@@ -40,7 +40,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="The location that you choose will be publicly available.\n\nDo not choose your home, your place at work, or any other places that you visit often.\n\nChoose meetup locations that are in crowded areas."
+                        android:text="The location that you choose will be publicly available or made available to other parties in carpool.\n\nDo not choose your home, your place at work, or any other places that you visit often.\n\nChoose meetup locations that are in crowded areas."
                         android:textColor="#AC0000"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"

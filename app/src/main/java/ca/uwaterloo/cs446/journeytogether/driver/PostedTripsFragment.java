@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether;
+package ca.uwaterloo.cs446.journeytogether.driver;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,9 +18,11 @@ import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.common.InAppNotice;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
-import ca.uwaterloo.cs446.journeytogether.user.TripAdapter;
+import ca.uwaterloo.cs446.journeytogether.R.id;
+import ca.uwaterloo.cs446.journeytogether.R.layout;
+import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
 
-public class TripListFragment extends Fragment {
+public class PostedTripsFragment extends Fragment {
 
     private ArrayList<Trip> trips = new ArrayList<>();
     private View rootView;
@@ -30,7 +32,7 @@ public class TripListFragment extends Fragment {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public TripListFragment() {
+    public PostedTripsFragment() {
 
     }
 
@@ -39,10 +41,10 @@ public class TripListFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
         inAppNotice = new InAppNotice(rootView);
-
-        // placeholder: currently it make query about everything
-        Trip.firestore.makeQuery(
-                c -> c,
+        
+        CurrentUser.getCurrentUser().thenApply((driver) -> {
+            Trip.firestore.makeQuery(
+                c -> c.whereEqualTo("driver", driver.getId()),
                 (arr) -> {
                     this.trips = arr;
                     recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
@@ -51,7 +53,9 @@ public class TripListFragment extends Fragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 },
                 () -> { inAppNotice.onError("Cannot fetch the trips. Please try again later."); }
-        );
+            );
+            return null;
+        });
 
         return rootView;
     }

@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import ca.uwaterloo.cs446.journeytogether.common.FirestoreCollection;
 
@@ -80,12 +81,18 @@ public class User implements Serializable {
         this.isDriver = false;
     }
 
-    public User(String email, String firstName, String lastName, String phoneNum, String driverLicense, boolean isDriver) {
+    public User(String email, String firstName, String lastName, String phoneNum, boolean isDriver) {
         this.id = email;
+        this.email =email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNum = phoneNum;
-        this.driverLicense = driverLicense;
+        this.driverLicense = null;
+        this.isDriver = isDriver;
+    }
+
+    public User(String email, boolean isDriver) {
+        this.email = email;
         this.isDriver = isDriver;
     }
 
@@ -102,6 +109,8 @@ public class User implements Serializable {
         return id;
     }
 
+    public boolean getIsDriver() { return isDriver; }
+
     public String getDisplayName() { return String.format("%s %s", firstName, lastName); }
 
     @Override
@@ -110,5 +119,30 @@ public class User implements Serializable {
                 "id='" + id + '\'' +
                 ", name='" + firstName + ' ' + lastName + '\'' +
                 '}';
+    }
+
+    public static CompletableFuture<User> getUserByEmail(String email) {
+
+        CompletableFuture<User> futureUser = new CompletableFuture<>();
+
+        User.firestore.makeQuery(
+                v -> v.whereEqualTo("email", email),
+                arr -> {
+                    if (arr.isEmpty()) {
+                        futureUser.completeExceptionally(new Exception("Query failed"));
+                        return;
+                    }
+                    futureUser.complete(arr.get(0));
+                },
+                () -> {
+                    futureUser.completeExceptionally(new Exception("Query failed"));
+                }
+        );
+
+        return futureUser;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 }

@@ -4,10 +4,10 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="already_registered">Already registered</string>
+    <string name="already_registered">Already registered?</string>
     <string name="register_here">Register here</string>
     <string name="login_here">Login here</string>
-    <string name="not_reg_yet">Not registered yet</string>
+    <string name="not_reg_yet">Not registered yet?</string>
     <string name="signout">Signout</string>
     <string name="driver_name_placeholder">Driver Name</string>
     <string name="how_many_seats">How many seats?</string>
