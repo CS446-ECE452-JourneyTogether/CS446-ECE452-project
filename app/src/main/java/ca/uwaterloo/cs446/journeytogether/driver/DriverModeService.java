@@ -108,6 +108,11 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                 String cityName = address.getSubAdminArea();
 
                 String message = roadNum + '\n' + roadName + '\n' + cityName;
+
+                Intent broadcastIntent = new Intent("LOCATION_UPDATE");
+                broadcastIntent.putExtra("message", message);
+                sendBroadcast(broadcastIntent);
+
                 // convert text to speech
                 textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
             }
