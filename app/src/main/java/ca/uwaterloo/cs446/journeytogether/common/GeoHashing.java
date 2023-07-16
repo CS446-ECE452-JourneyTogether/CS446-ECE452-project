@@ -5,6 +5,7 @@ import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import ca.uwaterloo.cs446.journeytogether.schema.SerializableLatLng;
@@ -31,6 +32,14 @@ public class GeoHashing {
     public static LatLng unhash(String fieldName, DocumentSnapshot doc) {
         double lat = (double) doc.get(String.format(LAT_FORMAT, fieldName));
         double lng = (double) doc.get(String.format(LNG_FORMAT, fieldName));
+
+        return new LatLng(lat, lng);
+    }
+
+    public static LatLng unhashMap(String fieldName, DocumentSnapshot doc) {
+        HashMap<String, Object> geohash = (HashMap<String, Object>) doc.get(fieldName);
+        double lat = (double) geohash.get("latitude");
+        double lng = (double) geohash.get("longitude");
 
         return new LatLng(lat, lng);
     }

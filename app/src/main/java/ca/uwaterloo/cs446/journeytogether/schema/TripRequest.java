@@ -58,8 +58,7 @@ public class TripRequest {
 
             this.seatRequest = Math.toIntExact((long) document.get("seatRequest"));
             this.sharePhone = (boolean) document.get("sharePhone");
-            // TODO: fix this
-            // this.pickupAddr = GeoHashing.unhash("pickupAddr", document);
+            this.pickupAddr = GeoHashing.unhashMap("pickupAddr", document);
             this.comment = (String) document.get("comment");
             this.status = Status.valueOf((String) document.get("status"));
         } catch (ClassCastException e) {
