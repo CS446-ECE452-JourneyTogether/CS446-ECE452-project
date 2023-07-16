@@ -87,9 +87,9 @@ public class ViewRequestsActivity extends AppCompatActivity {
         selectedTripViewHolder.setAllowViewRequests(false);
         selectedTripViewHolder.bind(selectedTrip);
 
-        // get the requests for the selected trip  // TODO: filter by trip after enough testing
+        // get the requests for the selected trip
         TripRequest.firestore.makeQuery(
-                c -> c,//.whereEqualTo("trip", selectedTrip.getId()),
+                c -> c.whereEqualTo("trip", selectedTrip.getId()),
                 (arr) -> {
                     this.tripRequests = arr;
                     RecyclerView requestsRecyclerView = findViewById(R.id.requestListRecyclerView);
