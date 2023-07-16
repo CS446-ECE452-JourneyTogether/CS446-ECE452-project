@@ -68,7 +68,7 @@ public class TripRequestActivity extends AppCompatActivity {
         selectedTripDisplay.addView(selectedTripView);
         selectedTripViewHolder = new TripAdapter.TripViewHolder(selectedTripView, this);
         selectedTripViewHolder.setAllowSendRequest(false); // don't display a button that let's user send request. This is just for display
-        selectedTripViewHolder.setAllowViewRequests(false);
+        // selectedTripViewHolder.setAllowViewRequests(false);
         selectedTripViewHolder.bind(selectedTrip);
 
         // components

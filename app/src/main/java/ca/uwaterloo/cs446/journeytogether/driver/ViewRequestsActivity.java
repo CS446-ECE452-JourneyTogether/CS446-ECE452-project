@@ -33,9 +33,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import ca.uwaterloo.cs446.journeytogether.TripRequestAdapter;
-import ca.uwaterloo.cs446.journeytogether.R.id;
-import ca.uwaterloo.cs446.journeytogether.R.layout;
+import ca.uwaterloo.cs446.journeytogether.driver.TripRequestAdapter;
+import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
 import ca.uwaterloo.cs446.journeytogether.component.LocationPickerButton;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
@@ -49,7 +48,7 @@ public class ViewRequestsActivity extends AppCompatActivity {
     private Trip selectedTrip;
     private ArrayList<TripRequest> tripRequests;
     private FrameLayout selectedTripDisplay;
-    private TripAdapter.TripViewHolder selectedTripViewHolder;
+    private DriverTripAdapter.DriverTripViewHolder selectedTripViewHolder;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 12f;
@@ -82,10 +81,9 @@ public class ViewRequestsActivity extends AppCompatActivity {
 
         // display the selected trip at the top
         selectedTripDisplay = findViewById(R.id.selectedTripDisplay);
-        View selectedTripView = LayoutInflater.from(this).inflate(R.layout.trip_item_layout, selectedTripDisplay, false);
+        View selectedTripView = LayoutInflater.from(this).inflate(R.layout.driver_trip_item_layout, selectedTripDisplay, false);
         selectedTripDisplay.addView(selectedTripView);
-        selectedTripViewHolder = new TripAdapter.TripViewHolder(selectedTripView, this);
-        selectedTripViewHolder.setAllowSendRequest(false);
+        selectedTripViewHolder = new DriverTripAdapter.DriverTripViewHolder(selectedTripView, this);
         selectedTripViewHolder.setAllowViewRequests(false);
         selectedTripViewHolder.bind(selectedTrip);
 

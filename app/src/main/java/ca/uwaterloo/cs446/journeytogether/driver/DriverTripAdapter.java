@@ -1,4 +1,4 @@
-package ca.uwaterloo.cs446.journeytogether.user;
+package ca.uwaterloo.cs446.journeytogether.driver;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,28 +19,28 @@ import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
-import ca.uwaterloo.cs446.journeytogether.user.TripRequestActivity;
+import ca.uwaterloo.cs446.journeytogether.driver.ViewRequestsActivity;
 
-public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
+public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.DriverTripViewHolder> {
 
     private ArrayList<Trip> trips;
     private Context context;
     private Geocoder geocoder;
 
-    public TripAdapter(ArrayList<Trip> trips, Context context) {
+    public DriverTripAdapter(ArrayList<Trip> trips, Context context) {
         this.trips = trips;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trip_item_layout, parent, false);
-        return new TripViewHolder(view, context);
+    public DriverTripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.driver_trip_item_layout, parent, false);
+        return new DriverTripViewHolder(view, context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DriverTripViewHolder holder, int position) {
         Trip trip = trips.get(position);
         holder.bind(trip);
     }
@@ -50,30 +50,25 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         return trips.size();
     }
 
-    public static class TripViewHolder extends RecyclerView.ViewHolder {
-        private TextView tripDriverTextView;
+    public static class DriverTripViewHolder extends RecyclerView.ViewHolder {
         private TextView tripDestinationTextView;
         private TextView tripCostTextView;
         private TextView tripSeatsLeftTextView;
-        private Button startSendRequestButton;
-//        private ImageView iconImageView;
+        private Button startViewRequestsButton;
         private Context context;
         private Trip trip;
 
-        public TripViewHolder(@NonNull View itemView, Context context) {
+        public DriverTripViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
-            tripDriverTextView = itemView.findViewById(R.id.tripDriverTextView);
             tripDestinationTextView = itemView.findViewById(R.id.tripDestinationTextView);
             tripCostTextView = itemView.findViewById(R.id.tripCostTextView);
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
-            startSendRequestButton = itemView.findViewById(R.id.startSendRequestButton);
+            startViewRequestsButton = itemView.findViewById(R.id.startViewRequestsButton);
             this.context = context;
-//            iconImageView = itemView.findViewById(R.id.iconImageView);
         }
 
-        // this function enables or disables the Send request button
-        public void setAllowSendRequest(boolean allow) {
-            startSendRequestButton.setVisibility(allow ? View.VISIBLE : View.GONE);
+        public void setAllowViewRequests(boolean allow) {
+            startViewRequestsButton.setVisibility(allow ? View.VISIBLE : View.GONE);
         }
 
         public void bind(Trip trip) {
@@ -81,20 +76,14 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference driverCollection = db.collection("jt_driver");
 
-            if (trip.getDriver() != null) {
-                tripDriverTextView.setText(trip.getDriver().getDisplayName());
-            }
-
             tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
             tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
-//            iconImageView.setImageResource(trip.getIconResId());
 
-            // upon pressing the send button, it takes us to a trip request activity
-            startSendRequestButton.setOnClickListener(new View.OnClickListener() {
+            startViewRequestsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, TripRequestActivity.class);
+                    Intent intent = new Intent(context, ViewRequestsActivity.class);
                     intent.putExtra("trip", trip);
                     context.startActivity(intent);
                 }
