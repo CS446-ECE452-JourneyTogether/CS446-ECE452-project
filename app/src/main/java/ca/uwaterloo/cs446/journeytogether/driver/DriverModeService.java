@@ -48,6 +48,8 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
 
+    private boolean mute = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -58,7 +60,7 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // 启动前台服务通知
+        mute = intent.getBooleanExtra("mute", false);
         startForeground(NOTIFICATION_ID, createNotification());
         requestLocationPermission();
         return START_STICKY;
@@ -113,8 +115,9 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                 broadcastIntent.putExtra("message", message);
                 sendBroadcast(broadcastIntent);
 
-                // convert text to speech
-                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                if(!mute) {
+                    textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

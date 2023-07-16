@@ -15,4 +15,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
 
+        <ImageButton
+            android:id="@+id/buttonMuteUnmute"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/mute"
+            android:scaleType="fitCenter"
+            app:layout_constraintTop_toBottomOf="@id/textViewMessage"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
