@@ -118,7 +118,10 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                 String roadName = address.getThoroughfare();
                 String cityName = address.getSubAdminArea();
 
-                // 查询jt_roadcond表
+                if (roadNum == null || roadName == null) {
+                    message = cityName;
+                } else {
+
                 db.collection("jt_roadcond")
                         .whereEqualTo("street", roadName)
                         .get()
@@ -150,6 +153,7 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                                 textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                             }
                         });
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
