@@ -31,8 +31,13 @@ import android.app.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.R;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class DriverModeService extends Service implements TextToSpeech.OnInitListener {
 
@@ -50,10 +55,14 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
     private boolean mute = false;
 
+    private FirebaseFirestore db;
+
+    private String message;
+
     @Override
     public void onCreate() {
         super.onCreate();
-
+        db = FirebaseFirestore.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         textToSpeech = new TextToSpeech(this, this);
     }
@@ -109,15 +118,38 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                 String roadName = address.getThoroughfare();
                 String cityName = address.getSubAdminArea();
 
-                String message = roadNum + '\n' + roadName + '\n' + cityName;
+                // 查询jt_roadcond表
+                db.collection("jt_roadcond")
+                        .whereEqualTo("street", roadName)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot querySnapshot = task.getResult();
+                                if (!querySnapshot.isEmpty()) {
+                                    for (QueryDocumentSnapshot document : querySnapshot) {
+                                        long startunitLong = document.getLong("startunit");
+                                        int startunit = (int) startunitLong;
+                                        long endunitLong = document.getLong("endunit");
+                                        int endunit = (int) endunitLong;
+                                        if (startunit <= Integer.parseInt(roadNum) && endunit >= Integer.parseInt(roadNum)) {
+                                            String status = document.getString("status");
+                                            message = roadNum + '\n' + roadName + '\n' + cityName + '\n' + status;
+                                        }
+                                    }
+                                } else {
+                                    message = roadNum + '\n' + roadName + '\n' + cityName;
+                                }
+                            }
 
-                Intent broadcastIntent = new Intent("LOCATION_UPDATE");
-                broadcastIntent.putExtra("message", message);
-                sendBroadcast(broadcastIntent);
+                            // 发送广播更新消息
+                            Intent broadcastIntent = new Intent("LOCATION_UPDATE");
+                            broadcastIntent.putExtra("message", message);
+                            sendBroadcast(broadcastIntent);
 
-                if(!mute) {
-                    textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-                }
+                            if (!mute) {
+                                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                            }
+                        });
             }
         } catch (IOException e) {
             e.printStackTrace();
