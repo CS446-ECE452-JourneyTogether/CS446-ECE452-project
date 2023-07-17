@@ -89,6 +89,7 @@ public class UserMainActivity extends AppCompatActivity {
         startActivity(new Intent(UserMainActivity.this, WelcomeActivity.class));
         finish();
     }
+
     private void redirectToDebuggingPage() {
 //        startActivity(new Intent(MainActivity.this, TripListActivity.class));
         finish();

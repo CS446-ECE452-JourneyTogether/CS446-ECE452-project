@@ -31,13 +31,19 @@ import android.app.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.lang.*;
 
 import ca.uwaterloo.cs446.journeytogether.R;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class DriverModeService extends Service implements TextToSpeech.OnInitListener {
 
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final int LOCATION_UPDATE_INTERVAL = 15000; // Update interval in milliseconds
+    private static final int LOCATION_UPDATE_INTERVAL = 20000; // Update interval in milliseconds
     private static final String NOTIFICATION_CHANNEL_ID = "DriverModeChannel";
     private static final int NOTIFICATION_ID = 1;
 
@@ -48,17 +54,25 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
 
+    private boolean mute = false;
+
+    private FirebaseFirestore db;
+
+    private String message;
+
     @Override
     public void onCreate() {
         super.onCreate();
-
+        db = FirebaseFirestore.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         textToSpeech = new TextToSpeech(this, this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // 启动前台服务通知
+        if(intent != null) {
+            mute = intent.getBooleanExtra("mute", false);
+        }
         startForeground(NOTIFICATION_ID, createNotification());
         requestLocationPermission();
         return START_STICKY;
@@ -107,14 +121,44 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                 String roadName = address.getThoroughfare();
                 String cityName = address.getSubAdminArea();
 
-                String message = roadNum + '\n' + roadName + '\n' + cityName;
+                if (roadNum == null || roadName == null) {
+                    message = cityName;
+                } else if(!roadNum.matches("\\d+")) {
+                    message = roadNum + '\n' + roadName + '\n' + cityName;
+                } else {
 
-                Intent broadcastIntent = new Intent("LOCATION_UPDATE");
-                broadcastIntent.putExtra("message", message);
-                sendBroadcast(broadcastIntent);
+                db.collection("jt_roadcond")
+                        .whereEqualTo("street", roadName)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot querySnapshot = task.getResult();
+                                if (!querySnapshot.isEmpty()) {
+                                    for (QueryDocumentSnapshot document : querySnapshot) {
+                                        Long startunitLong = document.getLong("startunit");
+                                        Long endunitLong = document.getLong("endunit");
+                                        int startunit = startunitLong != null ? startunitLong.intValue() : 0;
+                                        int endunit = endunitLong != null ? endunitLong.intValue() : 0;
+                                        if (startunit <= Integer.parseInt(roadNum) && endunit >= Integer.parseInt(roadNum)) {
+                                            String status = document.getString("status");
+                                            message = roadNum + '\n' + roadName + '\n' + cityName + '\n' + status;
+                                        }
+                                    }
+                                } else {
+                                    message = roadNum + '\n' + roadName + '\n' + cityName;
+                                }
+                            }
 
-                // convert text to speech
-                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                            // 发送广播更新消息
+                            Intent broadcastIntent = new Intent("LOCATION_UPDATE");
+                            broadcastIntent.putExtra("message", message);
+                            sendBroadcast(broadcastIntent);
+
+                            if (!mute) {
+                                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                            }
+                        });
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
