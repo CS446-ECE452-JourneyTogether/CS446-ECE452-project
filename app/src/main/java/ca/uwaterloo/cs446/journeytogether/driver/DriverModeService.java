@@ -123,7 +123,7 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
                 if (roadNum == null || roadName == null) {
                     message = cityName;
-                } else if(roadNum.matches("\\d+") {
+                } else if(!roadNum.matches("\\d+")) {
                     message = roadNum + '\n' + roadName + '\n' + cityName;
                 } else {
 
