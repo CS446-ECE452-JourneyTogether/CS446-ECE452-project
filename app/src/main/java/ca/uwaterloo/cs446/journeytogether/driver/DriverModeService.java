@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.ArrayList;
+import java.lang.*;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 
@@ -69,7 +70,9 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mute = intent.getBooleanExtra("mute", false);
+        if(intent != null) {
+            mute = intent.getBooleanExtra("mute", false);
+        }
         startForeground(NOTIFICATION_ID, createNotification());
         requestLocationPermission();
         return START_STICKY;
@@ -130,10 +133,10 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                                 QuerySnapshot querySnapshot = task.getResult();
                                 if (!querySnapshot.isEmpty()) {
                                     for (QueryDocumentSnapshot document : querySnapshot) {
-                                        long startunitLong = document.getLong("startunit");
-                                        int startunit = (int) startunitLong;
-                                        long endunitLong = document.getLong("endunit");
-                                        int endunit = (int) endunitLong;
+                                        Long startunitLong = document.getLong("startunit");
+                                        Long endunitLong = document.getLong("endunit");
+                                        int startunit = startunitLong != null ? startunitLong.intValue() : 0;
+                                        int endunit = endunitLong != null ? endunitLong.intValue() : 0;
                                         if (startunit <= Integer.parseInt(roadNum) && endunit >= Integer.parseInt(roadNum)) {
                                             String status = document.getString("status");
                                             message = roadNum + '\n' + roadName + '\n' + cityName + '\n' + status;
