@@ -10,11 +10,11 @@
 
     <ImageView
         android:id="@+id/ivRegLogo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="123dp"
+        android:layout_height="104dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:src="@drawable/app_logo"/>
+        android:src="@drawable/app_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
