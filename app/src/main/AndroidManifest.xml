@@ -44,6 +44,7 @@
         <activity android:name=".driver.DriverRegistrationActivity" />
 
         <activity android:name=".driver.PostTripActivity" />
+        <activity android:name=".driver.ViewRequestsActivity" />
         <activity
             android:name=".LocationPickerActivity">
         </activity>
