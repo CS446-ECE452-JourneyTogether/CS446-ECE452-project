@@ -43,7 +43,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class DriverModeService extends Service implements TextToSpeech.OnInitListener {
 
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final int LOCATION_UPDATE_INTERVAL = 25000; // Update interval in milliseconds
+    private static final int LOCATION_UPDATE_INTERVAL = 20000; // Update interval in milliseconds
     private static final String NOTIFICATION_CHANNEL_ID = "DriverModeChannel";
     private static final int NOTIFICATION_ID = 1;
 
