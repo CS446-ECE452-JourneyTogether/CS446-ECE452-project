@@ -24,29 +24,13 @@ public class DriverModeFragment extends Fragment {
 
     private TextView textViewMessage;
 
-    private ImageButton buttonMuteUnmute;
-
     private ImageButton buttonStop;
-
-    private boolean mute = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_mode, container, false);
 
         textViewMessage = view.findViewById(R.id.textViewMessage);
-        buttonMuteUnmute = view.findViewById(R.id.buttonMuteUnmute);
-
-        buttonMuteUnmute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mute = !mute;
-                Intent intent = new Intent(requireContext(), DriverModeService.class);
-                intent.putExtra("mute", mute);
-                requireContext().startService(intent);
-                buttonMuteUnmute.setImageResource(mute ? R.drawable.unmute : R.drawable.mute);
-            }
-        });
 
         buttonStop = view.findViewById(R.id.buttonStop);
         buttonStop.setOnClickListener(new View.OnClickListener() {

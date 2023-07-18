@@ -54,8 +54,6 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
 
-    private boolean mute = false;
-
     private FirebaseFirestore db;
 
     private String message;
@@ -70,14 +68,10 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null) {
-            mute = intent.getBooleanExtra("mute", false);
-        }
         startForeground(NOTIFICATION_ID, createNotification());
         requestLocationPermission();
         return START_STICKY;
     }
-
 
     private void requestLocationPermission() {
         startLocationUpdates();
@@ -153,10 +147,7 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                             Intent broadcastIntent = new Intent("LOCATION_UPDATE");
                             broadcastIntent.putExtra("message", message);
                             sendBroadcast(broadcastIntent);
-
-                            if (!mute) {
-                                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-                            }
+                            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                         });
                 }
             }
