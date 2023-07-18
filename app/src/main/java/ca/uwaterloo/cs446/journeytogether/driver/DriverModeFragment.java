@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 
@@ -21,6 +25,9 @@ public class DriverModeFragment extends Fragment {
     private TextView textViewMessage;
 
     private ImageButton buttonMuteUnmute;
+
+    private ImageButton buttonStop;
+
     private boolean mute = false;
 
     @Override
@@ -41,6 +48,14 @@ public class DriverModeFragment extends Fragment {
             }
         });
 
+        buttonStop = view.findViewById(R.id.buttonStop);
+        buttonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopDriverModeService();
+            }
+        });
+
         startDriverModeService();
 
         return view;
@@ -49,6 +64,21 @@ public class DriverModeFragment extends Fragment {
     private void startDriverModeService() {
         Intent serviceIntent = new Intent(requireContext(), DriverModeService.class);
         ContextCompat.startForegroundService(requireContext(), serviceIntent);
+    }
+
+
+    private void stopDriverModeService() {
+        Intent serviceIntent = new Intent(requireContext(), DriverModeService.class);
+        requireContext().stopService(serviceIntent);
+
+        DriverTripsFragment fragmentTrips = new DriverTripsFragment();
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fcvDriver, fragmentTrips);
+        fragmentTransaction.commit();
+
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bnvDriver);
+        bottomNavigationView.setSelectedItemId(R.id.driver_menu_trips);
     }
 
     private BroadcastReceiver locationReceiver = new BroadcastReceiver() {

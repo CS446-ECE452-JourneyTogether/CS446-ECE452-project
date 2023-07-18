@@ -17,6 +17,9 @@
     <string name="additional_info_hint">Here you can specify anything else that the driver should know, such as accomodations or other special requests.</string>
     <string name="send_trip_request">Send request</string>
     <string name="start_send_trip_request">Send request</string>
+    <string name="start_view_requests">View requests</string>
+    <string name="accept_request">Accept</string>
+    <string name="reject_request">Reject</string>
     <string name="btnPostText">+ Post</string>
     <string name="update">Update</string>
 </resources>
