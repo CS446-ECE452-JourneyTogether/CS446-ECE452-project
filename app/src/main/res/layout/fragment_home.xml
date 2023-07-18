@@ -5,4 +5,24 @@
     android:layout_height="match_parent">
 
     <!-- Your other layout elements here -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp">
+
+        <Button
+            android:id="@+id/btnHomeSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/floating_button_background"
+            android:text="Search"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp" />
+    </RelativeLayout>
 </RelativeLayout>

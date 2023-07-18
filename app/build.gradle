@@ -44,4 +44,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 }

@@ -2,33 +2,29 @@ package ca.uwaterloo.cs446.journeytogether.schema;
 
 import android.content.Context;
 import android.location.Address;
-import android.location.Geocoder;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import ca.uwaterloo.cs446.journeytogether.common.AddressRep;
 import ca.uwaterloo.cs446.journeytogether.common.DateTimeConverter;
 import ca.uwaterloo.cs446.journeytogether.common.FirestoreCollection;
-import ca.uwaterloo.cs446.journeytogether.common.GeoHashing;
 
 public class Trip implements Serializable {
 
     private String id;
     private User driver;
-    private SerializableLatLng origin;
-    private SerializableLatLng destination;
+    private GeoPoint origin;
+    private GeoPoint destination;
 
     public LocalDateTime getDepartureTime() {
         return departureTime;
@@ -46,55 +42,65 @@ public class Trip implements Serializable {
     private int cost;
     private List<User> passengers;
 
-    private static final String COLLECTION_PATH = "jt_trips";
+    private static final String COLLECTION_PATH = "jt_trips_test";
     public static final FirestoreCollection<Trip> firestore =
             new FirestoreCollection<>(
                     COLLECTION_PATH,
-                    (onto, document) -> { onto.update(document); },
+                    (onto, document) -> {
+                        onto.update(document);
+                    },
                     (value) -> value.asMap(),
-                    (onto, id) -> onto.setId(id),
+                    (onto, id) -> {
+                        onto.setId(id);
+                    },
                     () -> new Trip()
             );
 
     public void update(DocumentSnapshot document) {
         try {
-            String driverId = (String) document.get("driver");
+            String driverId = document.getString("driver");
 
             if (driverId != null) {
                 User.firestore.getValuesById(driverId,
-                    (arr) -> {
-                        if (!arr.isEmpty()) { this.driver = arr.get(0); }
-                    },
-                    () -> {}
+                        (arr) -> {
+                            if (!arr.isEmpty()) {
+                                this.driver = arr.get(0);
+                            }
+                        },
+                        () -> {
+                        }
                 );
             }
 
-            this.origin = new SerializableLatLng(GeoHashing.unhash("origin", document));
-            this.destination = new SerializableLatLng(GeoHashing.unhash("destination", document));
+            this.origin = document.getGeoPoint("origin");
+            this.destination = document.getGeoPoint("destination");
 
-            this.departureTime = DateTimeConverter.toLocalDateTime((Timestamp) document.get("departureTime"));
-            this.arrivalTime = DateTimeConverter.toLocalDateTime((Timestamp) document.get("arrivalTime"));
+            this.departureTime = DateTimeConverter.toLocalDateTime(document.getTimestamp("departureTime"));
+            this.arrivalTime = DateTimeConverter.toLocalDateTime(document.getTimestamp("arrivalTime"));
 
-            this.availableSeats = Math.toIntExact((long) document.get("availableSeats"));
-            this.totalSeats = Math.toIntExact((long) document.get("totalSeats"));
-            this.cost = Math.toIntExact((long) document.get("cost"));
+            this.availableSeats = document.getLong("availableSeats").intValue();
+            this.totalSeats = document.getLong("totalSeats").intValue();
+            this.cost = document.getLong("cost").intValue();
 
             List<String> passengerId = (List<String>) document.get("passengers");
-            this.passengers = new ArrayList<User>();
+            this.passengers = new ArrayList<>();
 
             if (passengerId != null) {
                 for (String id : passengerId) {
                     User.firestore.getValuesById(id,
                             (arr) -> {
-                                if (!arr.isEmpty()) { this.passengers.add(arr.get(0)); }
+                                if (!arr.isEmpty()) {
+                                    this.passengers.add(arr.get(0));
+                                }
                             },
-                            () -> {}
+                            () -> {
+                            }
                     );
                 }
             }
 
-        } catch (ClassCastException e) {
-            Log.e("E", String.format("Casting error occurred with Trip %s: %s", this.id, e.getMessage()));
+        } catch (Exception e) {
+            Log.e("E", String.format("Error occurred with Trip %s: %s", this.id, e.getMessage()));
         }
 
     }
@@ -106,8 +112,8 @@ public class Trip implements Serializable {
             map.put("driver", this.driver.getId());
         }
 
-        GeoHashing.hash("origin", this.origin, map);
-        GeoHashing.hash("destination", this.destination, map);
+        map.put("origin", this.origin);
+        map.put("destination", this.destination);
 
         map.put("departureTime", DateTimeConverter.toTimestamp(departureTime));
         map.put("arrivalTime", DateTimeConverter.toTimestamp(arrivalTime));
@@ -129,14 +135,17 @@ public class Trip implements Serializable {
         this.id = id;
     }
 
-    public String getId() { return this.id; }
+    public String getId() {
+        return this.id;
+    }
 
-    public Trip() {}
+    public Trip() {
+    }
 
     public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.driver = driver;
-        this.origin = new SerializableLatLng(origin);
-        this.destination = new SerializableLatLng(destination);
+        this.origin = new GeoPoint(origin.latitude, origin.longitude);
+        this.destination = new GeoPoint(destination.latitude, destination.longitude);
         this.availableSeats = availableSeats;
         this.totalSeats = availableSeats;
         this.departureTime = departureTime;
@@ -146,18 +155,18 @@ public class Trip implements Serializable {
     }
 
     public Address getOriginAddress(Context context) {
-        return AddressRep.getLocationAddress(context, this.origin.toLatLng());
+        return AddressRep.getLocationAddress(context, new LatLng(origin.getLatitude(), origin.getLongitude()));
     }
 
     public Address getDestinationAddress(Context context) {
-        return AddressRep.getLocationAddress(context, this.destination.toLatLng());
+        return AddressRep.getLocationAddress(context, new LatLng(destination.getLatitude(), destination.getLongitude()));
     }
 
     public String getRouteStringRep(Context context) {
         return String.format(
                 "%s → %s",
-                AddressRep.getLocationStringAddress(context, origin.toLatLng()),
-                AddressRep.getLocationStringAddress(context, destination.toLatLng()));
+                AddressRep.getLocationStringAddress(context, new LatLng(origin.getLatitude(), origin.getLongitude())),
+                AddressRep.getLocationStringAddress(context, new LatLng(destination.getLatitude(), destination.getLongitude())));
     }
 
     public User getDriver() {
@@ -168,20 +177,20 @@ public class Trip implements Serializable {
         this.driver = driver;
     }
 
-    public LatLng getOrigin() {
-        return origin.toLatLng();
+    public GeoPoint getOrigin() {
+        return new GeoPoint(origin.getLatitude(), origin.getLongitude());
     }
 
     public void setOrigin(LatLng origin) {
-        this.origin = new SerializableLatLng(origin);
+        this.origin = new GeoPoint(origin.latitude, origin.longitude);
     }
 
-    public LatLng getDestination() {
-        return destination.toLatLng();
+    public GeoPoint getDestination() {
+        return new GeoPoint(destination.getLatitude(), destination.getLongitude());
     }
 
     public void setDestination(LatLng destination) {
-        this.destination = new SerializableLatLng(destination);
+        this.destination = new GeoPoint(destination.latitude, destination.longitude);
     }
 
 
@@ -217,4 +226,3 @@ public class Trip implements Serializable {
         this.passengers = passengers;
     }
 }
-
