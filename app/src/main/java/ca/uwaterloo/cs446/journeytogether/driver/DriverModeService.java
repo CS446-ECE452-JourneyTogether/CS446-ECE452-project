@@ -166,6 +166,16 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     }
 
     @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            // TextToSpeech initialization successful
+        } else {
+            // TextToSpeech initialization failed
+            Toast.makeText(this, "TextToSpeech initialization failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (fusedLocationClient != null && locationCallback != null) {
@@ -176,16 +186,8 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
             textToSpeech.stop();
             textToSpeech.shutdown();
         }
-    }
 
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-            // TextToSpeech initialization successful
-        } else {
-            // TextToSpeech initialization failed
-            Toast.makeText(this, "TextToSpeech initialization failed", Toast.LENGTH_SHORT).show();
-        }
+        stopSelf();
     }
 
     @Override
