@@ -37,8 +37,8 @@
 | 2023-06-28 | 3     |       |        |        | 3    |      | D3 & Trip List                                                                                        |
 | 2023-07-11 | 2     |       |        |        | 3    |      | D4                                                                                                    |
 | 2023-07-11 |       |       |        |        | 6    |      | Request status functionality (accept/reject)                                                          |
-| 2023-07-12 |       |       |        |        | 8    |      | Request status functionality                                                                          |
+| 2023-07-12 | 5     |       |        |        | 8    |      | Request status functionality                                                                          |
 | 2023-07-14 |       |       |        |        | 1    |      | D4                                                                                                    |
-| 2023-07-15 |       |       |        |        | 6    |      | Request status functionality                                                                          |
-| 2023-07-16 |       |       |        |        | 2    |      | Request status functionality                                                                          |
-| 2023-07-17 |       |       |        |        | 1    |      | Request status functionality                                                                          |
+| 2023-07-15 | 5     |       |        |        | 6    |      | Request status functionality                                                                          |
+| 2023-07-16 | 5     |       |        |        | 2    |      | Request status functionality                                                                          |
+| 2023-07-17 | 10   |       |        |        | 1    |      | Request status functionality                                                                          |
