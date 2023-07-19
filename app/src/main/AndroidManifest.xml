@@ -40,10 +40,10 @@
         <activity android:name=".user.UserRegistrationActivity" />
         <activity android:name=".user.SearchTripActivity" />
         <activity android:name=".user.UserMainActivity" />
+        <activity android:name=".user.SearchedTripsActivity" />
         <activity android:name=".driver.DriverMainActivity" />
         <activity android:name=".driver.DriverLoginActivity" />
         <activity android:name=".driver.DriverRegistrationActivity" />
-
         <activity android:name=".driver.PostTripActivity" />
         <activity android:name=".driver.ViewRequestsActivity" />
         <activity
