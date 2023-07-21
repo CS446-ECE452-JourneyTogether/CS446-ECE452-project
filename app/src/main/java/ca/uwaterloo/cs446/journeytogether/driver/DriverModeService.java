@@ -7,8 +7,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.IBinder;
 import android.os.Looper;
@@ -16,7 +14,6 @@ import android.speech.tts.TextToSpeech;
 
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -28,10 +25,6 @@ import com.google.android.gms.location.LocationServices;
 
 import android.app.Service;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.ArrayList;
 import java.lang.*;
 
 import ca.uwaterloo.cs446.journeytogether.R;
@@ -39,6 +32,13 @@ import ca.uwaterloo.cs446.journeytogether.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.AddressComponent;
+import com.google.maps.model.AddressComponentType;
+import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
 
 public class DriverModeService extends Service implements TextToSpeech.OnInitListener {
 
@@ -104,27 +104,47 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     }
 
     private void updateLocation() {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-            List<Address> addresses = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+            GeoApiContext context = new GeoApiContext.Builder().apiKey("AIzaSyCsFS0c6k07jbJLYwNBXbSiCiwSPMMUjWU").build();
+            double latitude = currentLocation.getLatitude();
+            double longitude = currentLocation.getLongitude();
+            LatLng location = new LatLng(latitude, longitude);
 
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
+            GeocodingResult[] results = GeocodingApi.reverseGeocode(context, location).await();
 
-                String roadNum = address.getSubThoroughfare();
-                String roadName = address.getThoroughfare();
-                String cityName = address.getSubAdminArea();
+            if (results != null && results.length > 0) {
+                GeocodingResult result = results[0];
+                String tempNum = null;
+                String tempRoad = null;
+                String tempCity = null;
+                for (AddressComponent component : result.addressComponents) {
+                    for (AddressComponentType type : component.types) {
+                        if ("street_number".equals(type.toString())) {
+                            tempNum = component.longName;
+                            break;
+                        }
 
-                if (roadNum == null || roadName == null) {
-                    message = cityName;
-                } else if(!roadNum.matches("\\d+")) {
-                    message = roadNum + '\n' + roadName + '\n' + cityName;
-                } else {
+                        if ("route".equals(type.toString())) {
+                            tempRoad = component.longName;
+                            break;
+                        }
 
-                db.collection("jt_roadcond")
+                        if ("locality".equals(type.toString())) {
+                            tempCity = component.longName;
+                            break;
+                        }
+                    }
+                }
+
+                if (tempNum != null && tempRoad != null && tempCity != null) {
+                    String roadNum = tempNum;
+                    String roadName = tempRoad;
+                    String cityName = tempCity;
+                    db.collection("jt_roadcond")
                         .whereEqualTo("street", roadName)
                         .get()
                         .addOnCompleteListener(task -> {
+                            String message = null;
                             if (task.isSuccessful()) {
                                 QuerySnapshot querySnapshot = task.getResult();
                                 if (!querySnapshot.isEmpty()) {
@@ -151,7 +171,7 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                         });
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
