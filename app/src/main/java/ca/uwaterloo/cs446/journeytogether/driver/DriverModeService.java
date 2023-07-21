@@ -136,7 +136,7 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                     }
                 }
 
-                if (tempNum != null && tempRoad != null && tempCity != null) {
+                if (tempNum != null && tempNum.matches("\\d+") && tempRoad != null && tempCity != null) {
                     String roadNum = tempNum;
                     String roadName = tempRoad;
                     String cityName = tempCity;
