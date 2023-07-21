@@ -9,6 +9,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Driver Mode"
+            android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -16,10 +17,10 @@
             />
 
         <ImageButton
-            android:id="@+id/buttonMuteUnmute"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/mute"
+            android:id="@+id/buttonStop"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/stop"
             android:scaleType="fitCenter"
             app:layout_constraintTop_toBottomOf="@id/textViewMessage"
             app:layout_constraintLeft_toLeftOf="parent"

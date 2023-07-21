@@ -7,8 +7,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.IBinder;
 import android.os.Looper;
@@ -16,7 +14,6 @@ import android.speech.tts.TextToSpeech;
 
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -28,10 +25,7 @@ import com.google.android.gms.location.LocationServices;
 
 import android.app.Service;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.ArrayList;
+import java.lang.*;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 
@@ -39,10 +33,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.AddressComponent;
+import com.google.maps.model.AddressComponentType;
+import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
+
 public class DriverModeService extends Service implements TextToSpeech.OnInitListener {
 
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final int LOCATION_UPDATE_INTERVAL = 15000; // Update interval in milliseconds
+    private static final int LOCATION_UPDATE_INTERVAL = 20000; // Update interval in milliseconds
     private static final String NOTIFICATION_CHANNEL_ID = "DriverModeChannel";
     private static final int NOTIFICATION_ID = 1;
 
@@ -52,8 +53,6 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-
-    private boolean mute = false;
 
     private FirebaseFirestore db;
 
@@ -69,12 +68,10 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mute = intent.getBooleanExtra("mute", false);
         startForeground(NOTIFICATION_ID, createNotification());
         requestLocationPermission();
         return START_STICKY;
     }
-
 
     private void requestLocationPermission() {
         startLocationUpdates();
@@ -107,30 +104,55 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     }
 
     private void updateLocation() {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-            List<Address> addresses = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+            GeoApiContext context = new GeoApiContext.Builder().apiKey("AIzaSyCsFS0c6k07jbJLYwNBXbSiCiwSPMMUjWU").build();
+            double latitude = currentLocation.getLatitude();
+            double longitude = currentLocation.getLongitude();
+            LatLng location = new LatLng(latitude, longitude);
 
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
+            GeocodingResult[] results = GeocodingApi.reverseGeocode(context, location).await();
 
-                String roadNum = address.getSubThoroughfare();
-                String roadName = address.getThoroughfare();
-                String cityName = address.getSubAdminArea();
+            if (results != null && results.length > 0) {
+                GeocodingResult result = results[0];
+                String tempNum = null;
+                String tempRoad = null;
+                String tempCity = null;
+                for (AddressComponent component : result.addressComponents) {
+                    for (AddressComponentType type : component.types) {
+                        if ("street_number".equals(type.toString())) {
+                            tempNum = component.longName;
+                            break;
+                        }
 
-                // 查询jt_roadcond表
-                db.collection("jt_roadcond")
+                        if ("route".equals(type.toString())) {
+                            tempRoad = component.longName;
+                            break;
+                        }
+
+                        if ("locality".equals(type.toString())) {
+                            tempCity = component.longName;
+                            break;
+                        }
+                    }
+                }
+
+                if (tempNum != null && tempRoad != null && tempCity != null) {
+                    String roadNum = tempNum;
+                    String roadName = tempRoad;
+                    String cityName = tempCity;
+                    db.collection("jt_roadcond")
                         .whereEqualTo("street", roadName)
                         .get()
                         .addOnCompleteListener(task -> {
+                            String message = null;
                             if (task.isSuccessful()) {
                                 QuerySnapshot querySnapshot = task.getResult();
                                 if (!querySnapshot.isEmpty()) {
                                     for (QueryDocumentSnapshot document : querySnapshot) {
-                                        long startunitLong = document.getLong("startunit");
-                                        int startunit = (int) startunitLong;
-                                        long endunitLong = document.getLong("endunit");
-                                        int endunit = (int) endunitLong;
+                                        Long startunitLong = document.getLong("startunit");
+                                        Long endunitLong = document.getLong("endunit");
+                                        int startunit = startunitLong != null ? startunitLong.intValue() : 0;
+                                        int endunit = endunitLong != null ? endunitLong.intValue() : 0;
                                         if (startunit <= Integer.parseInt(roadNum) && endunit >= Integer.parseInt(roadNum)) {
                                             String status = document.getString("status");
                                             message = roadNum + '\n' + roadName + '\n' + cityName + '\n' + status;
@@ -145,14 +167,22 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                             Intent broadcastIntent = new Intent("LOCATION_UPDATE");
                             broadcastIntent.putExtra("message", message);
                             sendBroadcast(broadcastIntent);
-
-                            if (!mute) {
-                                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-                            }
+                            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                         });
+                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            // TextToSpeech initialization successful
+        } else {
+            // TextToSpeech initialization failed
+            Toast.makeText(this, "TextToSpeech initialization failed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -167,16 +197,8 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
             textToSpeech.stop();
             textToSpeech.shutdown();
         }
-    }
 
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-            // TextToSpeech initialization successful
-        } else {
-            // TextToSpeech initialization failed
-            Toast.makeText(this, "TextToSpeech initialization failed", Toast.LENGTH_SHORT).show();
-        }
+        stopSelf();
     }
 
     @Override

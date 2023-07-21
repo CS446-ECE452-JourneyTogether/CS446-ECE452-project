@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 
@@ -20,24 +24,19 @@ public class DriverModeFragment extends Fragment {
 
     private TextView textViewMessage;
 
-    private ImageButton buttonMuteUnmute;
-    private boolean mute = false;
+    private ImageButton buttonStop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_mode, container, false);
 
         textViewMessage = view.findViewById(R.id.textViewMessage);
-        buttonMuteUnmute = view.findViewById(R.id.buttonMuteUnmute);
 
-        buttonMuteUnmute.setOnClickListener(new View.OnClickListener() {
+        buttonStop = view.findViewById(R.id.buttonStop);
+        buttonStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mute = !mute;
-                Intent intent = new Intent(requireContext(), DriverModeService.class);
-                intent.putExtra("mute", mute);
-                requireContext().startService(intent);
-                buttonMuteUnmute.setImageResource(mute ? R.drawable.unmute : R.drawable.mute);
+                stopDriverModeService();
             }
         });
 
@@ -49,6 +48,21 @@ public class DriverModeFragment extends Fragment {
     private void startDriverModeService() {
         Intent serviceIntent = new Intent(requireContext(), DriverModeService.class);
         ContextCompat.startForegroundService(requireContext(), serviceIntent);
+    }
+
+
+    private void stopDriverModeService() {
+        Intent serviceIntent = new Intent(requireContext(), DriverModeService.class);
+        requireContext().stopService(serviceIntent);
+
+        DriverTripsFragment fragmentTrips = new DriverTripsFragment();
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fcvDriver, fragmentTrips);
+        fragmentTransaction.commit();
+
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bnvDriver);
+        bottomNavigationView.setSelectedItemId(R.id.driver_menu_trips);
     }
 
     private BroadcastReceiver locationReceiver = new BroadcastReceiver() {

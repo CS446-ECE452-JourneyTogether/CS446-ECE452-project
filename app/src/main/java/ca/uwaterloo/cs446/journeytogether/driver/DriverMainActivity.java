@@ -94,6 +94,25 @@ public class DriverMainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            boolean isAllPermissionGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    isAllPermissionGranted = false;
+                    break;
+                }
+            }
+
+            if (!isAllPermissionGranted) {
+                bnvDriver.getMenu().findItem(R.id.driver_mode).setEnabled(false);
+            } else {
+                startForegroundService();
+            }
+        }
+    }
 
     private void startForegroundService() {
         Intent serviceIntent = new Intent(this, DriverModeService.class);
