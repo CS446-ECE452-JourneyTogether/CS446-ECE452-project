@@ -71,12 +71,7 @@ public class UserProfileFragment extends Fragment {
         etFirstName.setText(firstName);
         etLastName.setText(lastName);
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUserProfile();
-            }
-        });
+        btnUpdate.setOnClickListener(v -> updateUserProfile());
 
         btnSignout.setOnClickListener(v -> {
             mAuth.signOut();

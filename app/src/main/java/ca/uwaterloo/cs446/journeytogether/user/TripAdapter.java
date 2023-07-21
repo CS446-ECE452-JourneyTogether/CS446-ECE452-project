@@ -52,6 +52,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     public static class TripViewHolder extends RecyclerView.ViewHolder {
         private TextView tripDriverTextView;
+        private TextView tripOriginTextView;
         private TextView tripDestinationTextView;
         private TextView tripCostTextView;
         private TextView tripSeatsLeftTextView;
@@ -63,6 +64,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         public TripViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
             tripDriverTextView = itemView.findViewById(R.id.tripDriverTextView);
+            tripOriginTextView = itemView.findViewById(R.id.tripOriginTextView);
             tripDestinationTextView = itemView.findViewById(R.id.tripDestinationTextView);
             tripCostTextView = itemView.findViewById(R.id.tripCostTextView);
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
@@ -85,19 +87,17 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 tripDriverTextView.setText(trip.getDriver().getDisplayName());
             }
 
-            tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
+            tripOriginTextView.setText(trip.getOriginLocation(this.context));
+            tripDestinationTextView.setText(trip.getDestinationLocation(this.context));
             tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
 //            iconImageView.setImageResource(trip.getIconResId());
 
             // upon pressing the send button, it takes us to a trip request activity
-            startSendRequestButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, TripRequestActivity.class);
-                    intent.putExtra("trip", trip);
-                    context.startActivity(intent);
-                }
+            startSendRequestButton.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TripRequestActivity.class);
+                intent.putExtra("trip", trip);
+                context.startActivity(intent);
             });
         }
     }
