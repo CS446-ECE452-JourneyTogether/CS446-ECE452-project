@@ -130,8 +130,10 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                             Intent broadcastIntent = new Intent("LOCATION_UPDATE");
                             broadcastIntent.putExtra("message", message);
                             sendBroadcast(broadcastIntent);
-                            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
 
+                            if(message != null && message != "Driver Mode") {
+                                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                            }
                         }
                     })
                     .addOnFailureListener(e -> {
