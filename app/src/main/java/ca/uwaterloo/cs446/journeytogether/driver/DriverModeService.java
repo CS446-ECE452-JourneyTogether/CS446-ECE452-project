@@ -131,7 +131,7 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
                             broadcastIntent.putExtra("message", message);
                             sendBroadcast(broadcastIntent);
 
-                            if(message != null && message != "Driver Mode") {
+                            if(!message.equals("Driver Mode")) {
                                 textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                             }
                         }
