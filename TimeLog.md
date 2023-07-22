@@ -30,6 +30,7 @@
 |2023-07-13|0|0|4|0|0|0|update registeration interface so it require more fileds|
 |2023-07-14|0|0|3|0|0|0|update profile interface for passenger|
 |2023-07-15|0|0|4|0|0|0|update profile interface editing for passenger|
+|2023-07-16|0|0|2|0|0|0|Fix driver registration for driver license|
 |2023-05-29|||||1.5||D1|
 |2023-06-01|||||1.5||D1|
 |2023-06-13|||||1||D2|
@@ -39,3 +40,4 @@
 |2023-07-12|||||8||Request status function|
 |2023-07-19|0|0|2.5|0|0|0|D5 document|
 |2023-07-21|0|0|3|0|0|0|enable profile picture select for passenger|
+|2023-07-21|0|0|3|0|0|0|driver profile update|
