@@ -5,7 +5,6 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,7 +89,7 @@ public class TripRequest {
 
     public TripRequest() {}
 
-    public TripRequest(Trip trip, User passenger, int seatRequest, boolean sharePhone, LatLng pickupAddr, String comment) {
+    public TripRequest(Trip trip, User passenger, int seatRequest, boolean sharePhone, LatLng pickupAddr, String comment, String status) {
         this.trip = trip;
         this.passenger = passenger;
         this.seatRequest = seatRequest;
@@ -98,6 +97,7 @@ public class TripRequest {
         this.pickupAddr = pickupAddr;
         this.comment = comment;
         this.status = Status.PENDING;
+
     }
 
     // Getters and Setters for each property
@@ -133,6 +133,8 @@ public class TripRequest {
     public void setSharePhone(boolean sharePhone) {
         this.sharePhone = sharePhone;
     }
+
+    public Status getstatusRequest() {return status;}
 
     public LatLng getPickupAddr() {
         return pickupAddr;

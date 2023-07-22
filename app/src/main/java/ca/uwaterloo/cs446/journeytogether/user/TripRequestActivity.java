@@ -106,7 +106,7 @@ public class TripRequestActivity extends AppCompatActivity {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             CurrentUser.getCurrentUser().thenApply((user) -> {
                 // Create a Trip object with the retrieved details
-                TripRequest tripRequest = new TripRequest(this.selectedTrip, user, seatRequest, sharePhone, pickupAddress, comment);
+                TripRequest tripRequest = new TripRequest(this.selectedTrip, user, seatRequest, sharePhone, pickupAddress, comment, "Pending");
 
                 TripRequest.firestore.create(
                     tripRequest,

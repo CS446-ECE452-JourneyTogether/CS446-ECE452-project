@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="35dp"
+            android:layout_width="15dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
@@ -24,7 +24,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <LinearLayout
-            android:layout_width="20dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -93,13 +93,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/seats" />
+
+                <TextView
+                    android:id="@+id/tripReqSeatsLeftTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/StatusImageView"
-            android:layout_width="20dp"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             tools:srcCompat="@drawable/carpool" />

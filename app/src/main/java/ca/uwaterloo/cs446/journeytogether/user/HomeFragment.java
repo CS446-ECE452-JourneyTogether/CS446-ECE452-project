@@ -18,9 +18,10 @@ import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.common.InAppNotice;
 import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 
-public class HomeFragment extends Fragment {
-    public HomeFragment() {}
+import android.util.Log;
 
+public class HomeFragment extends Fragment {
+    public HomeFragment(FirebaseAuth mAuth) {this.mAuth = mAuth; }
     private View rootView;
     private ArrayList<TripRequest> tripRequest = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -29,16 +30,16 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
         inAppNotice = new InAppNotice(rootView);
         FirebaseUser user = mAuth.getCurrentUser();
 
-        // placeholder: currently it make query about everything
         TripRequest.firestore.makeQuery(
-                c -> c.whereEqualTo("Passenger",user.getUid()),
+                c -> c.whereEqualTo("passenger",user.getUid()),
                 (arr) -> {
+                    Log.w("Home", arr.toString());
                     this.tripRequest = arr;
-                    recyclerView = rootView.findViewById(R.id.tripListRecyclerView);
+                    recyclerView = rootView.findViewById(R.id.tripReqRecyclerView);
                     RequestAdapter = new RequestAdapter(tripRequest, getContext());
                     recyclerView.setAdapter(RequestAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

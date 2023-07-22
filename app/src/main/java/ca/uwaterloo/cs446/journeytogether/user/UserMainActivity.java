@@ -31,7 +31,7 @@ public class UserMainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        homeFragment = new HomeFragment();
+        homeFragment = new HomeFragment(mAuth);
         tripListFragment = new TripListFragment();
         profileFragment = new UserProfileFragment(mAuth);
         setFragment(homeFragment);

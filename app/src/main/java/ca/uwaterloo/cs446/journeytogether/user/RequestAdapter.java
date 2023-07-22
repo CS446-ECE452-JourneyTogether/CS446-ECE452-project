@@ -3,6 +3,7 @@ package ca.uwaterloo.cs446.journeytogether.user;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Geocoder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 
-public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripViewHolder> {
+public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqViewHolder> {
 
     private ArrayList<TripRequest> tripRequests;
     private Context context;
@@ -36,15 +37,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripView
 
     @NonNull
     @Override
-    public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TripReqViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.triprequest_item_layout, parent, false);
-        return new TripViewHolder(view, context);
+        return new TripReqViewHolder(view, context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
-        TripRequest tripr = tripRequests.get(position);
-        holder.bind(tripr);
+    public void onBindViewHolder(@NonNull TripReqViewHolder holder, int position) {
+        TripRequest tripRequest = tripRequests.get(position);
+        holder.bind(tripRequest);
     }
 
     @Override
@@ -52,38 +53,51 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripView
         return tripRequests.size();
     }
 
-    public static class TripViewHolder extends RecyclerView.ViewHolder {
-        private TextView tripDriverTextView;
-        private TextView tripDestinationTextView;
-        private TextView tripCostTextView;
+
+    public static class TripReqViewHolder extends RecyclerView.ViewHolder {
+        private TextView tripReqDriverTextView;
+        private TextView tripReqDestinationTextView;
+        private TextView tripReqCostTextView;
+        private  TextView tripReqSeatsLeftTextView;
         private ImageView StatusImageView;
 //        private ImageView iconImageView;
         private Context context;
         private TripRequest tripRequest;
 
-        public TripViewHolder(@NonNull View itemView, Context context) {
+        public TripReqViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
-            tripDriverTextView = itemView.findViewById(R.id.tripReqDriverTextView);
-            tripDestinationTextView = itemView.findViewById(R.id.tripReqDestinationTextView);
-            tripCostTextView = itemView.findViewById(R.id.tripReqCostTextView);
+            tripReqDriverTextView = itemView.findViewById(R.id.tripReqDriverTextView);
+            tripReqDestinationTextView = itemView.findViewById(R.id.tripReqDestinationTextView);
+            tripReqCostTextView = itemView.findViewById(R.id.tripReqCostTextView);
             StatusImageView = itemView.findViewById(R.id.StatusImageView);
+            tripReqSeatsLeftTextView = itemView.findViewById(R.id.tripReqSeatsLeftTextView);
             this.context = context;
         }
 
         public void bind(TripRequest tripRequest) {
             this.tripRequest = tripRequest;
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference driverCollection = db.collection("jt_user");
-            CollectionReference tripCollection = db.collection("jt_trips");
 
-            Trip trip = tripRequest.getTrip();
-            if (trip.getDriver() != null) {
-                tripDriverTextView.setText(trip.getDriver().getDisplayName());
+            if (tripRequest.getTrip() != null) {
+                tripReqDriverTextView.setText(tripRequest.getTrip().getDriver().getDisplayName());
+                tripReqDestinationTextView.setText(tripRequest.getTrip().getRouteStringRep(this.context));
+                tripReqCostTextView.setText(String.format("$%d/seat", tripRequest.getTrip().getCost()));
             }
 
-            tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
-            tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
+            tripReqSeatsLeftTextView.setText(String.format(String.format("%d seats request", tripRequest.getSeatRequest())));
 
+            Log.w("Status", tripRequest.getstatusRequest().toString());
+
+            TripRequest.Status status = this.tripRequest.getstatusRequest();
+            if (status.toString().equals("PENDING")) {
+                Log.w("Status",status.toString());
+                StatusImageView.setImageResource(R.drawable.pending);
+            } else if (status.toString().equals("ACCEPTED")) {
+                Log.w("Status",status.toString());
+                StatusImageView.setImageResource(R.drawable.accept);
+            } else if (status.toString().equals("REJECTED")) {
+                StatusImageView.setImageResource(R.drawable.reject);
+            }
         }
     }
 }
