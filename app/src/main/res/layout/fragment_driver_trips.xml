@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Driver Trips"
+            android:text="Posted Trips"
             android:textSize="32sp"
             android:textStyle="bold"
             android:gravity="center_horizontal" />
