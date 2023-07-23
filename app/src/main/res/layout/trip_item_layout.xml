@@ -45,7 +45,7 @@
                     android:src="@drawable/person" />
 
                 <TextView
-                    android:id="@+id/tripReqDriverTextView"
+                    android:id="@+id/tripDriverTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/driver_name_placeholder"
@@ -75,7 +75,7 @@
                     android:layout_marginVertical="5dp" />
 
                 <TextView
-                    android:id="@+id/tripReqDestinationTextView"
+                    android:id="@+id/tripDestinationTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Destination"
@@ -95,7 +95,7 @@
                     android:src="@drawable/payments" />
 
                 <TextView
-                    android:id="@+id/tripReqCostTextView"
+                    android:id="@+id/tripCostTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TextView"
@@ -116,7 +116,7 @@
                     android:src="@drawable/seats" />
 
                 <TextView
-                    android:id="@+id/tripReqSeatsLeftTextView"
+                    android:id="@+id/tripSeatsLeftTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TextView"
