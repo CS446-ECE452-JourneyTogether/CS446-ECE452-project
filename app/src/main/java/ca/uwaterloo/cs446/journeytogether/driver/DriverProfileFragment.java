@@ -14,9 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +29,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,15 +44,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
+
 
 public class DriverProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private View rootView;
-    private EditText etLastName, etFirstName, etEmail, etPhoneNumber, etDriverL, etCarMake;
+    private TextView etFirstName,etLastName, etEmail, etPhoneNumber, etDriverL, etCarMake;
     private Button btnUpdate, btnSignout, btnLoginToDriver, btnFirstName, btnLastName, btnPhoneNumber;
     private Button btnDriverL, btnCarMake;
     private ImageView imgProfile;
@@ -91,7 +103,6 @@ public class DriverProfileFragment extends Fragment {
         etPhoneNumber = rootView.findViewById(R.id.profileEtPhoneNumber);
         etDriverL = rootView.findViewById(R.id.profileEtDriverL);
         etCarMake = rootView.findViewById(R.id.profileEtCarMake);
-        //btnUpdate = rootView.findViewById(R.id.profileBtnUpdate);
         btnSignout = rootView.findViewById(R.id.profileBtnSignout);
         btnFirstName = rootView.findViewById(R.id.profileEtFirstNameBtn);
         btnLastName = rootView.findViewById(R.id.profileEtLastNameBtn);
@@ -120,7 +131,6 @@ public class DriverProfileFragment extends Fragment {
                                         String email = document.getString("email");
                                         String phoneNumber = document.getString("phoneNum");
                                         String driverL = document.getString("driverLicense");
-                                        String carMake = document.getString("CarMake");
                                         // Update EditText fields with the names from Firestore
                                         if (firstName != null) {
                                             etFirstName.setText(firstName);
@@ -140,11 +150,6 @@ public class DriverProfileFragment extends Fragment {
 
                                             etDriverL.setText("Please update driver License");
                                         }
-                                        /*if(carMake != null){
-                                            etCarMake.setText(carMake);
-                                        }else{
-                                            etCarMake.setText("Please update Make of Vehicle");
-                                        }*/
                                     }
 
                                 }
@@ -152,6 +157,186 @@ public class DriverProfileFragment extends Fragment {
                         });
             }
         }
+
+
+        btnCarMake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Vehicle Information Displaying...");
+
+                // Inflate the layout
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.car_brands, null);
+                final TextView carBrand = dialogLayout.findViewById(R.id.carBrandLabel);
+                final TextView carColor = dialogLayout.findViewById(R.id.carColorLabel);
+                final TextView carYear = dialogLayout.findViewById(R.id.carYearLabel);
+                final TextView insurance = dialogLayout.findViewById(R.id.insuranceInput);
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null) {
+                    String userEmail = firebaseUser.getEmail();
+                    if (userEmail != null && !userEmail.isEmpty()) {
+                        db.collection("jt_user")
+                                .whereEqualTo("email", userEmail)
+                                .limit(1)
+                                .get()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        QuerySnapshot queryDocumentSnapshots = task.getResult();
+                                        if (queryDocumentSnapshots != null) {
+                                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                                String CarBrandStr = document.getString("carBrand");
+                                                String CarColorStr = document.getString("carColor");
+                                                String CarYearStr = document.getString("carYear");
+                                                String Insurance = document.getString("insurance");
+                                                if(CarBrandStr == null){
+                                                    carBrand.setText("Update Brand");
+                                                }else{
+                                                    carBrand.setText(CarBrandStr);
+                                                }
+                                                if(CarColorStr == null){
+                                                    carColor.setText("Update Color");
+                                                }else{
+                                                    carColor.setText(CarColorStr);
+                                                }
+                                                if(CarYearStr == null){
+                                                    carYear.setText("Update Year");
+                                                }else{
+                                                    carYear.setText(CarYearStr);
+                                                }
+                                                if(Insurance == null){
+                                                    insurance.setText("Enter Insurance");
+                                                }else{
+                                                    insurance.setText(Insurance);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                }
+
+                // do the check null for brand here
+
+
+
+
+                Spinner spinnerBrand = dialogLayout.findViewById(R.id.carBrandSpinner);
+                Spinner spinnerColor = dialogLayout.findViewById(R.id.carColorSpinner);
+                Spinner spinnerYear = dialogLayout.findViewById(R.id.carYearSpinner);
+                final EditText insuranceInput = dialogLayout.findViewById(R.id.insuranceInput);
+
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                        R.array.car_brands, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerBrand.setAdapter(adapter);
+                //handel the brand spinner
+
+                ArrayAdapter<CharSequence> adapterColor = ArrayAdapter.createFromResource(getContext(),
+                        R.array.car_colors, android.R.layout.simple_spinner_item); // Change this to your actual array resource for colors
+                adapterColor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerColor.setAdapter(adapterColor);
+
+                ArrayAdapter<CharSequence> adapterYear = ArrayAdapter.createFromResource(getContext(),
+                        R.array.car_years, android.R.layout.simple_spinner_item); // Change this to your actual array resource for years
+                adapterYear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerYear.setAdapter(adapterYear);
+
+                spinnerBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedCarBrand = parent.getItemAtPosition(position).toString();
+                        carBrand.setText(selectedCarBrand);
+                        Log.d("TAG", "Selected car brand: " + selectedCarBrand);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // This method is invoked when the spinner selection is cleared.
+                        // You might want to handle this case too, depending on your app's behavior.
+                    }
+                });
+                spinnerColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedCarColor = parent.getItemAtPosition(position).toString();
+                        carColor.setText(selectedCarColor);
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // You might want to handle this case too, depending on your app's behavior.
+                    }
+                });
+                spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedCarYear = parent.getItemAtPosition(position).toString();
+                        carYear.setText(selectedCarYear);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // You might want to handle this case too, depending on your app's behavior.
+                    }
+                });
+
+
+                builder.setView(dialogLayout);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String carColorStr = carColor.getText().toString();
+                        String insuranceNum = insuranceInput.getText().toString();
+                        String carBrandStr =carBrand.getText().toString();
+                        String carYearStr =carYear.getText().toString();
+                        /*final TextView carBrand = dialogLayout.findViewById(R.id.carBrandLabel);
+                        String carBrandValue = carBrand.getText().toString();*/
+
+                        // You may want to add additional validation here, similar to isValidLicense
+
+                        String userEmail = firebaseUser.getEmail();
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("carColor", carColorStr);
+                        map.put("insurance", insuranceNum);
+                        map.put("carBrand", carBrandStr);
+                        map.put("carYear", carYearStr);
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                        db.collection("jt_user")
+                                .whereEqualTo("email", userEmail)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                // The document ID can be used to get the document path
+                                                String path = document.getReference().getPath();
+                                                // assuming you have an EditText etInsurance for the insurance number
+                                                //etInsurance.setText(insuranceNum);
+                                                db.document(path).update(map);
+                                            }
+
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        });
 
         btnSignout.setOnClickListener(v -> {
             mAuth.signOut();
@@ -254,6 +439,64 @@ public class DriverProfileFragment extends Fragment {
             }
         });
 
+        btnDriverL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Enter new Driver License");
+                final EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String textInput = input.getText().toString();
+                        if(!isValidLicense(textInput)){
+                            Toast.makeText(getContext(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                            // Show the dialog again
+                            return;
+                        }else {
+                            String userEmail = firebaseUser.getEmail();
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("driverLicense", textInput);
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                            db.collection("jt_user")
+                                    .whereEqualTo("email", userEmail)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                                    // The document ID can be used to get the document path
+                                                    String path = document.getReference().getPath();
+                                                    etDriverL.setText(textInput);
+                                                    db.document(path).update(map);
+                                                }
+                                            } else {
+                                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
         btnPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,12 +553,14 @@ public class DriverProfileFragment extends Fragment {
                 mGetContent.launch("image/*");
             }
         });
-
-
-
-
-
         return rootView;
     }
+
+    private boolean isValidLicense(String driverL) {
+        Pattern pattern = Pattern.compile("[A-Za-z]{1}\\d{4}-\\d{5}-\\d{5}");
+        Matcher matcher = pattern.matcher(driverL);
+        return matcher.matches();
+    }
+
 }
 

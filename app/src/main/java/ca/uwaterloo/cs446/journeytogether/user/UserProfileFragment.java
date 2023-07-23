@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -56,7 +57,7 @@ public class UserProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private View rootView;
-    private EditText etLastName, etFirstName, etEmail, etPhoneNumber;
+    private TextView etLastName, etFirstName, etEmail, etPhoneNumber;
     private Button btnUpdate, btnSignout, btnLoginToDriver, btnFirstName, btnLastName, btnPhoneNumber;
     private ImageView imgProfile;
     private Uri imagePath;

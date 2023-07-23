@@ -41,3 +41,5 @@
 |2023-07-19|0|0|2.5|0|0|0|D5 document|
 |2023-07-21|0|0|3|0|0|0|enable profile picture select for passenger|
 |2023-07-21|0|0|3|0|0|0|driver profile update|
+|2023-07-22|0|0|4|0|0|0|Vehicle profile display|
+|2023-07-23|0|0|5|0|0|0|Vehicle profile display update and edit|

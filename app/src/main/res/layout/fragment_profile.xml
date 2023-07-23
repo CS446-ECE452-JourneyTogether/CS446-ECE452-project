@@ -26,7 +26,7 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <EditText
+            <TextView
                 android:id="@+id/profileEtFirstName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <EditText
+            <TextView
                 android:id="@+id/profileEtLastName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <EditText
+            <TextView
                 android:id="@+id/profileEtEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <EditText
+            <TextView
                 android:id="@+id/profileEtPhoneNumber"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
