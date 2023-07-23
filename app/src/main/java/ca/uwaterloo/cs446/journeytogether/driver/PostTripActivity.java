@@ -43,6 +43,9 @@ public class PostTripActivity extends AppCompatActivity {
 
         departureDateTimePicker = findViewById(R.id.departureDateTimePicker);
         arrivalDateTimePicker = findViewById(R.id.arrivalDateTimePicker);
+        departureDateTimePicker.setFragmentManager(getSupportFragmentManager());
+        arrivalDateTimePicker.setFragmentManager(getSupportFragmentManager());
+
 
         originLocationSelector.setActivity(this, 1);
         destinationLocationSelector.setActivity(this, 2);

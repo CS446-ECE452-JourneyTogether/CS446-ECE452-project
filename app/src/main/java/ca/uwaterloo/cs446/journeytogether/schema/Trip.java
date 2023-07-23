@@ -62,10 +62,10 @@ public class Trip implements Serializable {
 
             if (driverId != null) {
                 User.firestore.getValuesById(driverId,
-                    (arr) -> {
-                        if (!arr.isEmpty()) { this.driver = arr.get(0); }
-                    },
-                    () -> {}
+                        (arr) -> {
+                            if (!arr.isEmpty()) { this.driver = arr.get(0); }
+                        },
+                        () -> {}
                 );
             }
 
@@ -160,6 +160,14 @@ public class Trip implements Serializable {
                 AddressRep.getLocationStringAddress(context, destination.toLatLng()));
     }
 
+    public String getOriginLocation(Context context) {
+        return AddressRep.getLocationStringAddress(context, origin.toLatLng());
+    }
+
+    public String getDestinationLocation(Context context) {
+        return AddressRep.getLocationStringAddress(context, destination.toLatLng());
+    }
+
     public User getDriver() {
         return driver;
     }
@@ -217,4 +225,3 @@ public class Trip implements Serializable {
         this.passengers = passengers;
     }
 }
-

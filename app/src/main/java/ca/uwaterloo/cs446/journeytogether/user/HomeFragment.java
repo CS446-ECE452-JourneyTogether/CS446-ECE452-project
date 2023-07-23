@@ -1,9 +1,11 @@
 package ca.uwaterloo.cs446.journeytogether.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,10 +23,12 @@ import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 import android.util.Log;
 
 public class HomeFragment extends Fragment {
+
     public HomeFragment(FirebaseAuth mAuth) {this.mAuth = mAuth; }
     private View rootView;
     private ArrayList<TripRequest> tripRequest = new ArrayList<>();
     private RecyclerView recyclerView;
+    private Button btnSearch;
     private RequestAdapter RequestAdapter;
     private InAppNotice inAppNotice;
     private FirebaseAuth mAuth;
@@ -32,6 +36,8 @@ public class HomeFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         inAppNotice = new InAppNotice(rootView);
+        btnSearch = rootView.findViewById(R.id.btnHomeSearch);
+        btnSearch.setOnClickListener(v -> onSearchButtonClick());
         FirebaseUser user = mAuth.getCurrentUser();
 
         TripRequest.firestore.makeQuery(
@@ -47,5 +53,10 @@ public class HomeFragment extends Fragment {
                 () -> { inAppNotice.onError("Cannot fetch the trips. Please try again later."); }
         );
         return rootView;
+
+    }
+
+    private void onSearchButtonClick() {
+        startActivity(new Intent(getActivity(), SearchTripActivity.class));
     }
 }

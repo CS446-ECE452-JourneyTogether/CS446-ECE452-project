@@ -26,19 +26,19 @@ import com.google.android.gms.location.LocationServices;
 import android.app.Service;
 
 import java.lang.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.common.PolygonUtils;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
-import com.google.maps.model.AddressComponent;
-import com.google.maps.model.AddressComponentType;
-import com.google.maps.model.GeocodingResult;
-import com.google.maps.model.LatLng;
+import android.graphics.PointF;
 
 public class DriverModeService extends Service implements TextToSpeech.OnInitListener {
 
@@ -55,8 +55,6 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     private LocationCallback locationCallback;
 
     private FirebaseFirestore db;
-
-    private String message;
 
     @Override
     public void onCreate() {
@@ -105,75 +103,59 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
     private void updateLocation() {
         try {
-            GeoApiContext context = new GeoApiContext.Builder().apiKey("AIzaSyCsFS0c6k07jbJLYwNBXbSiCiwSPMMUjWU").build();
             double latitude = currentLocation.getLatitude();
             double longitude = currentLocation.getLongitude();
-            LatLng location = new LatLng(latitude, longitude);
 
-            GeocodingResult[] results = GeocodingApi.reverseGeocode(context, location).await();
+            db.collection("jt_polygon").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot querySnapshot) {
+                            String message = "Driver Mode";
+                            for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                                String status = documentSnapshot.getString("status");
+                                List<GeoPoint> boundarySnapshot = (List<GeoPoint>) documentSnapshot.get("boundary");
 
-            if (results != null && results.length > 0) {
-                GeocodingResult result = results[0];
-                String tempNum = null;
-                String tempRoad = null;
-                String tempCity = null;
-                for (AddressComponent component : result.addressComponents) {
-                    for (AddressComponentType type : component.types) {
-                        if ("street_number".equals(type.toString())) {
-                            tempNum = component.longName;
-                            break;
-                        }
+                                PointF[] polygon = parseBoundaryCoordinates(boundarySnapshot);
+                                PointF point = new PointF((float) latitude, (float) longitude);
 
-                        if ("route".equals(type.toString())) {
-                            tempRoad = component.longName;
-                            break;
-                        }
+                                boolean isPointInPolygon = PolygonUtils.isPointInPolygon(point, polygon);
 
-                        if ("locality".equals(type.toString())) {
-                            tempCity = component.longName;
-                            break;
-                        }
-                    }
-                }
-
-                if (tempNum != null && tempRoad != null && tempCity != null) {
-                    String roadNum = tempNum;
-                    String roadName = tempRoad;
-                    String cityName = tempCity;
-                    db.collection("jt_roadcond")
-                        .whereEqualTo("street", roadName)
-                        .get()
-                        .addOnCompleteListener(task -> {
-                            String message = null;
-                            if (task.isSuccessful()) {
-                                QuerySnapshot querySnapshot = task.getResult();
-                                if (!querySnapshot.isEmpty()) {
-                                    for (QueryDocumentSnapshot document : querySnapshot) {
-                                        Long startunitLong = document.getLong("startunit");
-                                        Long endunitLong = document.getLong("endunit");
-                                        int startunit = startunitLong != null ? startunitLong.intValue() : 0;
-                                        int endunit = endunitLong != null ? endunitLong.intValue() : 0;
-                                        if (startunit <= Integer.parseInt(roadNum) && endunit >= Integer.parseInt(roadNum)) {
-                                            String status = document.getString("status");
-                                            message = roadNum + '\n' + roadName + '\n' + cityName + '\n' + status;
-                                        }
-                                    }
-                                } else {
-                                    message = roadNum + '\n' + roadName + '\n' + cityName;
+                                if (isPointInPolygon) {
+                                    message = status;
+                                    break;
                                 }
+
                             }
 
-                            // 发送广播更新消息
                             Intent broadcastIntent = new Intent("LOCATION_UPDATE");
                             broadcastIntent.putExtra("message", message);
                             sendBroadcast(broadcastIntent);
-                            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-                        });
-                }
-            }
+
+                            if(!message.equals("Driver Mode")) {
+                                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+
+                    });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private PointF[] parseBoundaryCoordinates(List<GeoPoint> boundarySnapshot) {
+        // 解析 GeoPoint 对象为 PointF 数组
+        List<PointF> points = new ArrayList<>();
+
+        for (GeoPoint geoPoint : boundarySnapshot) {
+            float latitude = (float) geoPoint.getLatitude();
+            float longitude = (float) geoPoint.getLongitude();
+            points.add(new PointF(longitude, latitude));
+        }
+
+        return points.toArray(new PointF[0]);
     }
 
     @Override
