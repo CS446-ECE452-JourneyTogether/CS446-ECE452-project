@@ -8,17 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
 
 import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
+import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 import ca.uwaterloo.cs446.journeytogether.user.TripRequestActivity;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
@@ -95,9 +97,21 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
             // upon pressing the send button, it takes us to a trip request activity
             startSendRequestButton.setOnClickListener(v -> {
-                Intent intent = new Intent(context, TripRequestActivity.class);
-                intent.putExtra("trip", trip);
-                context.startActivity(intent);
+                CurrentUser.getCurrentUser().thenApply((currentUser) -> {
+                    TripRequest.firestore.makeQuery(
+                        c -> c.whereEqualTo("trip", trip.getId()).whereEqualTo("passenger", currentUser.getId()),
+                        (arr) -> {
+                            if (arr.size() > 0) {
+                                Toast.makeText(context, "You have already sent a request for this trip", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(context, TripRequestActivity.class);
+                                intent.putExtra("trip", trip);
+                                context.startActivity(intent);
+                            }
+                        },
+                        () -> { });
+                    return currentUser;
+                });
             });
         }
     }

@@ -75,6 +75,7 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             // TODO: update available seats display in ViewRequestsActivity after accepting/rejecting request
             Intent intent = new Intent(context, ViewRequestsActivity.class);
             intent.putExtra("trip", tripRequest.getTrip());
+            ((ViewRequestsActivity) context).finish();
             context.startActivity(intent);
         }
 
