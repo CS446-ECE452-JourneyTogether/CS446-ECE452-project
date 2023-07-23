@@ -51,6 +51,7 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
     }
 
     public static class DriverTripViewHolder extends RecyclerView.ViewHolder {
+        private TextView tripOriginTextView;
         private TextView tripDestinationTextView;
         private TextView tripCostTextView;
         private TextView tripSeatsLeftTextView;
@@ -60,6 +61,7 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
 
         public DriverTripViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
+            tripOriginTextView = itemView.findViewById(R.id.tripOriginTextView);
             tripDestinationTextView = itemView.findViewById(R.id.tripDestinationTextView);
             tripCostTextView = itemView.findViewById(R.id.tripCostTextView);
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
@@ -73,9 +75,8 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
 
         public void bind(Trip trip) {
             this.trip = trip;
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference driverCollection = db.collection("jt_driver");
 
+            tripOriginTextView.setText(trip.getOriginLocation(this.context));
             tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
             tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));

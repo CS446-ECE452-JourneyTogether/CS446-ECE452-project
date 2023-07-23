@@ -90,9 +90,9 @@ public class UserProfileFragment extends Fragment {
 
             String displayName = firstName + " " + lastName;
 
-            CollectionReference usersCollection = db.collection("jt_driver");
+            CollectionReference usersCollection = db.collection("jt_user");
 
-            usersCollection.whereEqualTo("id", user.getEmail())
+            usersCollection.whereEqualTo("email", user.getEmail())
                     .limit(1)
                     .get()
                     .addOnSuccessListener(querySnapshot -> {
@@ -100,11 +100,11 @@ public class UserProfileFragment extends Fragment {
                             DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
                             String documentId = documentSnapshot.getId();
 
-                            DocumentReference documentRef = db.collection("jt_driver").document(documentId);
+                            DocumentReference documentRef = db.collection("jt_user").document(documentId);
 
                             Map<String, Object> updates = new HashMap<>();
-                            updates.put("FirstName", firstName);
-                            updates.put("LastName", lastName);
+                            updates.put("firstName", firstName);
+                            updates.put("lastName", lastName);
 
                             documentRef.update(updates);
                         }
