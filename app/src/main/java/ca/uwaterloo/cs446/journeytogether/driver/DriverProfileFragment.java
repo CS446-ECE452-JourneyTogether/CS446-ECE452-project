@@ -50,6 +50,8 @@ import java.util.regex.Pattern;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
+import ca.uwaterloo.cs446.journeytogether.common.CurrentUser;
+import ca.uwaterloo.cs446.journeytogether.schema.User;
 
 public class DriverProfileFragment extends Fragment {
 
@@ -399,43 +401,31 @@ public class DriverProfileFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String textInput = input.getText().toString();
-                String userEmail = firebaseUser.getEmail();
-                Map<String,Object> map = new HashMap<>();
-                map.put(fieldName, textInput);
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                db.collection("jt_user")
-                        .whereEqualTo("email", userEmail)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                        // The document ID can be used to get the document path
-                                        String path = document.getReference().getPath();
-                                        if (fieldName.equals("firstName")) {
-                                            etFirstName.setText(textInput);
-                                        } else if (fieldName.equals("lastName")) {
-                                            etLastName.setText(textInput);
-                                        } else if (fieldName.equals("phoneNum")) {
-                                            etPhoneNumber.setText(textInput);
-                                        } else if (fieldName.equals("driverLicense")) {
-                                            if (isValidLicense(textInput)) {
-                                                etDriverL.setText(textInput);
-                                            } else {
-                                                Toast.makeText(getContext(), "Invalid Driver License", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-                                        }
-                                        db.document(path).update(map);
-                                    }
+                CurrentUser.getCurrentUser().thenApply((user) -> {
+                    User.firestore.update(
+                        user.getId(),
+                        fieldName,
+                        textInput,
+                        () -> {
+                            if (fieldName.equals("firstName")) {
+                                etFirstName.setText(textInput);
+                            } else if (fieldName.equals("lastName")) {
+                                etLastName.setText(textInput);
+                            } else if (fieldName.equals("phoneNum")) {
+                                etPhoneNumber.setText(textInput);
+                            } else if (fieldName.equals("driverLicense")) {
+                                if (isValidLicense(textInput)) {
+                                    etDriverL.setText(textInput);
                                 } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                    Toast.makeText(getContext(), "Invalid Driver License", Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
                             }
-                        });
+                        },
+                        () -> {}
+                    );
+                    return null;
+                });
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
