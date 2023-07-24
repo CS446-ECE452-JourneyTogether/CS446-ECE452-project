@@ -91,10 +91,10 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             );
             if (status == TripRequest.Status.REJECTED) {
                 if (!success.get()) {
-                    Toast.makeText(context, "Failed to reject request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Failed to reject request", Toast.LENGTH_LONG).show();
                     return false;
                 }
-                Toast.makeText(context, "Request rejected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Request rejected", Toast.LENGTH_LONG).show();
                 return true;
             }
             Trip.firestore.update(
@@ -157,6 +157,10 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (tripRequest.getSeatRequest() > tripRequest.getTrip().getAvailableSeats()) {
+                        Toast.makeText(context, "There is not enough seats to accept this request", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     if (changeStatus(TripRequest.Status.ACCEPTED))
                         toViewRequestsActivity();
                 }
