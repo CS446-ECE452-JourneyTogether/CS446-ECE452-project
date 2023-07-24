@@ -113,6 +113,8 @@ public class User implements Serializable {
 
     public String getDisplayName() { return String.format("%s %s", firstName, lastName); }
 
+    public String getPhoneNum() {return String.format("%s",phoneNum);}
+
     @Override
     public String toString() {
         return "User{" +

@@ -3,6 +3,7 @@ package ca.uwaterloo.cs446.journeytogether.user;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Geocoder;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,10 +59,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
         private TextView tripReqDriverTextView;
         private TextView tripReqDestinationTextView;
         private TextView tripReqCostTextView;
-        private  TextView tripReqSeatsLeftTextView;
+        private TextView tripReqSeatsLeftTextView;
+        private TextView tripReqPhoneNumTextView;
         private ImageView StatusImageView;
 //        private ImageView iconImageView;
         private Context context;
+        private ImageView PhoneNumImage;
         private TripRequest tripRequest;
 
         public TripReqViewHolder(@NonNull View itemView, Context context) {
@@ -71,6 +74,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
             tripReqCostTextView = itemView.findViewById(R.id.tripReqCostTextView);
             StatusImageView = itemView.findViewById(R.id.StatusImageView);
             tripReqSeatsLeftTextView = itemView.findViewById(R.id.tripReqSeatsLeftTextView);
+            tripReqPhoneNumTextView = itemView.findViewById(R.id.tripReqPhoneNumTextView);
+            PhoneNumImage=itemView.findViewById(R.id.imageView6);
             this.context = context;
         }
 
@@ -82,6 +87,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
                 tripReqDriverTextView.setText(tripRequest.getTrip().getDriver().getDisplayName());
                 tripReqDestinationTextView.setText(tripRequest.getTrip().getRouteStringRep(this.context));
                 tripReqCostTextView.setText(String.format("$%d/seat", tripRequest.getTrip().getCost()));
+                if (tripRequest.getStatus().toString().equals("ACCEPTED")) {
+                    tripReqPhoneNumTextView.setText(tripRequest.getTrip().getDriver().getPhoneNum());
+                    PhoneNumImage.setImageResource(R.drawable.phone);
+                } else {
+                    tripReqPhoneNumTextView.setText("");
+                    PhoneNumImage.setVisibility(View.INVISIBLE);
+                }
             }
 
             tripReqSeatsLeftTextView.setText(String.format(String.format("%d seats requested", tripRequest.getSeatRequest())));
