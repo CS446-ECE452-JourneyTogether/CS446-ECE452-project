@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -60,6 +62,7 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
         private TextView statusTextView;
         private TextView PhoneNumTextView;
         private ImageView PhoneNumeImage;
+        private TextView TimeTextView;
         private Button acceptButton;
         private Button rejectButton;
         private Context context;
@@ -76,6 +79,7 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             PhoneNumTextView=itemView.findViewById(R.id.phonenumTextView);
             acceptButton = itemView.findViewById(R.id.acceptButton);
             rejectButton = itemView.findViewById(R.id.rejectButton);
+            TimeTextView = itemView.findViewById(R.id.timeTextView);
             this.context = context;
         }
 
@@ -141,6 +145,9 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             passengerTextView.setText(tripRequest.getPassenger() != null ? tripRequest.getPassenger().getDisplayName() : "...");
             seatsRequestedTextView.setText(String.format("%d seats requested", tripRequest.getSeatRequest()));
             pickupTextView.setText(String.format("Pickup at: %s", AddressRep.getLocationStringAddress(context, tripRequest.getPickupAddr())));
+            if (tripRequest.getTrip() != null) {
+                TimeTextView.setText(String.format("%s -> %s", tripRequest.getTrip().getDepartureTime().toString(), tripRequest.getTrip().getArrivalTime().toString()));
+            }
             additionalInfoTextView.setText(tripRequest.getComment());
 
             switch (tripRequest.getStatus()) {

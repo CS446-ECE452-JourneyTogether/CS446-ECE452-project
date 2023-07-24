@@ -61,6 +61,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
         private TextView tripReqCostTextView;
         private TextView tripReqSeatsLeftTextView;
         private TextView tripReqPhoneNumTextView;
+        private TextView tripReqTimeTextView;
         private ImageView StatusImageView;
 //        private ImageView iconImageView;
         private Context context;
@@ -76,6 +77,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
             tripReqSeatsLeftTextView = itemView.findViewById(R.id.tripReqSeatsLeftTextView);
             tripReqPhoneNumTextView = itemView.findViewById(R.id.tripReqPhoneNumTextView);
             PhoneNumImage=itemView.findViewById(R.id.imageView6);
+            tripReqTimeTextView=itemView.findViewById(R.id.tripReqTimeTextView);
             this.context = context;
         }
 
@@ -86,6 +88,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
             if (tripRequest.getTrip() != null) {
                 tripReqDriverTextView.setText(tripRequest.getTrip().getDriver().getDisplayName());
                 tripReqDestinationTextView.setText(tripRequest.getTrip().getRouteStringRep(this.context));
+                tripReqTimeTextView.setText(String.format("%s -> %s" , tripRequest.getTrip().getDepartureTime().toString(),tripRequest.getTrip().getArrivalTime().toString()));
                 tripReqCostTextView.setText(String.format("$%d/seat", tripRequest.getTrip().getCost()));
                 if (tripRequest.getStatus().toString().equals("ACCEPTED")) {
                     tripReqPhoneNumTextView.setText(tripRequest.getTrip().getDriver().getPhoneNum());
