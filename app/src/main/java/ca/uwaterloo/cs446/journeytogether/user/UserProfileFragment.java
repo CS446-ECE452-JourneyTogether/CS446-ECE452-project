@@ -92,6 +92,59 @@ public class UserProfileFragment extends Fragment {
         );
     }
 
+    private void updateField(FirebaseUser firebaseUser, String fieldName, String dialogTitle) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(dialogTitle);
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String textInput = input.getText().toString();
+                String userEmail = firebaseUser.getEmail();
+                Map<String,Object> map = new HashMap<>();
+                map.put(fieldName, textInput);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                db.collection("jt_user")
+                        .whereEqualTo("email", userEmail)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        // The document ID can be used to get the document path
+                                        String path = document.getReference().getPath();
+                                        if (fieldName.equals("firstName")) {
+                                            etFirstName.setText(textInput);
+                                        } else if (fieldName.equals("lastName")) {
+                                            etLastName.setText(textInput);
+                                        } else if (fieldName.equals("phoneNum")) {
+                                            etPhoneNumber.setText(textInput);
+                                        }
+                                        db.document(path).update(map);
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -155,147 +208,23 @@ public class UserProfileFragment extends Fragment {
         btnFirstName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new FirstName");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String textInput = input.getText().toString();
-                        String userEmail = firebaseUser.getEmail();
-                        Map<String,Object> map = new HashMap<>();
-                        map.put("firstName", textInput);
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        db.collection("jt_user")
-                                .whereEqualTo("email", userEmail)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                                // The document ID can be used to get the document path
-                                                String path = document.getReference().getPath();
-                                                etFirstName.setText(textInput);
-                                                db.document(path).update(map);
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });}});
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                updateField(firebaseUser, "firstName", "Enter new First Name");
             }
         });
 
         btnLastName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new LastName");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String textInput = input.getText().toString();
-                        String userEmail = firebaseUser.getEmail();
-                        Map<String,Object> map = new HashMap<>();
-                        map.put("lastName", textInput);
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        db.collection("jt_user")
-                                .whereEqualTo("email", userEmail)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                                // The document ID can be used to get the document path
-                                                String path = document.getReference().getPath();
-                                                etLastName.setText(textInput);
-                                                db.document(path).update(map);
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });}});
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                updateField(firebaseUser, "lastName", "Enter new Last Name");
             }
         });
 
         btnPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new Phone Number");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_PHONE);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String textInput = input.getText().toString();
-                        String userEmail = firebaseUser.getEmail();
-                        Map<String,Object> map = new HashMap<>();
-                        map.put("phoneNum", textInput);
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        db.collection("jt_user")
-                                .whereEqualTo("email", userEmail)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                                // The document ID can be used to get the document path
-                                                String path = document.getReference().getPath();
-                                                etPhoneNumber.setText(textInput);
-                                                db.document(path).update(map);
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });}});
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                updateField(firebaseUser, "phoneNum", "Enter new Phone Number");
             }
         });
-
 
 
         imgProfile.setOnClickListener(new View.OnClickListener() {
@@ -304,10 +233,6 @@ public class UserProfileFragment extends Fragment {
                 mGetContent.launch("image/*");
             }
         });
-
-
-
-
 
         return rootView;
     }
