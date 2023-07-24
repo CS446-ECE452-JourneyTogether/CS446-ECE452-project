@@ -9,7 +9,7 @@
     <string name="login_here">Login here</string>
     <string name="not_reg_yet">Not registered yet?</string>
     <string name="signout">Signout</string>
-    <string name="driver_name_placeholder">Driver Name</string>
+    <string name="driver_name_placeholder">...</string>
     <string name="how_many_seats">How many seats?</string>
     <string name="share_your_phone_number">Share your phone number with driver?</string>
     <string name="pickup_address">Pickup address</string>

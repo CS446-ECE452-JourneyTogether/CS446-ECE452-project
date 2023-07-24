@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
+
 import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 import ca.uwaterloo.cs446.journeytogether.user.TripRequestActivity;
 
@@ -65,11 +66,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
         public TripViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
+
             tripDriverTextView = itemView.findViewById(R.id.tripDriverTextView);
             tripOriginTextView = itemView.findViewById(R.id.tripOriginTextView);
             tripDestinationTextView = itemView.findViewById(R.id.tripDestinationTextView);
             tripCostTextView = itemView.findViewById(R.id.tripCostTextView);
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
+
             startSendRequestButton = itemView.findViewById(R.id.startSendRequestButton);
             this.context = context;
 //            iconImageView = itemView.findViewById(R.id.iconImageView);
