@@ -75,6 +75,12 @@ public class SearchedTripsActivity extends AppCompatActivity {
 
                     // Retrieve the sorted trips from the priority queue
                     ArrayList<Trip> sortedTrips = new ArrayList<>();
+
+                    if (tripQueue.isEmpty()) {
+                        Toast.makeText(SearchedTripsActivity.this, "No trip found.", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+
                     while (!tripQueue.isEmpty()) {
                         sortedTrips.add(tripQueue.poll());
                     }
