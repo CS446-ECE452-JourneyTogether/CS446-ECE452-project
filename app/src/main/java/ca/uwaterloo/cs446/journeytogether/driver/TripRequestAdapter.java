@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -57,6 +58,8 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
         private TextView passengerTextView;
         private TextView seatsRequestedTextView, pickupTextView, additionalInfoTextView;
         private TextView statusTextView;
+        private TextView PhoneNumTextView;
+        private ImageView PhoneNumeImage;
         private Button acceptButton;
         private Button rejectButton;
         private Context context;
@@ -69,6 +72,8 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             pickupTextView = itemView.findViewById(R.id.pickupTextView);
             additionalInfoTextView = itemView.findViewById(R.id.additionalInfoTextView);
             statusTextView = itemView.findViewById(R.id.statusTextView);
+            PhoneNumeImage =itemView.findViewById(R.id.imageView4);
+            PhoneNumTextView=itemView.findViewById(R.id.phonenumTextView);
             acceptButton = itemView.findViewById(R.id.acceptButton);
             rejectButton = itemView.findViewById(R.id.rejectButton);
             this.context = context;
@@ -143,13 +148,29 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
                     statusTextView.setText("Accepted");
                     acceptButton.setVisibility(View.GONE);
                     rejectButton.setVisibility(View.GONE);
+                    if (tripRequest.isSharePhone()) {
+                        if (tripRequest.getPassenger() != null) {
+                            PhoneNumTextView.setText(tripRequest.getPassenger().getPhoneNum());
+                        }
+                    } else {
+                        PhoneNumTextView.setVisibility(View.GONE);
+                        PhoneNumeImage.setVisibility(View.GONE);
+                    }
                     break;
                 case REJECTED:
                     statusTextView.setText("Rejected");
                     acceptButton.setVisibility(View.GONE);
                     rejectButton.setVisibility(View.GONE);
+                    if(!tripRequest.isSharePhone()) {
+                        PhoneNumTextView.setVisibility(View.GONE);
+                        PhoneNumeImage.setVisibility(View.GONE);
+                    }
                     break;
                 case PENDING:
+                    if(!tripRequest.isSharePhone()) {
+                        PhoneNumTextView.setVisibility(View.GONE);
+                        PhoneNumeImage.setVisibility(View.GONE);
+                    }
                     break;
             }
             
