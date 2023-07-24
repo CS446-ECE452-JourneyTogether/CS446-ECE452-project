@@ -127,10 +127,6 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
                             }
 
-                            Intent broadcastIntent = new Intent("LOCATION_UPDATE");
-                            broadcastIntent.putExtra("message", message);
-                            sendBroadcast(broadcastIntent);
-
                             if(!message.equals("Driver Mode")) {
                                 textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                             }
@@ -140,6 +136,10 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
                     });
 
+            Intent broadcastIntent = new Intent("LOCATION_UPDATE");
+            broadcastIntent.putExtra("longitude", longitude);
+            broadcastIntent.putExtra("latitude", latitude);
+            sendBroadcast(broadcastIntent);
         } catch (Exception e) {
             e.printStackTrace();
         }
