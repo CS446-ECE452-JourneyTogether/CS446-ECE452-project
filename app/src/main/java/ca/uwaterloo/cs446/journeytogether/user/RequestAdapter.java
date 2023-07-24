@@ -84,11 +84,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
                 tripReqCostTextView.setText(String.format("$%d/seat", tripRequest.getTrip().getCost()));
             }
 
-            tripReqSeatsLeftTextView.setText(String.format(String.format("%d seats request", tripRequest.getSeatRequest())));
+            tripReqSeatsLeftTextView.setText(String.format(String.format("%d seats requested", tripRequest.getSeatRequest())));
 
-            Log.w("Status", tripRequest.getstatusRequest().toString());
+            Log.w("Status", tripRequest.getStatus().toString());
 
-            TripRequest.Status status = this.tripRequest.getstatusRequest();
+            TripRequest.Status status = this.tripRequest.getStatus();
             if (status.toString().equals("PENDING")) {
                 Log.w("Status",status.toString());
                 StatusImageView.setImageResource(R.drawable.pending);
