@@ -127,14 +127,6 @@ public class DriverModeFragment extends Fragment implements OnMapReadyCallback {
         googleMap = map;
 
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        LatLng latLng = new LatLng(43.4643, -80.5204);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(latLng)
-                .title("Waterloo");
-        googleMap.addMarker(markerOptions);
     }
 }
 
