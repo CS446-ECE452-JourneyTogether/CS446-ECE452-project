@@ -5,12 +5,18 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.FragmentManager;
+
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 
 public class DateTimePickerButton extends AppCompatButton {
 
-    DateTimePickerPopup dateTimePickerPopup;
+    private LocalDateTime selectedDateTime;
+    private FragmentManager fragmentManager;
 
     public DateTimePickerButton(Context context) {
         super(context);
@@ -27,22 +33,58 @@ public class DateTimePickerButton extends AppCompatButton {
         initialize();
     }
 
-    public LocalDateTime getDateTime() {
-        return this.dateTimePickerPopup.getLocalDateTime();
+    public void setFragmentManager(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
     }
 
-    private void onPopupClosed() {
-        this.setText(getDateTime().toString());
+    public LocalDateTime getDateTime() {
+        return selectedDateTime;
     }
 
     private void initialize() {
-        dateTimePickerPopup = new DateTimePickerPopup(this.getContext());
-
-        setOnClickListener(new OnClickListener() {
+        setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateTimePickerPopup.show(v, (localDateTime -> { onPopupClosed(); }));
+                showDateTimePicker();
             }
         });
+    }
+
+    private void showDateTimePicker() {
+        if (fragmentManager == null) {
+            throw new IllegalStateException("FragmentManager must be set before calling showDateTimePicker.");
+        }
+
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    selectedDateTime = LocalDateTime.of(year, monthOfYear + 1, dayOfMonth, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
+                    showTimePicker();
+                },
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+
+        datePickerDialog.show(fragmentManager, "DatePickerDialog");
+    }
+
+    private void showTimePicker() {
+        if (fragmentManager == null) {
+            throw new IllegalStateException("FragmentManager must be set before calling showTimePicker.");
+        }
+
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+                (view, hourOfDay, minute, second) -> {
+                    selectedDateTime = selectedDateTime.withHour(hourOfDay).withMinute(minute);
+                    setText(selectedDateTime.toString());
+                },
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                true
+        );
+
+        timePickerDialog.show(fragmentManager, "TimePickerDialog");
     }
 }

@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
 import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
+import ca.uwaterloo.cs446.journeytogether.driver.DriverProfileFragment;
 
 public class DriverMainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
