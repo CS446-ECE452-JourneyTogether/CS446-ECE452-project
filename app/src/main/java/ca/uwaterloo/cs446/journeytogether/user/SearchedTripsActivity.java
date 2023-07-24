@@ -45,7 +45,8 @@ public class SearchedTripsActivity extends AppCompatActivity {
 
                     arr.removeIf(trip ->{
                         Duration duration = Duration.between(departureDateTime,trip.getDepartureTime());
-                        return duration.toHours() > 24;
+                        Log.w("Time",duration.toString());
+                        return Math.abs(duration.toHours()) > 24;
                     });
                     // Filter trips whose origin or destination is not within the threshold
                     arr.removeIf(trip -> {
