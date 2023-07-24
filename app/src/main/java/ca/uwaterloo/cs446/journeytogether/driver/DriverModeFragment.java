@@ -21,6 +21,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -88,9 +90,12 @@ public class DriverModeFragment extends Fragment implements OnMapReadyCallback {
 
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15));
 
+                    BitmapDescriptor customIcon = BitmapDescriptorFactory.fromResource(R.drawable.bluedot);
+
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(newLocation)
-                            .title("New Location");
+                            .title("New Location")
+                            .icon(customIcon);
                     googleMap.clear();
                     googleMap.addMarker(markerOptions);
                 }
