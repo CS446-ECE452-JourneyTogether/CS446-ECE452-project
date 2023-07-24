@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -74,6 +75,7 @@ public class UserMainActivity extends AppCompatActivity {
     }
 
     private void setFragment(Fragment fragment) {
+        Log.d("UserMainActivity", "Switching to fragment: " + fragment.getClass().getSimpleName());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.mainFragmentContainerView, fragment)
                 .commit();

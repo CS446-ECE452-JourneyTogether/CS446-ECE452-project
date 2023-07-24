@@ -16,7 +16,8 @@ import com.google.firebase.auth.FirebaseUser;
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
 import ca.uwaterloo.cs446.journeytogether.user.UserMainActivity;
-import ca.uwaterloo.cs446.journeytogether.user.UserProfileFragment;
+import ca.uwaterloo.cs446.journeytogether.driver.DriverProfileFragment;
+
 
 public class DriverMainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -24,7 +25,7 @@ public class DriverMainActivity extends AppCompatActivity {
     private BottomNavigationView bnvDriver;
 
     private DriverTripsFragment tripsDriverFragment;
-    private UserProfileFragment profileDriverFragment;
+    private DriverProfileFragment profileDriverFragment;
 
     private DriverModeFragment modeDriverFragment;
 
@@ -50,7 +51,7 @@ public class DriverMainActivity extends AppCompatActivity {
         // Create instances of the fragments
         mAuth = FirebaseAuth.getInstance();
         tripsDriverFragment = new DriverTripsFragment();
-        profileDriverFragment = new UserProfileFragment(mAuth);
+        profileDriverFragment = new DriverProfileFragment(mAuth);
         modeDriverFragment = new DriverModeFragment();
 
         // Set the initial fragment

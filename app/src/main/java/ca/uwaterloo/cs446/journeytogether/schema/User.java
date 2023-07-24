@@ -34,6 +34,7 @@ public class User implements Serializable {
                     () -> new User()
             );
 
+
     public void update(DocumentSnapshot document) {
         try {
             this.firstName = (String) document.get("firstName");
@@ -96,9 +97,14 @@ public class User implements Serializable {
         this.isDriver = isDriver;
     }
 
-    public void setName(String firstName, String lastName) {
+    public User(String driverL,String email, String firstName, String lastName, String phoneNum, boolean isDriver) {
+        this.id = email;
+        this.email =email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNum = phoneNum;
+        this.driverLicense = driverL;
+        this.isDriver = isDriver;
     }
 
     public String getDocumentId() {

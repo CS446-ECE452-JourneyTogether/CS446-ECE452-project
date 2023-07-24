@@ -1,4 +1,40 @@
 <resources>
+    <string-array name="car_brands">
+        <item>Audi</item>
+        <item>BMW</item>
+        <item>Mercedes-Benz</item>
+        <item>Toyota</item>
+        <item>Honda</item>
+        <item>Chevrolet</item>
+        <item>Nissan</item>
+        <item>Jeep</item>
+        <item>Other</item>
+        <!-- Add as many brands as you need -->
+    </string-array>
+    <string-array name="car_colors">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Gold</item>
+        <item>White</item>
+        <item>Grey</item>
+        <item>Silver</item>
+        <item>Red</item>
+        <item>Yellow</item>
+        <item>Other</item>
+        <!-- Add as many brands as you need -->
+    </string-array>
+    <string-array name="car_years">
+        <item>2023</item>
+        <item>2022</item>
+        <item>2021</item>
+        <item>2020</item>
+        <item>2019</item>
+        <item>2018</item>
+        <item>2017</item>
+        <item>2016</item>
+        <item>2015 or less</item>
+        <!-- Add as many brands as you need -->
+    </string-array>
     <string name="app_name">Journey Together</string>
     <string name="register">Register</string>
     <string name="email">Email</string>
@@ -22,4 +58,6 @@
     <string name="reject_request">Reject</string>
     <string name="btnPostText">+ Post</string>
     <string name="update">Update</string>
+    <string name="driver_license">Driver License</string>
+
 </resources>

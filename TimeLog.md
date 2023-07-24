@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 | Date | Lance | Kevin | Yipeng | Xinhao | Bach | NAME | Task
 |------------|------|---------|-------|------|-|-|-|
 |2023-05-27|3.13|3.13|3.13|3.13|3.13|3.13|Team meeting on project design|
@@ -28,6 +29,9 @@
 |2023-07-12|0|0.32|0|0|0|0|Add privacy warning to map|
 |2023-07-12|0|0.58|0|0|0|0|Prevent driver from signing in as rider|
 |2023-07-13|0|0|4|0|0|0|update registeration interface so it require more fileds|
+|2023-07-14|0|0|3|0|0|0|update profile interface for passenger|
+|2023-07-15|0|0|4|0|0|0|update profile interface editing for passenger|
+|2023-07-16|0|0|2|0|0|0|Fix driver registration for driver license|
 |2023-05-29|||||1.5||D1|
 |2023-06-01|||||1.5||D1|
 |2023-06-13|||||1||D2|
@@ -35,4 +39,12 @@
 |2023-07-11|||||3||D4|
 |2023-07-11|||||6||Request status function|
 |2023-07-12|||||8||Request status function|
-
+|2023-07-19|0|0|2.5|0|0|0|D5 document|
+|2023-07-21|0|0|3|0|0|0|enable profile picture select for passenger|
+|2023-07-21|0|0|3|0|0|0|driver profile update|
+|2023-07-22|0|0|4|0|0|0|Vehicle profile display|
+|2023-07-23|0|0|5|0|0|0|Vehicle profile display update and edit|
+=======
+| Date | Lance | Kevin | Yipeng | Xinhao | NAME | NAME | Task
+|07/13 11:20 am - |Yipeng Huang|login page with additional information|
+>>>>>>> Stashed changes
