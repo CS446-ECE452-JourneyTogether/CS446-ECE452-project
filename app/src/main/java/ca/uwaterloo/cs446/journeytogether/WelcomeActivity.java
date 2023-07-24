@@ -23,7 +23,6 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(WelcomeActivity.this, UserLoginActivity.class));
-                finish();
             }
         });
 
@@ -31,7 +30,6 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(WelcomeActivity.this, DriverLoginActivity.class));
-                finish();
             }
         });
     }

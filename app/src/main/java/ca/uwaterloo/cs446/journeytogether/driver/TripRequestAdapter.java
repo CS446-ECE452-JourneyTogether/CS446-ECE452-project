@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.common.AddressRep;
 import ca.uwaterloo.cs446.journeytogether.driver.ViewRequestsActivity;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
@@ -54,7 +55,7 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
 
     public static class TripRequestViewHolder extends RecyclerView.ViewHolder {
         private TextView passengerTextView;
-        private TextView seatsRequestedTextView;
+        private TextView seatsRequestedTextView, pickupTextView, additionalInfoTextView;
         private TextView statusTextView;
         private Button acceptButton;
         private Button rejectButton;
@@ -65,6 +66,8 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             super(itemView);
             passengerTextView = itemView.findViewById(R.id.passengerTextView);
             seatsRequestedTextView = itemView.findViewById(R.id.seatsRequestedTextView);
+            pickupTextView = itemView.findViewById(R.id.pickupTextView);
+            additionalInfoTextView = itemView.findViewById(R.id.additionalInfoTextView);
             statusTextView = itemView.findViewById(R.id.statusTextView);
             acceptButton = itemView.findViewById(R.id.acceptButton);
             rejectButton = itemView.findViewById(R.id.rejectButton);
@@ -75,6 +78,7 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             // TODO: update available seats display in ViewRequestsActivity after accepting/rejecting request
             Intent intent = new Intent(context, ViewRequestsActivity.class);
             intent.putExtra("trip", tripRequest.getTrip());
+            ((ViewRequestsActivity) context).finish();
             context.startActivity(intent);
         }
 
@@ -87,10 +91,10 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             );
             if (status == TripRequest.Status.REJECTED) {
                 if (!success.get()) {
-                    Toast.makeText(context, "Failed to reject request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Failed to reject request", Toast.LENGTH_LONG).show();
                     return false;
                 }
-                Toast.makeText(context, "Request rejected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Request rejected", Toast.LENGTH_LONG).show();
                 return true;
             }
             Trip.firestore.update(
@@ -129,7 +133,10 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             if (tripRequest.getPassenger() != null) {
                 passengerTextView.setText(tripRequest.getPassenger().getDisplayName());
             }
+            passengerTextView.setText(tripRequest.getPassenger() != null ? tripRequest.getPassenger().getDisplayName() : "...");
             seatsRequestedTextView.setText(String.format("%d seats requested", tripRequest.getSeatRequest()));
+            pickupTextView.setText(String.format("Pickup at: %s", AddressRep.getLocationStringAddress(context, tripRequest.getPickupAddr())));
+            additionalInfoTextView.setText(tripRequest.getComment());
 
             switch (tripRequest.getStatus()) {
                 case ACCEPTED:
@@ -150,6 +157,10 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (tripRequest.getSeatRequest() > tripRequest.getTrip().getAvailableSeats()) {
+                        Toast.makeText(context, "There is not enough seats to accept this request", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     if (changeStatus(TripRequest.Status.ACCEPTED))
                         toViewRequestsActivity();
                 }

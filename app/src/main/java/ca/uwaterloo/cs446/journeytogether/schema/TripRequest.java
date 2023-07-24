@@ -5,7 +5,6 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,6 +97,7 @@ public class TripRequest {
         this.pickupAddr = pickupAddr;
         this.comment = comment;
         this.status = Status.PENDING;
+
     }
 
     // Getters and Setters for each property

@@ -347,7 +347,7 @@ public class DriverProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new FirstName");
+                builder.setTitle("Enter new First Name");
                 final EditText input = new EditText(getContext());
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
@@ -395,7 +395,7 @@ public class DriverProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new LastName");
+                builder.setTitle("Enter new Last Name");
                 final EditText input = new EditText(getContext());
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
