@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 | Date | Lance | Kevin | Yipeng | Xinhao | Bach | NAME | Task
 |------------|------|---------|-------|------|-|-|-|
 |2023-05-27|3.13|3.13|3.13|3.13|3.13|3.13|Team meeting on project design|
@@ -43,3 +44,7 @@
 |2023-07-21|0|0|3|0|0|0|driver profile update|
 |2023-07-22|0|0|4|0|0|0|Vehicle profile display|
 |2023-07-23|0|0|5|0|0|0|Vehicle profile display update and edit|
+=======
+| Date | Lance | Kevin | Yipeng | Xinhao | NAME | NAME | Task
+|07/13 11:20 am - |Yipeng Huang|login page with additional information|
+>>>>>>> Stashed changes

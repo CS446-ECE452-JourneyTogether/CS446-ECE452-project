@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -50,7 +51,9 @@ import java.util.regex.Pattern;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.WelcomeActivity;
-
+import ca.uwaterloo.cs446.journeytogether.schema.Trip;
+import ca.uwaterloo.cs446.journeytogether.schema.User;
+import ca.uwaterloo.cs446.journeytogether.user.TripAdapter;
 
 public class DriverProfileFragment extends Fragment {
 
@@ -317,6 +320,7 @@ public class DriverProfileFragment extends Fragment {
                                                 // assuming you have an EditText etInsurance for the insurance number
                                                 //etInsurance.setText(insuranceNum);
                                                 db.document(path).update(map);
+                                                Toast.makeText(getContext(), "Car Information Updated", Toast.LENGTH_SHORT).show();
                                             }
 
                                         } else {
@@ -346,205 +350,30 @@ public class DriverProfileFragment extends Fragment {
         btnFirstName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new First Name");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String textInput = input.getText().toString();
-                        String userEmail = firebaseUser.getEmail();
-                        Map<String,Object> map = new HashMap<>();
-                        map.put("firstName", textInput);
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        db.collection("jt_user")
-                                .whereEqualTo("email", userEmail)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                                // The document ID can be used to get the document path
-                                                String path = document.getReference().getPath();
-                                                etFirstName.setText(textInput);
-                                                db.document(path).update(map);
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });}});
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                updateField(firebaseUser, "firstName", "Enter new First Name");
             }
         });
 
         btnLastName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new Last Name");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String textInput = input.getText().toString();
-                        String userEmail = firebaseUser.getEmail();
-                        Map<String,Object> map = new HashMap<>();
-                        map.put("lastName", textInput);
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        db.collection("jt_user")
-                                .whereEqualTo("email", userEmail)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                                // The document ID can be used to get the document path
-                                                String path = document.getReference().getPath();
-                                                etLastName.setText(textInput);
-                                                db.document(path).update(map);
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });}});
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                updateField(firebaseUser, "lastName", "Enter new Last Name");
             }
         });
 
         btnDriverL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new Driver License");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String textInput = input.getText().toString();
-                        if(!isValidLicense(textInput)){
-                            Toast.makeText(getContext(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
-                            // Show the dialog again
-                            return;
-                        }else {
-                            String userEmail = firebaseUser.getEmail();
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("driverLicense", textInput);
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                            db.collection("jt_user")
-                                    .whereEqualTo("email", userEmail)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                                    // The document ID can be used to get the document path
-                                                    String path = document.getReference().getPath();
-                                                    etDriverL.setText(textInput);
-                                                    db.document(path).update(map);
-                                                }
-                                            } else {
-                                                Log.d(TAG, "Error getting documents: ", task.getException());
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-                });
-
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                updateField(firebaseUser, "driverLicense", "Enter new Driver License");
             }
         });
 
         btnPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Enter new Phone Number");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_PHONE);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String textInput = input.getText().toString();
-                        String userEmail = firebaseUser.getEmail();
-                        Map<String,Object> map = new HashMap<>();
-                        map.put("phoneNum", textInput);
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        db.collection("jt_user")
-                                .whereEqualTo("email", userEmail)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                                // The document ID can be used to get the document path
-                                                String path = document.getReference().getPath();
-                                                etPhoneNumber.setText(textInput);
-                                                db.document(path).update(map);
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });}});
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                updateField(firebaseUser, "phoneNum", "Enter new Phone Number");
             }
         });
-
 
 
         imgProfile.setOnClickListener(new View.OnClickListener() {
@@ -558,8 +387,69 @@ public class DriverProfileFragment extends Fragment {
 
     private boolean isValidLicense(String driverL) {
         Pattern pattern = Pattern.compile("[A-Za-z]{1}\\d{4}-\\d{5}-\\d{5}");
+        // example: A1234-12345-12345
         Matcher matcher = pattern.matcher(driverL);
         return matcher.matches();
+    }
+
+    private void updateField(FirebaseUser firebaseUser, String fieldName, String dialogTitle) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(dialogTitle);
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String textInput = input.getText().toString();
+                String userEmail = firebaseUser.getEmail();
+                Map<String,Object> map = new HashMap<>();
+                map.put(fieldName, textInput);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                db.collection("jt_user")
+                        .whereEqualTo("email", userEmail)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        // The document ID can be used to get the document path
+                                        String path = document.getReference().getPath();
+                                        if (fieldName.equals("firstName")) {
+                                            etFirstName.setText(textInput);
+                                        } else if (fieldName.equals("lastName")) {
+                                            etLastName.setText(textInput);
+                                        } else if (fieldName.equals("phoneNum")) {
+                                            etPhoneNumber.setText(textInput);
+                                        } else if (fieldName.equals("driverLicense")) {
+                                            if (isValidLicense(textInput)) {
+                                                etDriverL.setText(textInput);
+                                            } else {
+                                                Toast.makeText(getContext(), "Invalid Driver License", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                        }
+                                        db.document(path).update(map);
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
 }

@@ -5,41 +5,46 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/carBrandLabel"
-            android:layout_width="240dp"
+            android:layout_width="0dp"
             android:layout_height="46dp"
-            android:text="Branch"
-            android:textSize="24sp"
-            android:textColor="#093CC5 "
+            android:layout_weight="0.9"
             android:fontFamily="sans-serif-light"
-            android:textStyle="bold"/>
+            android:text="Branch"
+            android:textColor="#093CC5 "
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/carBrandSpinner"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="46dp"
-            android:layout_marginStart="-1dp"
-            android:layout_marginLeft="-1dp"
+            android:layout_weight="0.1"
+            android:layout_marginStart="-2dp"
+            android:layout_marginLeft="-2dp"
             android:layout_toEndOf="@id/carBrandLabel"
             android:layout_toRightOf="@id/carBrandLabel" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/carColorLabel"
-            android:layout_width="240dp"
+            android:layout_width="0dp"
             android:layout_height="46dp"
+            android:layout_weight="0.9"
             android:text="Branch"
             android:textSize="24sp"
             android:textColor="#093CC5 "
@@ -48,24 +53,27 @@
 
         <Spinner
             android:id="@+id/carColorSpinner"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="46dp"
+            android:layout_weight="0.1"
             android:layout_marginStart="-1dp"
             android:layout_marginLeft="-1dp"
             android:layout_toEndOf="@id/carColorLabel"
             android:layout_toRightOf="@id/carColorLabel" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/carYearLabel"
-            android:layout_width="240dp"
+            android:layout_width="0dp"
             android:layout_height="46dp"
+            android:layout_weight="0.9"
             android:text="Branch"
             android:textSize="24sp"
             android:textColor="#093CC5 "
@@ -74,14 +82,16 @@
 
         <Spinner
             android:id="@+id/carYearSpinner"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="46dp"
+            android:layout_weight="0.1"
             android:layout_marginStart="2dp"
             android:layout_marginLeft="2dp"
             android:layout_toEndOf="@id/carYearLabel"
             android:layout_toRightOf="@id/carYearLabel" />
 
-    </RelativeLayout>
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
