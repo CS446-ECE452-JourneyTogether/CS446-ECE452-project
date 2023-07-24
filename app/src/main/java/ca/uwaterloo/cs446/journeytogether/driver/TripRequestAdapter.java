@@ -170,6 +170,7 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
                     rejectButton.setVisibility(View.GONE);
                     break;
                 case PENDING:
+                    statusTextView.setVisibility(View.GONE);
                     break;
             }
             
