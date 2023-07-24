@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
+import android.util.Log;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.common.GeoUtils;
@@ -30,6 +33,9 @@ public class SearchedTripsActivity extends AppCompatActivity {
         double userOriginLongitude = getIntent().getDoubleExtra("originLongitude", 0.0);
         double userDestinationLatitude = getIntent().getDoubleExtra("destinationLatitude", 0.0);
         double userDestinationLongitude = getIntent().getDoubleExtra("destinationLongitude", 0.0);
+        String formattedDateTime = getIntent().getStringExtra("departureTime");
+        Log.w("TIME", formattedDateTime);
+        LocalDateTime departureDateTime = LocalDateTime.parse(formattedDateTime);
 
         Trip.firestore.makeQuery(
                 c -> c,
@@ -37,6 +43,11 @@ public class SearchedTripsActivity extends AppCompatActivity {
                     // Define the maximum allowable difference in kilometers
                     double maxAllowableDifference = 20.0;
 
+                    arr.removeIf(trip ->{
+                        Duration duration = Duration.between(departureDateTime,trip.getDepartureTime());
+                        Log.w("Time",duration.toString());
+                        return Math.abs(duration.toHours()) > 24;
+                    });
                     // Filter trips whose origin or destination is not within the threshold
                     arr.removeIf(trip -> {
                         double originDistance = GeoUtils.calculateDistance(trip.getOrigin().latitude, trip.getOrigin().longitude, userOriginLatitude, userOriginLongitude);
@@ -65,6 +76,12 @@ public class SearchedTripsActivity extends AppCompatActivity {
 
                     // Retrieve the sorted trips from the priority queue
                     ArrayList<Trip> sortedTrips = new ArrayList<>();
+
+                    if (tripQueue.isEmpty()) {
+                        Toast.makeText(SearchedTripsActivity.this, "No trip found.", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+
                     while (!tripQueue.isEmpty()) {
                         sortedTrips.add(tripQueue.poll());
                     }

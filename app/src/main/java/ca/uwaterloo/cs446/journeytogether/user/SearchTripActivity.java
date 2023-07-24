@@ -69,6 +69,7 @@ public class SearchTripActivity extends AppCompatActivity {
         intent.putExtra("originLongitude", origin.longitude);
         intent.putExtra("destinationLatitude", destination.latitude);
         intent.putExtra("destinationLongitude", destination.longitude);
+        intent.putExtra("departureTime",departureDateTime.toString());
         startActivity(intent);
     }
 }

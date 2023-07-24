@@ -52,7 +52,9 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     private TextToSpeech textToSpeech;
 
     private FusedLocationProviderClient fusedLocationClient;
-    private LocationCallback locationCallback;
+
+    private LocationCallback locationCallbackBroadcast;
+    private LocationCallback locationCallbackTextToSpeech;
 
     private FirebaseFirestore db;
 
@@ -79,29 +81,58 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            LocationRequest locationRequest = LocationRequest.create()
+            LocationRequest locationRequestTextToSpeech = LocationRequest.create()
                     .setInterval(LOCATION_UPDATE_INTERVAL)
                     .setFastestInterval(LOCATION_UPDATE_INTERVAL)
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-            locationCallback = new LocationCallback() {
+            LocationRequest locationRequestBroadcast = LocationRequest.create()
+                    .setInterval(5000) // Update interval in milliseconds
+                    .setFastestInterval(5000)
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+            locationCallbackTextToSpeech = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
                     if (locationResult != null) {
                         currentLocation = locationResult.getLastLocation();
-                        updateLocation();
+                        updateLocationForSpeech();
                     }
                 }
             };
 
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+            locationCallbackBroadcast = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult != null) {
+                        currentLocation = locationResult.getLastLocation();
+                        updateLocationForBroadcast();
+                    }
+                }
+            };
 
-            // 启动前台服务通知
+            fusedLocationClient.requestLocationUpdates(locationRequestTextToSpeech, locationCallbackTextToSpeech, Looper.getMainLooper());
+            fusedLocationClient.requestLocationUpdates(locationRequestBroadcast, locationCallbackBroadcast, Looper.getMainLooper());
+
             startForeground(NOTIFICATION_ID, createNotification());
         }
     }
 
-    private void updateLocation() {
+    private void updateLocationForBroadcast() {
+        try {
+            double latitude = currentLocation.getLatitude();
+            double longitude = currentLocation.getLongitude();
+
+            Intent broadcastIntent = new Intent("LOCATION_UPDATE");
+            broadcastIntent.putExtra("longitude", longitude);
+            broadcastIntent.putExtra("latitude", latitude);
+            sendBroadcast(broadcastIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateLocationForSpeech() {
         try {
             double latitude = currentLocation.getLatitude();
             double longitude = currentLocation.getLongitude();
@@ -127,10 +158,6 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
                             }
 
-                            Intent broadcastIntent = new Intent("LOCATION_UPDATE");
-                            broadcastIntent.putExtra("message", message);
-                            sendBroadcast(broadcastIntent);
-
                             if(!message.equals("Driver Mode")) {
                                 textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
                             }
@@ -140,13 +167,17 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
 
                     });
 
+            Intent broadcastIntent = new Intent("LOCATION_UPDATE");
+            broadcastIntent.putExtra("longitude", longitude);
+            broadcastIntent.putExtra("latitude", latitude);
+            sendBroadcast(broadcastIntent);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private PointF[] parseBoundaryCoordinates(List<GeoPoint> boundarySnapshot) {
-        // 解析 GeoPoint 对象为 PointF 数组
+
         List<PointF> points = new ArrayList<>();
 
         for (GeoPoint geoPoint : boundarySnapshot) {
@@ -171,8 +202,9 @@ public class DriverModeService extends Service implements TextToSpeech.OnInitLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (fusedLocationClient != null && locationCallback != null) {
-            fusedLocationClient.removeLocationUpdates(locationCallback);
+        if (fusedLocationClient != null) {
+            fusedLocationClient.removeLocationUpdates(locationCallbackTextToSpeech);
+            fusedLocationClient.removeLocationUpdates(locationCallbackBroadcast);
         }
 
         if (textToSpeech != null) {

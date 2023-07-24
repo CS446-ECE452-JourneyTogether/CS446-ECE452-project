@@ -55,6 +55,7 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
         private TextView tripDestinationTextView;
         private TextView tripCostTextView;
         private TextView tripSeatsLeftTextView;
+        private TextView tripTimeTextView;
         private Button startViewRequestsButton;
         private Context context;
         private Trip trip;
@@ -66,6 +67,7 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
             tripCostTextView = itemView.findViewById(R.id.tripCostTextView);
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
             startViewRequestsButton = itemView.findViewById(R.id.startViewRequestsButton);
+            tripTimeTextView = itemView.findViewById(R.id.tripTimeTextView);
             this.context = context;
         }
 
@@ -78,6 +80,7 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
 
             tripOriginTextView.setText(trip.getOriginLocation(this.context));
             tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
+            tripTimeTextView.setText(String.format("%s -> %s" , trip.getDepartureTime().toString(),trip.getArrivalTime().toString()));
             tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
 

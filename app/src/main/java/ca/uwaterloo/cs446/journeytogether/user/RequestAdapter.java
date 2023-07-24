@@ -3,6 +3,7 @@ package ca.uwaterloo.cs446.journeytogether.user;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Geocoder;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 
 import ca.uwaterloo.cs446.journeytogether.R;
+import ca.uwaterloo.cs446.journeytogether.common.AddressRep;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 
@@ -56,21 +58,35 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
 
     public static class TripReqViewHolder extends RecyclerView.ViewHolder {
         private TextView tripReqDriverTextView;
+        private TextView tripReqDepartureTextView;
         private TextView tripReqDestinationTextView;
         private TextView tripReqCostTextView;
-        private  TextView tripReqSeatsLeftTextView;
+        private TextView tripReqSeatsLeftTextView;
+        private TextView tripReqPhoneNumTextView;
+        private TextView tripReqTimeTextView;
         private ImageView StatusImageView;
+        private TextView tripReqPickUpAddr;
+        private TextView tripReqComment;
 //        private ImageView iconImageView;
         private Context context;
+        private ImageView PhoneNumImage;
+        private ImageView CommentImage;
         private TripRequest tripRequest;
 
         public TripReqViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
             tripReqDriverTextView = itemView.findViewById(R.id.tripReqDriverTextView);
+            tripReqDepartureTextView = itemView.findViewById(R.id.tripReqOriginTextView);
             tripReqDestinationTextView = itemView.findViewById(R.id.tripReqDestinationTextView);
             tripReqCostTextView = itemView.findViewById(R.id.tripReqCostTextView);
             StatusImageView = itemView.findViewById(R.id.StatusImageView);
             tripReqSeatsLeftTextView = itemView.findViewById(R.id.tripReqSeatsLeftTextView);
+            tripReqPhoneNumTextView = itemView.findViewById(R.id.tripReqPhoneNumTextView);
+            PhoneNumImage=itemView.findViewById(R.id.imageView6);
+            tripReqTimeTextView=itemView.findViewById(R.id.tripReqTimeTextView);
+            tripReqPickUpAddr=itemView.findViewById(R.id.tripReqPickupAddTextView);
+            tripReqComment=itemView.findViewById(R.id.tripReqCommentTextView);
+            CommentImage=itemView.findViewById(R.id.imageView9);
             this.context = context;
         }
 
@@ -80,23 +96,38 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
 
             if (tripRequest.getTrip() != null) {
                 tripReqDriverTextView.setText(tripRequest.getTrip().getDriver().getDisplayName());
-                tripReqDestinationTextView.setText(tripRequest.getTrip().getRouteStringRep(this.context));
+                tripReqDepartureTextView.setText(tripRequest.getTrip().getOriginLocation(this.context));
+                tripReqDestinationTextView.setText(tripRequest.getTrip().getDestinationLocation(this.context));
+                tripReqTimeTextView.setText(String.format("%s -> %s" , tripRequest.getTrip().getDepartureTime().toString(),tripRequest.getTrip().getArrivalTime().toString()));
                 tripReqCostTextView.setText(String.format("$%d/seat", tripRequest.getTrip().getCost()));
+                tripReqPickUpAddr.setText(String.format("Pickup at: %s", AddressRep.getLocationStringAddress(context, tripRequest.getPickupAddr())));
+                if (tripRequest.getComment().isEmpty()){
+                    CommentImage.setVisibility(View.GONE);
+                }
+                tripReqComment.setText(tripRequest.getComment());
+                if (tripRequest.getStatus().toString().equals("ACCEPTED")) {
+                    tripReqPhoneNumTextView.setText(tripRequest.getTrip().getDriver().getPhoneNum());
+                    PhoneNumImage.setImageResource(R.drawable.phone);
+                } else {
+                    tripReqPhoneNumTextView.setText("");
+                    PhoneNumImage.setVisibility(View.INVISIBLE);
+                }
             }
 
             tripReqSeatsLeftTextView.setText(String.format(String.format("%d seats requested", tripRequest.getSeatRequest())));
 
-            Log.w("Status", tripRequest.getStatus().toString());
+            // Log.w("Status", tripRequest.getStatus().toString());
 
-            TripRequest.Status status = this.tripRequest.getStatus();
-            if (status.toString().equals("PENDING")) {
-                Log.w("Status",status.toString());
-                StatusImageView.setImageResource(R.drawable.pending);
-            } else if (status.toString().equals("ACCEPTED")) {
-                Log.w("Status",status.toString());
-                StatusImageView.setImageResource(R.drawable.accept);
-            } else if (status.toString().equals("REJECTED")) {
-                StatusImageView.setImageResource(R.drawable.reject);
+            switch (this.tripRequest.getStatus()) {
+                case PENDING:
+                    StatusImageView.setImageResource(R.drawable.pending);
+                    break;
+                case ACCEPTED:
+                    StatusImageView.setImageResource(R.drawable.accept);
+                    break;
+                case REJECTED:
+                    StatusImageView.setImageResource(R.drawable.reject);
+                    break;
             }
         }
     }

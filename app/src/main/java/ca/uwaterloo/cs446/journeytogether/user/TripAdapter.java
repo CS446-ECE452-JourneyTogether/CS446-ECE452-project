@@ -59,6 +59,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         private TextView tripDestinationTextView;
         private TextView tripCostTextView;
         private TextView tripSeatsLeftTextView;
+        private TextView tripTimeTexView;
         private Button startSendRequestButton;
 //        private ImageView iconImageView;
         private Context context;
@@ -72,6 +73,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             tripDestinationTextView = itemView.findViewById(R.id.tripDestinationTextView);
             tripCostTextView = itemView.findViewById(R.id.tripCostTextView);
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
+            tripTimeTexView = itemView.findViewById(R.id.tripTimeTextView);
 
             startSendRequestButton = itemView.findViewById(R.id.startSendRequestButton);
             this.context = context;
@@ -96,6 +98,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             tripDestinationTextView.setText(trip.getDestinationLocation(this.context));
             tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
+            tripTimeTexView.setText(String.format("%s -> %s" , trip.getDepartureTime().toString(),trip.getArrivalTime().toString()));
 //            iconImageView.setImageResource(trip.getIconResId());
 
             // upon pressing the send button, it takes us to a trip request activity
