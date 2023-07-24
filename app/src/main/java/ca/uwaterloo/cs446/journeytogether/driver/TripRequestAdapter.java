@@ -60,9 +60,8 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
         private TextView passengerTextView;
         private TextView seatsRequestedTextView, pickupTextView, additionalInfoTextView;
         private TextView statusTextView;
-        private TextView PhoneNumTextView;
-        private ImageView PhoneNumeImage;
-        private TextView TimeTextView;
+        private TextView phoneNumTextView;
+        private ImageView phoneImage;
         private Button acceptButton;
         private Button rejectButton;
         private Context context;
@@ -75,11 +74,10 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             pickupTextView = itemView.findViewById(R.id.pickupTextView);
             additionalInfoTextView = itemView.findViewById(R.id.additionalInfoTextView);
             statusTextView = itemView.findViewById(R.id.statusTextView);
-            PhoneNumeImage =itemView.findViewById(R.id.imageView4);
-            PhoneNumTextView=itemView.findViewById(R.id.phonenumTextView);
+            phoneImage = itemView.findViewById(R.id.imageView4);
+            phoneNumTextView = itemView.findViewById(R.id.phoneNumTextView);
             acceptButton = itemView.findViewById(R.id.acceptButton);
             rejectButton = itemView.findViewById(R.id.rejectButton);
-            TimeTextView = itemView.findViewById(R.id.timeTextView);
             this.context = context;
         }
 
@@ -145,39 +143,34 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
             passengerTextView.setText(tripRequest.getPassenger() != null ? tripRequest.getPassenger().getDisplayName() : "...");
             seatsRequestedTextView.setText(String.format("%d seats requested", tripRequest.getSeatRequest()));
             pickupTextView.setText(String.format("Pickup at: %s", AddressRep.getLocationStringAddress(context, tripRequest.getPickupAddr())));
-            if (tripRequest.getTrip() != null) {
-                TimeTextView.setText(String.format("%s -> %s", tripRequest.getTrip().getDepartureTime().toString(), tripRequest.getTrip().getArrivalTime().toString()));
+
+            if (tripRequest.getStatus() == TripRequest.Status.ACCEPTED && tripRequest.isSharePhone() && tripRequest.getPassenger() != null) {
+                phoneNumTextView.setText(tripRequest.getPassenger().getPhoneNum());
+            } else {
+                phoneNumTextView.setVisibility(View.GONE);
+                phoneImage.setVisibility(View.GONE);
             }
-            additionalInfoTextView.setText(tripRequest.getComment());
+
+            if (tripRequest.getComment() == null || tripRequest.getComment().isEmpty()) {
+                itemView.findViewById(R.id.textView9).setVisibility(View.GONE);
+                additionalInfoTextView.setVisibility(View.GONE);
+            } else {
+                additionalInfoTextView.setText(tripRequest.getComment());
+            }
 
             switch (tripRequest.getStatus()) {
                 case ACCEPTED:
                     statusTextView.setText("Accepted");
                     acceptButton.setVisibility(View.GONE);
                     rejectButton.setVisibility(View.GONE);
-                    if (tripRequest.isSharePhone()) {
-                        if (tripRequest.getPassenger() != null) {
-                            PhoneNumTextView.setText(tripRequest.getPassenger().getPhoneNum());
-                        }
-                    } else {
-                        PhoneNumTextView.setVisibility(View.GONE);
-                        PhoneNumeImage.setVisibility(View.GONE);
-                    }
                     break;
                 case REJECTED:
                     statusTextView.setText("Rejected");
                     acceptButton.setVisibility(View.GONE);
                     rejectButton.setVisibility(View.GONE);
-                    if(!tripRequest.isSharePhone()) {
-                        PhoneNumTextView.setVisibility(View.GONE);
-                        PhoneNumeImage.setVisibility(View.GONE);
-                    }
                     break;
                 case PENDING:
-                    if(!tripRequest.isSharePhone()) {
-                        PhoneNumTextView.setVisibility(View.GONE);
-                        PhoneNumeImage.setVisibility(View.GONE);
-                    }
+                    statusTextView.setVisibility(View.GONE);
                     break;
             }
             

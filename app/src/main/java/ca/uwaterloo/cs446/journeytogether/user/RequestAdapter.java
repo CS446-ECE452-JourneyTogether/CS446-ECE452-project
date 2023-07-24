@@ -116,17 +116,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
 
             tripReqSeatsLeftTextView.setText(String.format(String.format("%d seats requested", tripRequest.getSeatRequest())));
 
-            Log.w("Status", tripRequest.getStatus().toString());
+            // Log.w("Status", tripRequest.getStatus().toString());
 
-            TripRequest.Status status = this.tripRequest.getStatus();
-            if (status.toString().equals("PENDING")) {
-                Log.w("Status",status.toString());
-                StatusImageView.setImageResource(R.drawable.pending);
-            } else if (status.toString().equals("ACCEPTED")) {
-                Log.w("Status",status.toString());
-                StatusImageView.setImageResource(R.drawable.accept);
-            } else if (status.toString().equals("REJECTED")) {
-                StatusImageView.setImageResource(R.drawable.reject);
+            switch (this.tripRequest.getStatus()) {
+                case PENDING:
+                    StatusImageView.setImageResource(R.drawable.pending);
+                    break;
+                case ACCEPTED:
+                    StatusImageView.setImageResource(R.drawable.accept);
+                    break;
+                case REJECTED:
+                    StatusImageView.setImageResource(R.drawable.reject);
+                    break;
             }
         }
     }

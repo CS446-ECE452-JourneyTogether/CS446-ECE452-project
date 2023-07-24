@@ -95,27 +95,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/timeLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_weight="0"
-                        app:srcCompat="@drawable/time" />
-
-                    <TextView
-                        android:id="@+id/timeTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="..." />
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/phonenumLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -130,7 +109,7 @@
                         app:srcCompat="@drawable/phonewithoutbackground" />
 
                     <TextView
-                        android:id="@+id/phonenumTextView"
+                        android:id="@+id/phoneNumTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="..." />
