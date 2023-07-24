@@ -120,9 +120,9 @@
 
         <ImageView
             android:id="@+id/StatusImageView"
-            android:layout_width="10dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0"
             tools:srcCompat="@drawable/carpool" />
 
     </LinearLayout>
