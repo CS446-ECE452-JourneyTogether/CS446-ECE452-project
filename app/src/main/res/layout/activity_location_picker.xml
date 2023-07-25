@@ -12,11 +12,47 @@
 
     </TableRow>
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/confirmButton">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="8dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvMapWarning"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="2"
+                android:text="The location that you choose will be publicly available or made available to other parties in carpool.\n\nDo not choose your home, your place at work, or any other places that you visit often.\n\nChoose meetup locations that are in crowded areas."
+                android:textColor="#AC0000"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/showMoreButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show More"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/showLessButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Less"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
 
         <SearchView
             android:id="@+id/searchViewLocationPicker"

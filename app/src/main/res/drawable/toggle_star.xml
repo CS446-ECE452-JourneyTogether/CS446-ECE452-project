@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Unchecked state (star outline) -->
+    <item android:id="@+id/starOutline"
+        android:drawable="@drawable/ic_star_outline"
+        android:gravity="center"
+        android:width="50dp"
+        android:height="50dp" />
+
+    <!-- Checked state (filled star) -->
+    <item android:id="@+id/starFilled"
+        android:drawable="@drawable/ic_star_filled"
+        android:gravity="center"
+        android:width="50dp"
+        android:height="50dp"
+        android:visibility="invisible" />
+</layer-list>
+

@@ -42,6 +42,7 @@
         <activity android:name=".user.SearchTripActivity" />
         <activity android:name=".user.UserMainActivity" />
         <activity android:name=".user.SearchedTripsActivity" />
+        <activity android:name=".user.CollectedTripsActivity" />
         <activity android:name=".driver.DriverMainActivity" />
         <activity android:name=".driver.DriverLoginActivity" />
         <activity android:name=".driver.DriverRegistrationActivity" />

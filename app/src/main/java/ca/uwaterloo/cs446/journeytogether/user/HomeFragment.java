@@ -20,13 +20,13 @@ import ca.uwaterloo.cs446.journeytogether.schema.TripRequest;
 
 import android.util.Log;
 
-public class HomeFragment extends Fragment {
+public class  HomeFragment extends Fragment {
 
     public HomeFragment() { }
     private View rootView;
     private ArrayList<TripRequest> tripRequest = new ArrayList<>();
     private RecyclerView recyclerView;
-    private Button btnSearch;
+    private Button btnSearch, btnCollectedTrips;
     private RequestAdapter requestAdapter;
     private InAppNotice inAppNotice;
     
@@ -35,7 +35,9 @@ public class HomeFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         inAppNotice = new InAppNotice(rootView);
         btnSearch = rootView.findViewById(R.id.btnHomeSearch);
+        btnCollectedTrips = rootView.findViewById(R.id.btnCollectedTrips);
         btnSearch.setOnClickListener(v -> onSearchButtonClick());
+        btnCollectedTrips.setOnClickListener(v -> onBtnCollectedTripsClick());
 
         CurrentUser.getCurrentUser().thenApply((user) -> {
             TripRequest.firestore.makeQuery(
@@ -57,5 +59,9 @@ public class HomeFragment extends Fragment {
 
     private void onSearchButtonClick() {
         startActivity(new Intent(getActivity(), SearchTripActivity.class));
+    }
+
+    private void onBtnCollectedTripsClick() {
+        startActivity(new Intent(getActivity(), CollectedTripsActivity.class));
     }
 }
