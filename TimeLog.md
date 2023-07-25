@@ -50,6 +50,9 @@
 | 2023-07-16 | 5     |       |        |        | 2    |      | Request status functionality                                                                          |
 | 2023-07-16 | 0     |       |        |        | 0    | 6    | Trip Request View by Passenger                                                                        |
 | 2023-07-17 | 10    |       |        |        | 1    |      | Request status functionality                                                                          |
-| 2023-07-19 |       |       |        |        |      | 2    | D5                                                                                                    |
+| 2023-07-19 |       |       |        |        | 2    | 2    | D5                                                                                                    |
 | 2023-07-22 |       |       |        |        |      | 6    | Trip Request View by Passenger                                                                        |
-| 2023-07-24 |       |       |        |        |      | 8    | Phone number, Time display, Time search, Update UI  
+| 2023-07-24 |       |       |        |        |      | 8    | Phone number, Time display, Time search, Update UI                                                    |
+| 2023-07-22 |       |       |        |        | 1.5  |      | Phone number, Time display, Time search, Update UI                                                    |
+| 2023-07-23 |       |       |        |        | 1.5  |      | Phone number, Time display, Time search, Update UI                                                    |
+| 2023-07-24 |       |       |        |        | 9    |      | Update UI, trip list, trip requests, fix some bugs...                                                 |
