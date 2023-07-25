@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,8 +46,10 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
-
     private LatLng selectedLocation;
+
+    private TextView tvMapWarning;
+    private Button showMoreButton, showLessButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,11 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         mapView = findViewById(R.id.locationPickerMapView);
         searchViewLocationPicker = findViewById(R.id.searchViewLocationPicker);
         Button confirmButton = findViewById(R.id.confirmButton);
+
+        tvMapWarning = findViewById(R.id.tvMapWarning);
+        showMoreButton = findViewById(R.id.showMoreButton);
+        showLessButton = findViewById(R.id.showLessButton);
+
 
         // Initialize the Google Maps SDK
         mapView.onCreate(savedInstanceState);
@@ -74,6 +82,18 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                     Toast.makeText(LocationPickerActivity.this, "Please select a location", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+
+        showMoreButton.setOnClickListener(view -> {
+            tvMapWarning.setMaxLines(Integer.MAX_VALUE); // Show all lines
+            showMoreButton.setVisibility(View.GONE); // Hide "Show More" button
+            showLessButton.setVisibility(View.VISIBLE); // Show "Show Less" button
+        });
+
+        showLessButton.setOnClickListener(view -> {
+            tvMapWarning.setMaxLines(2); // Limit to three lines
+            showMoreButton.setVisibility(View.VISIBLE); // Show "Show More" button
+            showLessButton.setVisibility(View.GONE); // Hide "Show Less" button
         });
 
         setupSearchViewListener();
