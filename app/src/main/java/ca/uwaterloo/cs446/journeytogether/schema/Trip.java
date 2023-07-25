@@ -224,4 +224,8 @@ public class Trip implements Serializable {
     public void setPassengers(List<User> passengers) {
         this.passengers = passengers;
     }
+
+    public void addPassenger(User passenger) {
+        this.passengers.add(passenger);
+    }
 }

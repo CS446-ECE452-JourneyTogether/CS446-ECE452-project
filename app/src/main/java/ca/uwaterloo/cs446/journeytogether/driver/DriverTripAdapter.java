@@ -16,9 +16,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.uwaterloo.cs446.journeytogether.R;
 import ca.uwaterloo.cs446.journeytogether.schema.Trip;
+import ca.uwaterloo.cs446.journeytogether.schema.User;
 import ca.uwaterloo.cs446.journeytogether.driver.ViewRequestsActivity;
 
 public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.DriverTripViewHolder> {
@@ -56,6 +58,7 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
         private TextView tripCostTextView;
         private TextView tripSeatsLeftTextView;
         private TextView tripTimeTextView;
+        private TextView passengersTextView;
         private Button startViewRequestsButton;
         private Context context;
         private Trip trip;
@@ -68,6 +71,7 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
             tripSeatsLeftTextView = itemView.findViewById(R.id.tripSeatsLeftTextView);
             startViewRequestsButton = itemView.findViewById(R.id.startViewRequestsButton);
             tripTimeTextView = itemView.findViewById(R.id.tripTimeTextView);
+            passengersTextView = itemView.findViewById(R.id.passengersTextView);
             this.context = context;
         }
 
@@ -79,10 +83,22 @@ public class DriverTripAdapter extends RecyclerView.Adapter<DriverTripAdapter.Dr
             this.trip = trip;
 
             tripOriginTextView.setText(trip.getOriginLocation(this.context));
-            tripDestinationTextView.setText(trip.getRouteStringRep(this.context));
+            tripDestinationTextView.setText(trip.getDestinationLocation(this.context));
             tripTimeTextView.setText(String.format("%s -> %s" , trip.getDepartureTime().toString(),trip.getArrivalTime().toString()));
             tripCostTextView.setText(String.format("$%d/seat", trip.getCost()));
             tripSeatsLeftTextView.setText(String.format("%d/%d seats available", trip.getAvailableSeats(), trip.getTotalSeats()));
+  
+            List<User> passengers = trip.getPassengers();
+            List<String> passengerNames = new ArrayList<>();
+            for (User passenger : passengers) {
+                passengerNames.add(passenger.getDisplayName());
+            }
+            // if (passengerNames.isEmpty()) {
+            //     itemView.findViewById(R.id.passengersLabelTextView).setVisibility(View.GONE);
+            //     passengersTextView.setVisibility(View.GONE);    
+            // } else {
+                passengersTextView.setText(String.join(", ", passengerNames));
+            // }
 
             startViewRequestsButton.setOnClickListener(new View.OnClickListener() {
                 @Override

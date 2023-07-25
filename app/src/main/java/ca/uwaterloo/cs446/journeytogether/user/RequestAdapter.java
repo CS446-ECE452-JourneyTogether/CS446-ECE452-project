@@ -110,7 +110,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.TripReqV
                     PhoneNumImage.setImageResource(R.drawable.phone);
                 } else {
                     tripReqPhoneNumTextView.setText("");
-                    PhoneNumImage.setVisibility(View.INVISIBLE);
+                    PhoneNumImage.setVisibility(View.GONE);
                 }
             }
 

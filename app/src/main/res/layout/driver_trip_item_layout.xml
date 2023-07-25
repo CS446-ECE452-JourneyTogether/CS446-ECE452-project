@@ -124,6 +124,19 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/passengersLabelTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Passengers:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/passengersTextView"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:text="..." />
+
         </LinearLayout>
 
         <Button

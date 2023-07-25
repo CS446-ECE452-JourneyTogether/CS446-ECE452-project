@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.uwaterloo.cs446.journeytogether.R;
@@ -82,7 +83,6 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
         }
 
         private void toViewRequestsActivity() {
-            // TODO: update available seats display in ViewRequestsActivity after accepting/rejecting request
             Intent intent = new Intent(context, ViewRequestsActivity.class);
             intent.putExtra("trip", tripRequest.getTrip());
             ((ViewRequestsActivity) context).finish();
@@ -129,6 +129,15 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
                 return false;
             }
             Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+            Trip updatedTrip = tripRequest.getTrip();
+            updatedTrip.setAvailableSeats(updatedTrip.getAvailableSeats() - tripRequest.getSeatRequest());
+            updatedTrip.addPassenger(tripRequest.getPassenger());
+
+            Intent intent = new Intent(context, ViewRequestsActivity.class);
+            intent.putExtra("trip", updatedTrip);
+            ((ViewRequestsActivity) context).finish();
+            context.startActivity(intent);
+
             return true;
         }
 
@@ -181,8 +190,7 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
                         Toast.makeText(context, "There is not enough seats to accept this request", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    if (changeStatus(TripRequest.Status.ACCEPTED))
-                        toViewRequestsActivity();
+                    changeStatus(TripRequest.Status.ACCEPTED);
                 }
             });
             
