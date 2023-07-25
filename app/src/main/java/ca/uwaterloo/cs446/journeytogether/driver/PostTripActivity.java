@@ -25,6 +25,7 @@ import ca.uwaterloo.cs446.journeytogether.schema.Trip;
 public class PostTripActivity extends AppCompatActivity {
 
     private TextInputEditText etAvailableSeats;
+    private TextInputEditText etCost;
     private DateTimePickerButton departureDateTimePicker, arrivalDateTimePicker;
     private LocationPickerButton originLocationSelector, destinationLocationSelector;
     private InAppNotice inAppNotice;
@@ -51,6 +52,7 @@ public class PostTripActivity extends AppCompatActivity {
         destinationLocationSelector.setActivity(this, 2);
 
         etAvailableSeats = findViewById(R.id.ptEtSeats);
+        etCost = findViewById(R.id.ptEtCost);
 
         Button postButton = findViewById(R.id.ptBtnPost);
         postButton.setOnClickListener(view -> handleFormInputs());
@@ -69,6 +71,7 @@ public class PostTripActivity extends AppCompatActivity {
         LatLng destination = destinationLocationSelector.getSelectedLocation();
 
         String availableSeatsStr = etAvailableSeats.getText().toString().trim();
+        String costStr = etCost.getText().toString().trim();
         LocalDateTime departureTime = departureDateTimePicker.getDateTime();
         LocalDateTime arrivalTime = arrivalDateTimePicker.getDateTime();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
@@ -85,9 +88,10 @@ public class PostTripActivity extends AppCompatActivity {
         }
 
         int availableSeats = Integer.parseInt(availableSeatsStr);
+        int cost = Integer.parseInt(costStr);
 
         CurrentUser.getCurrentUser().thenApply((user) -> {
-            Trip trip = new Trip(user, origin, destination, availableSeats, departureTime, arrivalTime);
+            Trip trip = new Trip(user, origin, destination, availableSeats, cost, departureTime, arrivalTime);
             Trip.firestore.create(
                     trip,
                     () -> {

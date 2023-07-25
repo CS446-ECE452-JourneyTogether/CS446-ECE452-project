@@ -133,7 +133,7 @@ public class Trip implements Serializable {
 
     public Trip() {}
 
-    public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, LocalDateTime departureTime, LocalDateTime arrivalTime) {
+    public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, int cost, LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.driver = driver;
         this.origin = new SerializableLatLng(origin);
         this.destination = new SerializableLatLng(destination);
@@ -141,7 +141,7 @@ public class Trip implements Serializable {
         this.totalSeats = availableSeats;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-        this.cost = 100;
+        this.cost = cost;
         this.passengers = new ArrayList<>();
     }
 
