@@ -128,7 +128,6 @@ public class TripRequestAdapter extends RecyclerView.Adapter<TripRequestAdapter.
                 Toast.makeText(context, "Failed to accept request", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            // TODO: reject all other requests that need more seats than available
             Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
             return true;
         }
