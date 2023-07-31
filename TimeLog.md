@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 | Date | Lance | Kevin | Yipeng | Xinhao | Bach | NAME | Task
 |------------|------|---------|-------|------|-|-|-|
 |2023-05-27|3.13|3.13|3.13|3.13|3.13|3.13|Team meeting on project design|
@@ -24,6 +23,12 @@
 |2023-07-11|0|2.87|0|0|0|0|Create location selector activity|
 |2023-07-11|0|2.56|2|0|0|0|Create date-time selector|
 |2023-07-11|0|1.48|0|0|0|0|Update TripRequest activity|
+|2023-07-24|0|2|0|0|0|0|Fixed issue with improper number of seats|
+|2023-07-24|0|3|0|0|0|0|Fixed layout issues in TripRequestAdapter|
+|2023-07-25|5|5|5|5|5|5|Planning and recording final demo video|
+|2023-07-25|0|4|0|0|0|0|Edited final demo video|
+|2023-07-27|0|1.6|0|0|0|0|Edited D6|
+|2023-07-31|0|1|0|0|0|0|Edited D7|
 |2023-07-11|0|0|5|0|0|0|D4 Ex1, ex2 modification, 2 diargrams|
 |2023-07-12|0|1.29|0|0|0|0|Geocoding location names|
 |2023-07-12|0|0.32|0|0|0|0|Add privacy warning to map|
@@ -44,7 +49,3 @@
 |2023-07-21|0|0|3|0|0|0|driver profile update|
 |2023-07-22|0|0|4|0|0|0|Vehicle profile display|
 |2023-07-23|0|0|5|0|0|0|Vehicle profile display update and edit|
-=======
-| Date | Lance | Kevin | Yipeng | Xinhao | NAME | NAME | Task
-|07/13 11:20 am - |Yipeng Huang|login page with additional information|
->>>>>>> Stashed changes
