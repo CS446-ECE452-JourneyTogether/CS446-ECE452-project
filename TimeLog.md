@@ -5,9 +5,9 @@
 | 2023-05-17 | 0     | 0     | 0      | 0      | 0    | 1    | Rough copy of the mock interface (Just user interface)                                                | 
 | 2023-05-18 | 1     | 1     | 0      | 0      | 1    | 1    | Meet TA to build on our project                                                                       |
 | 2023-05-27 | 4     | 4     | 4      | 4      | 4    | 4    | Team meeting on project design                                                                        |
-| 2023-05-29 | 1     |       |        |        | 1.5  | 2    | D1                                                                                                    |
+| 2023-05-29 | 1     |       | 1      |        | 1.5  | 2    | D1                                                                                                    |
 | 2023-05-31 | 2     | 2     | 0      | 2      | 0    | 2    | Work on project proposal (D1)                                                                         |
-| 2023-06-01 | 1     |       |        |        | 1.5  | 2    | D1                                                                                                    |
+| 2023-06-01 | 1     |       | 1      |        | 1.5  | 2    | D1                                                                                                    |
 | 2023-06-10 | 0     | 0.78  | 0      | 0      | 0    | 0    | Create basic classes: Trip, User, etc.                                                                |
 | 2023-06-10 | 0     | 2.12  | 0      | 0      | 0    | 0    | App repository setup                                                                                  |
 | 2023-06-13 | 0     | 0.19  | 0      | 0      | 0    | 0    | Additional set up classes                                                                             |
@@ -40,7 +40,7 @@
 | 2023-07-11 | 0     | 1.41  | 0      | 0      | 0    | 0    | Turn location string into geohashes                                                                   |
 | 2023-07-11 | 0     | 2.56  | 2      | 0      | 0    | 0    | Create date-time selector                                                                             |
 | 2023-07-11 | 0     | 2.87  | 0      | 0      | 0    | 0    | Create location selector activity                                                                     |
-| 2023-07-11 | 2     |       |        |        | 3    | 0    | D4                                                                                                    |
+| 2023-07-11 | 2     |       | 2      |        | 3    | 0    | D4                                                                                                    |
 | 2023-07-11 | 5     | 1.48  | 0      | 0      | 0    | 0    | Update TripRequest activity                                                                           |
 | 2023-07-12 | 0     | 0.32  | 0      | 0      | 0    | 0    | Add privacy warning to map                                                                            |
 | 2023-07-12 | 0     | 0.58  | 0      | 0      | 0    | 0    | Prevent driver from signing in as rider                                                               |
@@ -69,5 +69,5 @@
 | 2023-07-24 | 0     | 3     | 0      | 0      | 0    | 0    | Fixed layout issues in TripRequestAdapter                                                             |
 | 2023-07-25 | 0     | 4     | 0      | 0      | 0    | 0    | Edited final demo video                                                                               |
 | 2023-07-25 | 5     | 5     | 5      | 5      | 5    | 5    | Planning and recording final demo video                                                               |
-| 2023-07-27 | 2.5   | 1.6   | 0      | 0      | 1    | 3    | Edited D6                                                                                             |
-| 2023-07-31 | 2.5   | 1     | 0      | 0      | 1    | 0.5  | Edited D7                                                                                             |
+| 2023-07-27 | 2.5   | 1.6   | 3      | 0      | 1    | 3    | Edited D6                                                                                             |
+| 2023-07-31 | 2.5   | 1     | 2      | 0      | 1    | 0.5  | Edited D7                                                                                             |
