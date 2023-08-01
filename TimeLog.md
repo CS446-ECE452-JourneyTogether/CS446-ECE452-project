@@ -59,9 +59,9 @@
 | 2023-07-21 | 0     | 0     | 3      | 0      | 0    | 0    | driver profile update                                                                                 |
 | 2023-07-21 | 0     | 0     | 3      | 0      | 0    | 0    | enable profile picture select for passenger                                                           |
 | 2023-07-22 |       |       |        |        |      | 6    | Trip Request View by Passenger                                                                        |
-| 2023-07-22 |       |       |        |        | 1.5  |      | Phone number, Time display, Time search, Update UI                                                    |
+| 2023-07-22 |       |       |        |        | 1.5  |      | Update TripAdapter, Update UI for trip item and profile                                               |
 | 2023-07-22 | 0     | 0     | 4      | 0      | 0    | 0    | Vehicle profile display                                                                               |
-| 2023-07-23 |       |       |        |        | 1.5  |      | Phone number, Time display, Time search, Update UI                                                    |
+| 2023-07-23 |       |       |        |        | 1.5  |      | Update UI                                                                                             |
 | 2023-07-23 | 0     | 0     | 5      | 0      | 0    | 0    | Vehicle profile display update and edit                                                               |
 | 2023-07-24 |       |       |        |        |      | 8    | Phone number, Time display, Time search, Update UI                                                    |
 | 2023-07-24 |       |       |        |        | 9    |      | Update UI, trip list, trip requests, fix some bugs...                                                 |
