@@ -69,5 +69,5 @@
 | 2023-07-24 | 0     | 3     | 0      | 0      | 0    | 0    | Fixed layout issues in TripRequestAdapter                                                             |
 | 2023-07-25 | 0     | 4     | 0      | 0      | 0    | 0    | Edited final demo video                                                                               |
 | 2023-07-25 | 5     | 5     | 5      | 5      | 5    | 5    | Planning and recording final demo video                                                               |
-| 2023-07-27 | 0     | 1.6   | 0      | 0      | 1    | 0    | Edited D6                                                                                             |
-| 2023-07-31 | 0     | 1     | 0      | 0      | 1    | 0    | Edited D7                                                                                             |
+| 2023-07-27 | 0     | 1.6   | 0      | 0      | 1    | 3    | Edited D6                                                                                             |
+| 2023-07-31 | 0     | 1     | 0      | 0      | 1    | 0.5  | Edited D7                                                                                             |
