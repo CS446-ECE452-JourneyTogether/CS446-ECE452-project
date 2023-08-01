@@ -3,10 +3,15 @@ package ca.uwaterloo.cs446.journeytogether;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -28,17 +32,24 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class LocationPickerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
     private MapView mapView;
     private GoogleMap googleMap;
+    private SearchView searchViewLocationPicker;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
-
     private LatLng selectedLocation;
+
+    private TextView tvMapWarning;
+    private Button showMoreButton, showLessButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +57,13 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         setContentView(R.layout.activity_location_picker);
 
         mapView = findViewById(R.id.locationPickerMapView);
+        searchViewLocationPicker = findViewById(R.id.searchViewLocationPicker);
         Button confirmButton = findViewById(R.id.confirmButton);
+
+        tvMapWarning = findViewById(R.id.tvMapWarning);
+        showMoreButton = findViewById(R.id.showMoreButton);
+        showLessButton = findViewById(R.id.showLessButton);
+
 
         // Initialize the Google Maps SDK
         mapView.onCreate(savedInstanceState);
@@ -64,6 +81,39 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                 } else {
                     Toast.makeText(LocationPickerActivity.this, "Please select a location", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        showMoreButton.setOnClickListener(view -> {
+            tvMapWarning.setMaxLines(Integer.MAX_VALUE); // Show all lines
+            showMoreButton.setVisibility(View.GONE); // Hide "Show More" button
+            showLessButton.setVisibility(View.VISIBLE); // Show "Show Less" button
+        });
+
+        showLessButton.setOnClickListener(view -> {
+            tvMapWarning.setMaxLines(2); // Limit to three lines
+            showMoreButton.setVisibility(View.VISIBLE); // Show "Show More" button
+            showLessButton.setVisibility(View.GONE); // Hide "Show Less" button
+        });
+
+        setupSearchViewListener();
+
+    }
+
+    private void setupSearchViewListener() {
+        searchViewLocationPicker.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Perform location search when the user submits the search query
+                performLocationSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Optional: Perform location search as the user types (live search)
+                // performLocationSearch(newText);
+                return false;
             }
         });
     }
@@ -110,6 +160,25 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             }
         });
     }
+
+    private void performLocationSearch(String searchQuery) {
+        if (!TextUtils.isEmpty(searchQuery)) {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                List<Address> addressList = geocoder.getFromLocationName(searchQuery, 1);
+                if (!addressList.isEmpty()) {
+                    Address address = addressList.get(0);
+                    LatLng searchLocation = new LatLng(address.getLatitude(), address.getLongitude());
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLocation, 15f));
+                    setSelectedLocation(searchLocation);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error searching for location: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     private void enableMyLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

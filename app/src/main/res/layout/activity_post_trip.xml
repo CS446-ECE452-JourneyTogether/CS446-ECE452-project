@@ -51,10 +51,26 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Available Seats">
+        android:hint="Available seats">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ptEtSeats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ptLayCost"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cost per seat">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ptEtCost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"

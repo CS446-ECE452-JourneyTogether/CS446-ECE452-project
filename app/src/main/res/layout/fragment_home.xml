@@ -1,8 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- Your other layout elements here -->
-</RelativeLayout>
+    <!-- Title and Collected Trips Button Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Your Trip Requests Title -->
+        <TextView
+            android:id="@+id/tvTripRequestsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Trip Requests"
+            android:textSize="24sp"
+            android:textColor="#000000"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Collected Trips Button -->
+        <Button
+            android:id="@+id/btnCollectedTrips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Collected Trips"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/floating_button_background"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <!-- RecyclerView for trip requests -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tripReqRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+
+    <!-- Search Button (Right-Bottom Corner) -->
+    <Button
+        android:id="@+id/btnHomeSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Search"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/floating_button_background"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

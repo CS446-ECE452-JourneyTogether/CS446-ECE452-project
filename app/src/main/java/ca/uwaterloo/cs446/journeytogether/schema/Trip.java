@@ -62,10 +62,10 @@ public class Trip implements Serializable {
 
             if (driverId != null) {
                 User.firestore.getValuesById(driverId,
-                    (arr) -> {
-                        if (!arr.isEmpty()) { this.driver = arr.get(0); }
-                    },
-                    () -> {}
+                        (arr) -> {
+                            if (!arr.isEmpty()) { this.driver = arr.get(0); }
+                        },
+                        () -> {}
                 );
             }
 
@@ -133,7 +133,7 @@ public class Trip implements Serializable {
 
     public Trip() {}
 
-    public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, LocalDateTime departureTime, LocalDateTime arrivalTime) {
+    public Trip(User driver, LatLng origin, LatLng destination, int availableSeats, int cost, LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.driver = driver;
         this.origin = new SerializableLatLng(origin);
         this.destination = new SerializableLatLng(destination);
@@ -141,7 +141,7 @@ public class Trip implements Serializable {
         this.totalSeats = availableSeats;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-        this.cost = 100;
+        this.cost = cost;
         this.passengers = new ArrayList<>();
     }
 
@@ -158,6 +158,14 @@ public class Trip implements Serializable {
                 "%s → %s",
                 AddressRep.getLocationStringAddress(context, origin.toLatLng()),
                 AddressRep.getLocationStringAddress(context, destination.toLatLng()));
+    }
+
+    public String getOriginLocation(Context context) {
+        return AddressRep.getLocationStringAddress(context, origin.toLatLng());
+    }
+
+    public String getDestinationLocation(Context context) {
+        return AddressRep.getLocationStringAddress(context, destination.toLatLng());
     }
 
     public User getDriver() {
@@ -216,5 +224,8 @@ public class Trip implements Serializable {
     public void setPassengers(List<User> passengers) {
         this.passengers = passengers;
     }
-}
 
+    public void addPassenger(User passenger) {
+        this.passengers.add(passenger);
+    }
+}

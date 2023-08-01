@@ -27,6 +27,9 @@ import ca.uwaterloo.cs446.journeytogether.user.UserLoginActivity;
 public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etRegEmail;
     private TextInputEditText etRegPassword;
+    private TextInputEditText etFirstName; // Added line
+    private TextInputEditText etLastName;  // Added line
+    private TextInputEditText etPhoneNum;  // Added line
     private Button btnRegister;
     private TextView tvLoginHere;
 
@@ -54,6 +57,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         etRegEmail = findViewById(R.id.etRegEmail);
         etRegPassword = findViewById(R.id.etRegPassword);
+        etFirstName = findViewById(R.id.etFirstName); // Added line
+        etLastName = findViewById(R.id.etLastName); // Added line
+        etPhoneNum = findViewById(R.id.etPhoneNum); // Added line
         btnRegister = findViewById(R.id.btnRegister);
         tvLoginHere = findViewById(R.id.tvLoginHere);
 
@@ -75,6 +81,9 @@ public class RegisterActivity extends AppCompatActivity {
     private void createUser() {
         String email = etRegEmail.getText().toString().trim();
         String password = etRegPassword.getText().toString().trim();
+        String firstName = etFirstName.getText().toString().trim(); // Added line
+        String lastName = etLastName.getText().toString().trim(); // Added line
+        String phoneNum = etPhoneNum.getText().toString().trim(); // Added line
 
         if (TextUtils.isEmpty(email)) {
             etRegEmail.setError("Email is empty");
@@ -88,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         User.firestore.create(
-                                new User(email, isDriverRegistration),
+                                new User(email, firstName,lastName,phoneNum,isDriverRegistration),
                                 () -> {
                                     Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_LONG).show();
                                      if (!isDriverRegistration) {

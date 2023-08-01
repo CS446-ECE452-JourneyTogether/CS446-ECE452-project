@@ -12,6 +12,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import android.util.Log;
+
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
@@ -133,6 +135,32 @@ public class FirestoreCollection<T> {
                     updateSnapshot(id, value);
 
                     onSuccess.callback();
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    onFailure.callback();
+                }
+            });
+    }
+
+    // update field in document
+    public void update(String id, String field, Object value, VoidCallback<T> onSuccess, VoidCallback<T> onFailure) {
+        db.collection(collectionPath).document(id)
+            .update(field, value)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    DocumentReference docRef = db.collection(collectionPath).document(id);
+                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            // Log.d("update", documentSnapshot.toString());
+                            updateSnapshot(id, documentSnapshot);
+                            onSuccess.callback();
+                        }
+                    });
                 }
             })
             .addOnFailureListener(new OnFailureListener() {

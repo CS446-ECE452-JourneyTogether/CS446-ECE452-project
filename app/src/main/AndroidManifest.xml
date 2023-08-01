@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -28,16 +30,24 @@
             android:name=".user.TripRequestActivity">
         </activity>
 
+        <service
+            android:name=".driver.DriverModeService"
+            android:foregroundServiceType="location">
+        </service>
+
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".user.UserLoginActivity" />
         <activity android:name=".user.UserRegistrationActivity" />
+        <activity android:name=".user.SearchTripActivity" />
         <activity android:name=".user.UserMainActivity" />
+        <activity android:name=".user.SearchedTripsActivity" />
+        <activity android:name=".user.CollectedTripsActivity" />
         <activity android:name=".driver.DriverMainActivity" />
         <activity android:name=".driver.DriverLoginActivity" />
         <activity android:name=".driver.DriverRegistrationActivity" />
-
         <activity android:name=".driver.PostTripActivity" />
+        <activity android:name=".driver.ViewRequestsActivity" />
         <activity
             android:name=".LocationPickerActivity">
         </activity>

@@ -76,3 +76,6 @@ To contribute to the project by creating a pull request, follow these steps:
 10. Add a title and description to your pull request, explaining the purpose of your changes. Be clear and detailed in your description to help the reviewers understand your modifications.
 11. Review the changes and, if everything looks good, click on the "Create pull request" button.
 12. Your pull request will be submitted and reviewed by the project maintainers. They will provide feedback or merge your changes into the main project if they are deemed suitable.
+
+## Driver Mode
+check out our road testing video https://youtu.be/IkcfRhN17IM?si=nXCscnZRHbmoZ0h6

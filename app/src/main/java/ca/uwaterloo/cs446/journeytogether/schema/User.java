@@ -5,7 +5,9 @@ import android.util.Log;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -24,6 +26,17 @@ public class User implements Serializable {
     private String driverLicense;
     private boolean isDriver;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // Add this field to store the IDs of collected trips
+    private List<String> collectedTrips;
+
     private static final String COLLECTION_PATH = "jt_user";
     public static final FirestoreCollection<User> firestore =
             new FirestoreCollection<>(
@@ -34,6 +47,7 @@ public class User implements Serializable {
                     () -> new User()
             );
 
+
     public void update(DocumentSnapshot document) {
         try {
             this.firstName = (String) document.get("firstName");
@@ -41,6 +55,7 @@ public class User implements Serializable {
             this.email = (String) document.get("email");
             this.phoneNum = (String) document.get("phoneNum");
             this.isDriver = (boolean) document.get("isDriver");
+            this.collectedTrips = (List<String>) document.get("collectedTrips");
 
             if (this.isDriver) {
                 this.driverLicense = (String) document.get("driverLicense");
@@ -58,6 +73,7 @@ public class User implements Serializable {
         map.put("email", this.email);
         map.put("phoneNum", this.phoneNum);
         map.put("isDriver", this.isDriver);
+        map.put("collectedTrips", this.collectedTrips);
 
         if (this.isDriver) {
             map.put("driverLicense", this.driverLicense);
@@ -79,25 +95,43 @@ public class User implements Serializable {
         this.phoneNum = null;
         this.driverLicense = null;
         this.isDriver = false;
+        this.collectedTrips = new ArrayList<>();
     }
 
-    public User(String email, String firstName, String lastName, String phoneNum, String driverLicense, boolean isDriver) {
+    public List<String> getCollectedTrips() {
+        return collectedTrips;
+    }
+
+    public void setCollectedTrips(List<String> collectedTrips) {
+        this.collectedTrips = collectedTrips;
+    }
+
+    public User(String email, String firstName, String lastName, String phoneNum, boolean isDriver) {
         this.id = email;
+        this.email =email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNum = phoneNum;
-        this.driverLicense = driverLicense;
+        this.driverLicense = null;
         this.isDriver = isDriver;
+        this.collectedTrips = new ArrayList<>();
     }
 
     public User(String email, boolean isDriver) {
         this.email = email;
         this.isDriver = isDriver;
+        this.collectedTrips = new ArrayList<>();
     }
 
-    public void setName(String firstName, String lastName) {
+    public User(String driverL,String email, String firstName, String lastName, String phoneNum, boolean isDriver) {
+        this.id = email;
+        this.email =email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNum = phoneNum;
+        this.driverLicense = driverL;
+        this.isDriver = isDriver;
+        this.collectedTrips = new ArrayList<>();
     }
 
     public String getDocumentId() {
@@ -111,6 +145,8 @@ public class User implements Serializable {
     public boolean getIsDriver() { return isDriver; }
 
     public String getDisplayName() { return String.format("%s %s", firstName, lastName); }
+
+    public String getPhoneNum() {return String.format("%s",phoneNum);}
 
     @Override
     public String toString() {
@@ -139,5 +175,9 @@ public class User implements Serializable {
         );
 
         return futureUser;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 }
