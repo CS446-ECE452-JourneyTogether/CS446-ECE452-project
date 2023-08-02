@@ -7,11 +7,11 @@
 | 2023-05-27 | 4     | 4     | 4      | 4      | 4    | 4     | Team meeting on project design                                                                |
 | 2023-05-29 | 1     |       | 1      |        | 1.5  | 2     | D1                                                                                            |
 | 2023-05-31 | 2     | 2     |        | 2      |      | 2     | Work on project proposal (D1)                                                                 |
-| 2023-06-01 | 1     |       | 1      |        | 1.5  | 2     | D1                                                                                            |
+| 2023-06-01 | 1     |       | 1      | 3      | 1.5  | 2     | D1                                                                                            |
 | 2023-06-10 |       | 0.78  |        |        |      |       | Create basic classes: Trip, User, etc.                                                        |
 | 2023-06-10 |       | 2.12  |        |        |      |       | App repository setup                                                                          |
 | 2023-06-13 |       | 0.19  |        |        |      |       | Additional set up classes                                                                     |
-| 2023-06-13 | 2     | 2     | 2      |        | 1    | 2     | D2 document                                                                                   |
+| 2023-06-13 | 2     | 2     | 2      | 1      | 1    | 2     | D2 document                                                                                   |
 | 2023-06-14 |       |       |        |        |      | 6     | MySQL Database setup (files are in github, but not be selected to use)                        |
 | 2023-06-14 | 0.5   | 0.33  |        |        |      |       | Set up database repo                                                                          |
 | 2023-06-20 |       |       |        | 1      |      |       | Update instructions on README.md                                                              |
@@ -22,12 +22,12 @@
 | 2023-06-24 | 1     | 1.83  |        |        |      |       | Develop ride request menu                                                                     |
 | 2023-06-24 | 3     | 2.68  |        |        |      |       | Develop navigation bar                                                                        |
 | 2023-06-26 |       | 1.09  |        |        |      |       | Bug fix and new schema                                                                        |
-| 2023-06-26 |       |       |        | 4      |      |       | Implement posting trips feature, fetching trip-list from database, setting up profile section |
-| 2023-06-28 | 3     | 2.43  | 2      |        | 1    | 3     | Writing demo report (D3)                                                                      |
+| 2023-06-26 |       |       |        | 6      |      |       | Implement posting trips feature, fetching trip-list from database, setting up profile section |
+| 2023-06-28 | 3     | 2.43  | 2      | 1      | 1    | 3     | Writing demo report (D3)                                                                      |
 | 2023-06-28 |       |       |        |        | 2    |       | Trip List                                                                                     |
 | 2023-06-29 |       |       |        |        |      | 1     | Try to standardize the database format                                                        |
 | 2023-07-04 |       | 0.52  |        |        |      |       | Removed inconsistent tick mark in SeekBar                                                     |
-| 2023-07-04 | 5     |       |        | 4      |      |       | Implement basic UI for driver side                                                            |
+| 2023-07-04 | 5     |       |        | 6      |      |       | Implement basic UI for driver side                                                            |
 | 2023-07-06 |       |       |        |        |      | 2     | Seprate the driver and passenger login                                                        |
 | 2023-07-09 |       | 1.85  |        |        |      |       | Add map to the application                                                                    |
 | 2023-07-09 |       | 4.00  |        |        |      |       | Fix badly written Firebase integration                                                        |
